@@ -1,7 +1,28 @@
 import axiosInstance from '@infrastructure/api/axiosInstance'
 import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
 import { Order, PinValidationResponse } from '../models'
-import { OrderStatus } from '@shared/types'
+import { OrderStatus, isValidOrderStatus } from '@shared/types'
+
+const mapOrder = (data: any): Order => ({
+  id: Number(data.id),
+  restauranteId: data.restaurantId,
+  clienteId: data.clientId,
+  clienteNombre: '',
+  clienteCorreo: '',
+  items: (data.dishes ?? []).map((dish: any) => ({
+    id: dish.dishId,
+    platoId: dish.dishId,
+    platoNombre: `Plato ${dish.dishId}`,
+    cantidad: dish.quantity,
+    precio: 0,
+  })),
+  estado: isValidOrderStatus(data.status)
+    ? (data.status as OrderStatus)
+    : OrderStatus.PENDIENTE,
+  empleadoId: data.chefId ?? undefined,
+  pin: data.pin,
+  fechaCreacion: data.date,
+})
 
 /**
  * Order Management Service
@@ -15,19 +36,17 @@ export const orderManagementService = {
    * @returns Array of orders
    */
   getOrdersByStatus: async (
-    restaurantId: number,
+    _restaurantId: number,
     status: OrderStatus
   ): Promise<Order[]> => {
+    void _restaurantId
     const response = await axiosInstance.get(
-      `${API_ENDPOINTS.PEDIDOS}/pedidos`,
-      {
-        params: {
-          restauranteId: restaurantId,
-          estado: status,
-        },
-      }
+      `${API_ENDPOINTS.PEDIDOS}/orders`,
+      { params: { status, page: 0, size: 30 } }
     )
-    return response.data
+    const data = response.data
+    const content = Array.isArray(data?.content) ? data.content : data
+    return (content ?? []).map(mapOrder)
   },
 
   /**
@@ -38,16 +57,13 @@ export const orderManagementService = {
    */
   assignOrderToEmployee: async (
     orderId: number,
-    employeeId: number
+    _employeeId: number
   ): Promise<Order> => {
+    void _employeeId
     const response = await axiosInstance.patch(
-      `${API_ENDPOINTS.PEDIDOS}/pedidos/${orderId}/asignar`,
-      {
-        empleadoId: employeeId,
-        nuevoEstado: OrderStatus.EN_PREPARACION,
-      }
+      `${API_ENDPOINTS.PEDIDOS}/orders/${orderId}/assign`
     )
-    return response.data
+    return mapOrder(response.data)
   },
 
   /**
@@ -57,12 +73,9 @@ export const orderManagementService = {
    */
   markOrderReady: async (orderId: number): Promise<Order> => {
     const response = await axiosInstance.patch(
-      `${API_ENDPOINTS.PEDIDOS}/pedidos/${orderId}/estado`,
-      {
-        nuevoEstado: OrderStatus.LISTO,
-      }
+      `${API_ENDPOINTS.PEDIDOS}/orders/${orderId}/ready`
     )
-    return response.data
+    return mapOrder(response.data)
   },
 
   /**
@@ -75,10 +88,12 @@ export const orderManagementService = {
     orderId: number,
     pin: string
   ): Promise<PinValidationResponse> => {
-    const response = await axiosInstance.post(
-      `${API_ENDPOINTS.PEDIDOS}/pedidos/${orderId}/validar-pin`,
-      { pin }
+    await axiosInstance.post(
+      `${API_ENDPOINTS.PEDIDOS}/orders/deliver/${orderId}/${pin}`
     )
-    return response.data
+    return {
+      valido: true,
+      mensaje: 'Pedido entregado',
+    }
   },
 }

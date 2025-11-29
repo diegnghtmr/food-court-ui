@@ -2,6 +2,16 @@ import axiosInstance from '@infrastructure/api/axiosInstance'
 import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
 import type { Restaurant, PaginatedResponse } from '../models'
 
+const mapRestaurant = (data: any): Restaurant => ({
+  id: data.id,
+  nombre: data.name,
+  nit: data.nit,
+  direccion: data.address,
+  telefono: data.phone,
+  urlLogo: data.urlLogo,
+  idPropietario: data.ownerId,
+})
+
 /**
  * Restaurant service for client module
  * Handles all restaurant-related API calls
@@ -20,18 +30,29 @@ export const restaurantService = {
         params: { page, size },
       }
     )
-    // Backend returns array directly, wrap it in paginated format
     const data = response.data
     if (Array.isArray(data)) {
+      const content = data.map(mapRestaurant)
       return {
-        content: data,
+        content,
         totalPages: 1,
-        totalElements: data.length,
+        totalElements: content.length,
         size: size,
         number: page,
       }
     }
-    return data
+
+    const content = Array.isArray(data?.content)
+      ? data.content.map(mapRestaurant)
+      : []
+
+    return {
+      content,
+      totalPages: data?.totalPages ?? 1,
+      totalElements: data?.totalElements ?? content.length,
+      size: data?.size ?? size,
+      number: data?.number ?? page,
+    }
   },
 
   /**
@@ -39,8 +60,20 @@ export const restaurantService = {
    */
   getRestaurantById: async (id: number): Promise<Restaurant> => {
     const response = await axiosInstance.get(
-      `${API_ENDPOINTS.PLAZOLETA}/restaurants/${id}`
+      `${API_ENDPOINTS.PLAZOLETA}/restaurants`,
+      { params: { page: 0, size: 100 } }
     )
-    return response.data
+    const data = Array.isArray(response.data)
+      ? response.data
+      : Array.isArray(response.data?.content)
+        ? response.data.content
+        : []
+
+    const restaurant = data.find((item: any) => item.id === id)
+    if (!restaurant) {
+      throw new Error('Restaurante no encontrado')
+    }
+
+    return mapRestaurant(restaurant)
   },
 }

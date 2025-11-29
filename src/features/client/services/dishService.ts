@@ -1,6 +1,29 @@
 import axiosInstance from '@infrastructure/api/axiosInstance'
 import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
 import type { Dish } from '../models'
+import { DishCategory, isValidDishCategory } from '@shared/types'
+
+const mapDish = (data: any): Dish => {
+  const normalizedCategory =
+    typeof data.categoryName === 'string'
+      ? data.categoryName.toUpperCase().replace(/\s+/g, '_')
+      : ''
+
+  const categoria = isValidDishCategory(normalizedCategory)
+    ? (normalizedCategory as DishCategory)
+    : DishCategory.PLATO_FUERTE
+
+  return {
+    id: data.id,
+    nombre: data.name,
+    precio: Number(data.price),
+    descripcion: data.description,
+    urlImagen: data.urlImage,
+    categoria,
+    activo: Boolean(data.active),
+    restauranteId: data.restaurantId,
+  }
+}
 
 /**
  * Dish service for client module
@@ -12,14 +35,11 @@ export const dishService = {
    */
   getDishesByRestaurant: async (restaurantId: number): Promise<Dish[]> => {
     const response = await axiosInstance.get(
-      `${API_ENDPOINTS.PLAZOLETA}/plazoleta/platos`,
-      {
-        params: {
-          restauranteId: restaurantId,
-          activo: true,
-        },
-      }
+      `${API_ENDPOINTS.PLAZOLETA}/dishes/restaurant/${restaurantId}`,
+      { params: { page: 0, size: 50 } }
     )
-    return response.data
+    const data = response.data
+    const items = Array.isArray(data) ? data : data?.content ?? []
+    return items.map(mapDish)
   },
 }
