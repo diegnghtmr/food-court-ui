@@ -57,13 +57,10 @@ describe('orderService', () => {
       platos: [{ platoId: 1, cantidad: 2 }],
     })
 
-    expect(mockPost).toHaveBeenCalledWith(
-      expect.stringContaining('/orders'),
-      {
-        restaurantId: 10,
-        dishes: [{ dishId: 1, quantity: 2 }],
-      }
-    )
+    expect(mockPost).toHaveBeenCalledWith(expect.stringContaining('/orders'), {
+      restaurantId: 10,
+      dishes: [{ dishId: 1, quantity: 2 }],
+    })
     expect(result).toMatchObject({
       id: 5,
       restauranteId: 10,

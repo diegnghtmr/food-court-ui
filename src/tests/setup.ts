@@ -76,8 +76,11 @@ class MockIntersectionObserver implements IntersectionObserver {
 }
 
 // Assign mock to global/window
-;(globalThis as typeof globalThis & { IntersectionObserver: typeof IntersectionObserver }).IntersectionObserver =
-  MockIntersectionObserver
+;(
+  globalThis as typeof globalThis & {
+    IntersectionObserver: typeof IntersectionObserver
+  }
+).IntersectionObserver = MockIntersectionObserver
 
 // Global test setup
 export { expect }

@@ -125,7 +125,11 @@ describe('orderManagementService', () => {
         data: { content: [{ id: 9, name: 'Taco', price: 8000 }] },
       })
       .mockResolvedValueOnce({
-        data: { firstName: 'Luis', lastName: 'Perez', email: 'luis@example.com' },
+        data: {
+          firstName: 'Luis',
+          lastName: 'Perez',
+          email: 'luis@example.com',
+        },
       })
 
     const orderManagementService = await loadService()

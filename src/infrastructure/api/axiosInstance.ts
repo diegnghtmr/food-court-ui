@@ -55,7 +55,8 @@ axiosInstance.interceptors.response.use(
       window.dispatchEvent(
         new CustomEvent('auth:unauthorized', {
           detail: {
-            message: 'Tu sesión ha expirado. Por favor inicia sesión nuevamente.',
+            message:
+              'Tu sesión ha expirado. Por favor inicia sesión nuevamente.',
           },
         })
       )

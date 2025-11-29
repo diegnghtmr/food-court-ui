@@ -41,11 +41,21 @@ describe('analyticsService', () => {
     })
 
     const analyticsService = await loadService()
-    const result = await analyticsService.getEfficiencyReport('1', '2024-01-01', '2024-01-31')
+    const result = await analyticsService.getEfficiencyReport(
+      '1',
+      '2024-01-01',
+      '2024-01-31'
+    )
 
     expect(mockGet).toHaveBeenCalledWith(
       expect.stringContaining('/trace/efficiency'),
-      { params: { restaurantId: '1', startDate: '2024-01-01', endDate: '2024-01-31' } }
+      {
+        params: {
+          restaurantId: '1',
+          startDate: '2024-01-01',
+          endDate: '2024-01-31',
+        },
+      }
     )
     expect(result[0]).toMatchObject({
       employeeId: '10',

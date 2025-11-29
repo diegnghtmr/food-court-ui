@@ -14,8 +14,8 @@ type AuthMode = 'login' | 'register'
 export const Auth = () => {
   const [mode, setMode] = useState<AuthMode>('login')
   const location = useLocation()
-  const authMessage =
-    (location.state as { authMessage?: string } | null)?.authMessage
+  const authMessage = (location.state as { authMessage?: string } | null)
+    ?.authMessage
 
   const handleRegisterSuccess = () => {
     setMode('login')

@@ -43,9 +43,9 @@ describe('useCartStore', () => {
 
     store.addItem(dish, 1, 99, 'Pizzería')
 
-    expect(() =>
-      store.addItem(otherDish, 1, 100, 'Burger Place')
-    ).toThrow(/Solo puedes pedir de un restaurante a la vez/)
+    expect(() => store.addItem(otherDish, 1, 100, 'Burger Place')).toThrow(
+      /Solo puedes pedir de un restaurante a la vez/
+    )
 
     const state = useCartStore.getState()
     expect(state.items).toHaveLength(1)
