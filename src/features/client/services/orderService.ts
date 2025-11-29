@@ -1,5 +1,6 @@
 import axiosInstance from '@infrastructure/api/axiosInstance'
 import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
+import { getUserId } from '@infrastructure/auth/tokenManager'
 import type { CreateOrderData, ClientOrder } from '../models'
 
 /**
@@ -19,11 +20,15 @@ export const orderService = {
   },
 
   /**
-   * Get all orders for the authenticated client
+   * Get all orders/traces for the authenticated client
    */
   getMyOrders: async (): Promise<ClientOrder[]> => {
+    const clientId = getUserId()
+    if (!clientId) {
+      throw new Error('User not authenticated')
+    }
     const response = await axiosInstance.get(
-      `${API_ENDPOINTS.TRAZABILIDAD}/trazabilidad/pedidos/mis-pedidos`
+      `${API_ENDPOINTS.TRAZABILIDAD}/trace/client/${clientId}`
     )
     return response.data
   },
