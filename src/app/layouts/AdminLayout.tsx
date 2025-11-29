@@ -50,7 +50,11 @@ export const AdminLayout = () => {
             </Link>
 
             <div className="pt-8">
-              <BrutalistButton variant="danger" onClick={handleLogout} fullWidth>
+              <BrutalistButton
+                variant="danger"
+                onClick={handleLogout}
+                fullWidth
+              >
                 Cerrar Sesion
               </BrutalistButton>
             </div>

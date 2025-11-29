@@ -43,7 +43,11 @@ export const ClientLayout = () => {
                 Mis Pedidos
               </Link>
 
-              <BrutalistButton variant="danger" size="sm" onClick={handleLogout}>
+              <BrutalistButton
+                variant="danger"
+                size="sm"
+                onClick={handleLogout}
+              >
                 Salir
               </BrutalistButton>
             </nav>

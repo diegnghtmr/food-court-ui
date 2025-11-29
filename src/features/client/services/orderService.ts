@@ -65,7 +65,9 @@ const fetchRestaurants = async (): Promise<RestaurantMap> => {
   const restaurants: RestaurantResponse[] = raw
   restaurants.forEach((r) => {
     if (r?.id !== undefined && r?.id !== null) {
-      restaurantCache.set(Number(r.id), { nombre: r.name ?? `Restaurante ${r.id}` })
+      restaurantCache.set(Number(r.id), {
+        nombre: r.name ?? `Restaurante ${r.id}`,
+      })
     }
   })
 
