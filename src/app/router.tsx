@@ -35,162 +35,170 @@ import { MyOrders } from '@features/client/components/MyOrders'
 // Pages
 import { NotFound } from './pages/NotFound'
 
-export const router = createBrowserRouter([
-  // Root redirect
-  {
-    path: '/',
-    element: <Navigate to="/login" replace />,
-  },
+export const router = createBrowserRouter(
+  [
+    // Root redirect
+    {
+      path: '/',
+      element: <Navigate to="/login" replace />,
+    },
 
-  // Auth routes (Guest only)
-  {
-    path: '/login',
-    element: (
-      <GuestGuard>
-        <Auth />
-      </GuestGuard>
-    ),
-  },
-  {
-    path: '/register',
-    element: (
-      <GuestGuard>
-        <Auth />
-      </GuestGuard>
-    ),
-  },
+    // Auth routes (Guest only)
+    {
+      path: '/login',
+      element: (
+        <GuestGuard>
+          <Auth />
+        </GuestGuard>
+      ),
+    },
+    {
+      path: '/register',
+      element: (
+        <GuestGuard>
+          <Auth />
+        </GuestGuard>
+      ),
+    },
 
-  // Admin routes
-  {
-    path: '/admin',
-    element: (
-      <AuthGuard>
-        <RoleGuard allowedRoles={[UserRole.ADMINISTRADOR]}>
-          <AdminLayout />
-        </RoleGuard>
-      </AuthGuard>
-    ),
-    children: [
-      {
-        index: true,
-        element: <Navigate to="/admin/dashboard" replace />,
-      },
-      {
-        path: 'dashboard',
-        element: <Admin />,
-      },
-      {
-        path: 'create-owner',
-        element: <CreateOwner />,
-      },
-      {
-        path: 'create-restaurant',
-        element: <CreateRestaurant />,
-      },
-    ],
-  },
+    // Admin routes
+    {
+      path: '/admin',
+      element: (
+        <AuthGuard>
+          <RoleGuard allowedRoles={[UserRole.ADMINISTRADOR]}>
+            <AdminLayout />
+          </RoleGuard>
+        </AuthGuard>
+      ),
+      children: [
+        {
+          index: true,
+          element: <Navigate to="/admin/dashboard" replace />,
+        },
+        {
+          path: 'dashboard',
+          element: <Admin />,
+        },
+        {
+          path: 'create-owner',
+          element: <CreateOwner />,
+        },
+        {
+          path: 'create-restaurant',
+          element: <CreateRestaurant />,
+        },
+      ],
+    },
 
-  // Owner routes
-  {
-    path: '/owner',
-    element: (
-      <AuthGuard>
-        <RoleGuard allowedRoles={[UserRole.PROPIETARIO]}>
-          <OwnerLayout />
-        </RoleGuard>
-      </AuthGuard>
-    ),
-    children: [
-      {
-        index: true,
-        element: <Navigate to="/owner/dashboard" replace />,
-      },
-      {
-        path: 'dashboard',
-        element: <Owner />,
-      },
-      {
-        path: 'dishes',
-        element: <DishesManager />,
-      },
-      {
-        path: 'dish/create',
-        element: <DishForm mode="create" />,
-      },
-      {
-        path: 'dish/edit/:id',
-        element: <DishForm mode="edit" />,
-      },
-      {
-        path: 'create-employee',
-        element: <CreateEmployee />,
-      },
-      {
-        path: 'analytics',
-        element: <EfficiencyReport />,
-      },
-    ],
-  },
+    // Owner routes
+    {
+      path: '/owner',
+      element: (
+        <AuthGuard>
+          <RoleGuard allowedRoles={[UserRole.PROPIETARIO]}>
+            <OwnerLayout />
+          </RoleGuard>
+        </AuthGuard>
+      ),
+      children: [
+        {
+          index: true,
+          element: <Navigate to="/owner/dashboard" replace />,
+        },
+        {
+          path: 'dashboard',
+          element: <Owner />,
+        },
+        {
+          path: 'dishes',
+          element: <DishesManager />,
+        },
+        {
+          path: 'dish/create',
+          element: <DishForm mode="create" />,
+        },
+        {
+          path: 'dish/edit/:id',
+          element: <DishForm mode="edit" />,
+        },
+        {
+          path: 'create-employee',
+          element: <CreateEmployee />,
+        },
+        {
+          path: 'analytics',
+          element: <EfficiencyReport />,
+        },
+      ],
+    },
 
-  // Employee routes
-  {
-    path: '/employee',
-    element: (
-      <AuthGuard>
-        <RoleGuard allowedRoles={[UserRole.EMPLEADO]}>
-          <EmployeeLayout />
-        </RoleGuard>
-      </AuthGuard>
-    ),
-    children: [
-      {
-        index: true,
-        element: <Navigate to="/employee/orders" replace />,
-      },
-      {
-        path: 'orders',
-        element: <Employee />,
-      },
-    ],
-  },
+    // Employee routes
+    {
+      path: '/employee',
+      element: (
+        <AuthGuard>
+          <RoleGuard allowedRoles={[UserRole.EMPLEADO]}>
+            <EmployeeLayout />
+          </RoleGuard>
+        </AuthGuard>
+      ),
+      children: [
+        {
+          index: true,
+          element: <Navigate to="/employee/orders" replace />,
+        },
+        {
+          path: 'orders',
+          element: <Employee />,
+        },
+      ],
+    },
 
-  // Client routes
-  {
-    path: '/client',
-    element: (
-      <AuthGuard>
-        <RoleGuard allowedRoles={[UserRole.CLIENTE]}>
-          <ClientLayout />
-        </RoleGuard>
-      </AuthGuard>
-    ),
-    children: [
-      {
-        index: true,
-        element: <Navigate to="/client/restaurants" replace />,
-      },
-      {
-        path: 'restaurants',
-        element: <Client />,
-      },
-      {
-        path: 'restaurant/:id',
-        element: <RestaurantMenu />,
-      },
-      {
-        path: 'cart',
-        element: <ShoppingCart />,
-      },
-      {
-        path: 'orders',
-        element: <MyOrders />,
-      },
-    ],
-  },
+    // Client routes
+    {
+      path: '/client',
+      element: (
+        <AuthGuard>
+          <RoleGuard allowedRoles={[UserRole.CLIENTE]}>
+            <ClientLayout />
+          </RoleGuard>
+        </AuthGuard>
+      ),
+      children: [
+        {
+          index: true,
+          element: <Navigate to="/client/restaurants" replace />,
+        },
+        {
+          path: 'restaurants',
+          element: <Client />,
+        },
+        {
+          path: 'restaurant/:id',
+          element: <RestaurantMenu />,
+        },
+        {
+          path: 'cart',
+          element: <ShoppingCart />,
+        },
+        {
+          path: 'orders',
+          element: <MyOrders />,
+        },
+      ],
+    },
 
-  // 404 Not Found
+    // 404 Not Found
+    {
+      path: '*',
+      element: <NotFound />,
+    },
+  ],
   {
-    path: '*',
-    element: <NotFound />,
-  },
-])
+    future: {
+      v7_startTransition: true,
+      v7_relativeSplatPath: true,
+    },
+  }
+)

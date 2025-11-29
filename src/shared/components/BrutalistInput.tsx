@@ -10,6 +10,7 @@ interface BrutalistInputProps {
   onKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void
   placeholder?: string
   disabled?: boolean
+  readOnly?: boolean
   name?: string
   id?: string
 }
@@ -29,6 +30,7 @@ export const BrutalistInput = React.forwardRef<
       onKeyPress,
       placeholder,
       disabled = false,
+      readOnly = false,
       name,
       id,
     },
@@ -88,6 +90,7 @@ export const BrutalistInput = React.forwardRef<
           onKeyPress={onKeyPress}
           placeholder={placeholder}
           disabled={disabled}
+          readOnly={readOnly}
           required={required}
           className={inputBaseClasses}
           aria-required={required}

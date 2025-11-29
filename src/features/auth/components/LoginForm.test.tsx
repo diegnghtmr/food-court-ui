@@ -5,9 +5,10 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { BrowserRouter } from 'react-router-dom'
+import { RouterProvider, createMemoryRouter } from 'react-router-dom'
 import { LoginForm } from './LoginForm'
 import { authService } from '../services/authService'
+import { UserRole } from '@shared/types'
 
 // Mock the auth service
 vi.mock('../services/authService')
@@ -32,17 +33,28 @@ vi.mock('@infrastructure/auth', () => ({
   }),
 }))
 
+// Mock token utilities for role-based navigation
+const tokenMocks = vi.hoisted(() => ({
+  getUserRole: vi.fn(),
+  getRoleHomePath: vi.fn(),
+}))
+vi.mock('@infrastructure/auth/tokenManager', () => ({
+  getUserRole: tokenMocks.getUserRole,
+  getRoleHomePath: tokenMocks.getRoleHomePath,
+}))
+
 describe('LoginForm Integration', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
   it('renders login form with all fields', () => {
-    render(
-      <BrowserRouter>
-        <LoginForm />
-      </BrowserRouter>
+    const router = createMemoryRouter(
+      [{ path: '/', element: <LoginForm /> }],
+      { future: { v7_startTransition: true, v7_relativeSplatPath: true } }
     )
+
+    render(<RouterProvider router={router} />)
 
     expect(screen.getByLabelText(/correo/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/contraseña/i)).toBeInTheDocument()
@@ -52,11 +64,12 @@ describe('LoginForm Integration', () => {
   })
 
   it('shows validation errors for empty fields', async () => {
-    render(
-      <BrowserRouter>
-        <LoginForm />
-      </BrowserRouter>
+    const router = createMemoryRouter(
+      [{ path: '/', element: <LoginForm /> }],
+      { future: { v7_startTransition: true, v7_relativeSplatPath: true } }
     )
+
+    render(<RouterProvider router={router} />)
 
     const submitButton = screen.getByRole('button', {
       name: /iniciar sesi[óo]n/i,
@@ -69,11 +82,12 @@ describe('LoginForm Integration', () => {
   })
 
   it('shows validation error for invalid email', async () => {
-    render(
-      <BrowserRouter>
-        <LoginForm />
-      </BrowserRouter>
+    const router = createMemoryRouter(
+      [{ path: '/', element: <LoginForm /> }],
+      { future: { v7_startTransition: true, v7_relativeSplatPath: true } }
     )
+
+    render(<RouterProvider router={router} />)
 
     const emailInput = screen.getByLabelText(/correo/i)
     const submitButton = screen.getByRole('button', {
@@ -100,12 +114,15 @@ describe('LoginForm Integration', () => {
     }
 
     vi.mocked(authService.login).mockResolvedValue(mockResponse)
+    tokenMocks.getUserRole.mockReturnValue(UserRole.CLIENTE)
+    tokenMocks.getRoleHomePath.mockReturnValue('/client/restaurants')
 
-    render(
-      <BrowserRouter>
-        <LoginForm />
-      </BrowserRouter>
+    const router = createMemoryRouter(
+      [{ path: '/', element: <LoginForm /> }],
+      { future: { v7_startTransition: true, v7_relativeSplatPath: true } }
     )
+
+    render(<RouterProvider router={router} />)
 
     const emailInput = screen.getByLabelText(/correo/i)
     const passwordInput = screen.getByLabelText(/contraseña/i)
@@ -122,6 +139,8 @@ describe('LoginForm Integration', () => {
         correo: 'test@example.com',
         clave: 'password123',
       })
+      expect(mockLogin).toHaveBeenCalledWith('mock-jwt-token')
+      expect(mockNavigate).toHaveBeenCalledWith('/client/restaurants')
     })
   })
 
@@ -134,11 +153,12 @@ describe('LoginForm Integration', () => {
       },
     })
 
-    render(
-      <BrowserRouter>
-        <LoginForm />
-      </BrowserRouter>
+    const router = createMemoryRouter(
+      [{ path: '/', element: <LoginForm /> }],
+      { future: { v7_startTransition: true, v7_relativeSplatPath: true } }
     )
+
+    render(<RouterProvider router={router} />)
 
     const emailInput = screen.getByLabelText(/correo/i)
     const passwordInput = screen.getByLabelText(/contraseña/i)
@@ -160,11 +180,12 @@ describe('LoginForm Integration', () => {
       () => new Promise((resolve) => setTimeout(resolve, 1000))
     )
 
-    render(
-      <BrowserRouter>
-        <LoginForm />
-      </BrowserRouter>
+    const router = createMemoryRouter(
+      [{ path: '/', element: <LoginForm /> }],
+      { future: { v7_startTransition: true, v7_relativeSplatPath: true } }
     )
+
+    render(<RouterProvider router={router} />)
 
     const emailInput = screen.getByLabelText(/correo/i)
     const passwordInput = screen.getByLabelText(/contraseña/i)

@@ -4,7 +4,8 @@
  */
 
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
-import { getToken, removeToken } from '@infrastructure/auth/tokenManager'
+import { getToken } from '@infrastructure/auth/tokenManager'
+import { useAuthStore } from '@infrastructure/auth/authStore'
 
 /**
  * Create axios instance with default config
@@ -47,13 +48,17 @@ axiosInstance.interceptors.response.use(
   (error: AxiosError) => {
     // Handle 401 Unauthorized - Token expired or invalid
     if (error.response?.status === 401) {
-      // Remove invalid token
-      removeToken()
+      // Clear auth state via store to keep SPA in sync
+      const { logout } = useAuthStore.getState()
+      logout()
 
-      // Redirect to login (only if not already there)
-      if (!window.location.pathname.includes('/login')) {
-        window.location.href = '/login'
-      }
+      window.dispatchEvent(
+        new CustomEvent('auth:unauthorized', {
+          detail: {
+            message: 'Tu sesión ha expirado. Por favor inicia sesión nuevamente.',
+          },
+        })
+      )
     }
 
     // Handle 403 Forbidden - Insufficient permissions
