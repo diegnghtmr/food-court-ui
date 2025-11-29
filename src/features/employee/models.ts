@@ -1,36 +1,68 @@
-export interface Order {
-  id: string
-  clientId: string
-  clientName?: string
-  restaurantId: string
-  status: string
-  items: OrderItem[]
-  totalAmount: number
-  createdAt: string
-  updatedAt: string
-}
+import { OrderStatus } from '@shared/types'
 
+/**
+ * Order Item Interface
+ * Represents an individual item within an order
+ */
 export interface OrderItem {
-  dishId: string
-  dishName: string
-  quantity: number
-  price: number
+  id: number
+  platoId: number
+  platoNombre: string
+  cantidad: number
+  precio: number
 }
 
-export interface UpdateOrderStatusData {
-  orderId: string
-  newStatus: string
-  securityPin?: string
+/**
+ * Order Interface
+ * Represents a complete order in the system
+ */
+export interface Order {
+  id: number
+  restauranteId: number
+  clienteId: number
+  clienteNombre: string
+  clienteCorreo: string
+  items: OrderItem[]
+  estado: OrderStatus
+  empleadoId?: number
+  pin?: string // Only visible when estado = LISTO
+  fechaCreacion: string
+  fechaActualizacion?: string
 }
 
+/**
+ * Orders grouped by status
+ * Used for Kanban board organization
+ */
 export interface OrdersByStatus {
-  pending: Order[]
-  preparing: Order[]
-  ready: Order[]
-  delivered: Order[]
+  PENDIENTE: Order[]
+  EN_PREPARACION: Order[]
+  LISTO: Order[]
+  ENTREGADO: Order[]
 }
 
-export interface PinValidation {
-  orderId: string
+/**
+ * Update Order Status Request
+ * Payload for status transition endpoints
+ */
+export interface UpdateOrderStatusData {
+  nuevoEstado: OrderStatus
+  empleadoId?: number
+}
+
+/**
+ * PIN Validation Request
+ * Payload for PIN verification endpoint
+ */
+export interface PinValidationRequest {
   pin: string
+}
+
+/**
+ * PIN Validation Response
+ * Response from PIN verification endpoint
+ */
+export interface PinValidationResponse {
+  valido: boolean
+  mensaje?: string
 }

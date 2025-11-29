@@ -1,72 +1,84 @@
-import type { Order, OrdersByStatus } from '../models'
+import axiosInstance from '@infrastructure/api/axiosInstance'
+import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
+import { Order, PinValidationResponse } from '../models'
+import { OrderStatus } from '@shared/types'
 
+/**
+ * Order Management Service
+ * Handles all employee-related order operations
+ */
 export const orderManagementService = {
-  getOrdersByStatus: async (_restaurantId: string): Promise<OrdersByStatus> => {
-    // TODO: Implement get orders by status API call
-    return Promise.resolve({
-      pending: [],
-      preparing: [],
-      ready: [],
-      delivered: [],
-    })
+  /**
+   * Get orders by status and restaurant
+   * @param restaurantId - Restaurant ID
+   * @param status - Order status to filter
+   * @returns Array of orders
+   */
+  getOrdersByStatus: async (
+    restaurantId: number,
+    status: OrderStatus
+  ): Promise<Order[]> => {
+    const response = await axiosInstance.get(
+      `${API_ENDPOINTS.PEDIDOS}/pedidos`,
+      {
+        params: {
+          restauranteId: restaurantId,
+          estado: status,
+        },
+      }
+    )
+    return response.data
   },
 
-  assignOrderToEmployee: async (orderId: string): Promise<Order> => {
-    // TODO: Implement assign order API call
-    return Promise.resolve({
-      id: orderId,
-      clientId: '1',
-      restaurantId: '1',
-      status: 'PREPARING',
-      items: [],
-      totalAmount: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    })
-  },
-
-  markOrderReady: async (orderId: string): Promise<Order> => {
-    // TODO: Implement mark order ready API call
-    return Promise.resolve({
-      id: orderId,
-      clientId: '1',
-      restaurantId: '1',
-      status: 'READY',
-      items: [],
-      totalAmount: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    })
-  },
-
-  deliverOrder: async (
-    orderId: string,
-    _securityPin: string
+  /**
+   * Assign order to employee (PENDIENTE -> EN_PREPARACION)
+   * @param orderId - Order ID to assign
+   * @param employeeId - Employee ID
+   * @returns Updated order
+   */
+  assignOrderToEmployee: async (
+    orderId: number,
+    employeeId: number
   ): Promise<Order> => {
-    // TODO: Implement deliver order API call (requires PIN validation)
-    return Promise.resolve({
-      id: orderId,
-      clientId: '1',
-      restaurantId: '1',
-      status: 'DELIVERED',
-      items: [],
-      totalAmount: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    })
+    const response = await axiosInstance.patch(
+      `${API_ENDPOINTS.PEDIDOS}/pedidos/${orderId}/asignar`,
+      {
+        empleadoId: employeeId,
+        nuevoEstado: OrderStatus.EN_PREPARACION,
+      }
+    )
+    return response.data
   },
 
-  cancelOrder: async (orderId: string): Promise<Order> => {
-    // TODO: Implement cancel order API call
-    return Promise.resolve({
-      id: orderId,
-      clientId: '1',
-      restaurantId: '1',
-      status: 'CANCELLED',
-      items: [],
-      totalAmount: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    })
+  /**
+   * Mark order as ready (EN_PREPARACION -> LISTO)
+   * @param orderId - Order ID
+   * @returns Updated order with PIN
+   */
+  markOrderReady: async (orderId: number): Promise<Order> => {
+    const response = await axiosInstance.patch(
+      `${API_ENDPOINTS.PEDIDOS}/pedidos/${orderId}/estado`,
+      {
+        nuevoEstado: OrderStatus.LISTO,
+      }
+    )
+    return response.data
+  },
+
+  /**
+   * Validate PIN and deliver order (LISTO -> ENTREGADO)
+   * @param orderId - Order ID
+   * @param pin - Security PIN from client
+   * @returns Validation response
+   */
+  deliverOrder: async (
+    orderId: number,
+    pin: string
+  ): Promise<PinValidationResponse> => {
+    const response = await axiosInstance.post(
+      `${API_ENDPOINTS.PEDIDOS}/pedidos/${orderId}/validar-pin`,
+      { pin }
+    )
+    return response.data
   },
 }

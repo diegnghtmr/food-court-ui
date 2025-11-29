@@ -1,38 +1,25 @@
+import axiosInstance from '@infrastructure/api/axiosInstance'
+import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
 import type { Dish } from '../models'
 
+/**
+ * Dish service for client module
+ * Handles all dish-related API calls
+ */
 export const dishService = {
-  getDishesByRestaurant: async (
-    _restaurantId: string,
-    _page: number = 0,
-    _size: number = 10,
-    _category?: string
-  ): Promise<{ content: Dish[]; totalPages: number }> => {
-    // TODO: Implement get dishes by restaurant API call with pagination and filter
-    return Promise.resolve({
-      content: [],
-      totalPages: 0,
-    })
-  },
-
-  getDishById: async (id: string): Promise<Dish> => {
-    // TODO: Implement get dish by id API call
-    return Promise.resolve({
-      id,
-      name: 'Mock Dish',
-      description: 'Mock description',
-      price: 0,
-      imageUrl: 'https://example.com/dish.jpg',
-      category: 'APPETIZER',
-      restaurantId: '1',
-      active: true,
-    })
-  },
-
-  searchDishes: async (
-    _restaurantId: string,
-    _query: string
-  ): Promise<Dish[]> => {
-    // TODO: Implement search dishes API call
-    return Promise.resolve([])
+  /**
+   * Get all active dishes by restaurant ID
+   */
+  getDishesByRestaurant: async (restaurantId: number): Promise<Dish[]> => {
+    const response = await axiosInstance.get(
+      `${API_ENDPOINTS.PLAZOLETA}/plazoleta/platos`,
+      {
+        params: {
+          restauranteId: restaurantId,
+          activo: true,
+        },
+      }
+    )
+    return response.data
   },
 }

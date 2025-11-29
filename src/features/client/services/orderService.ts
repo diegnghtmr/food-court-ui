@@ -1,50 +1,49 @@
+import axiosInstance from '@infrastructure/api/axiosInstance'
+import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
 import type { CreateOrderData, ClientOrder } from '../models'
 
+/**
+ * Order service for client module
+ * Handles all order-related API calls
+ */
 export const orderService = {
-  createOrder: async (data: CreateOrderData): Promise<ClientOrder> => {
-    // TODO: Implement create order API call
-    return Promise.resolve({
-      id: '1',
-      restaurantId: data.restaurantId,
-      status: 'PENDING',
-      items: [],
-      totalAmount: 0,
-      securityPin: '123456',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    })
+  /**
+   * Create a new order
+   */
+  createOrder: async (orderData: CreateOrderData): Promise<ClientOrder> => {
+    const response = await axiosInstance.post(
+      `${API_ENDPOINTS.PEDIDOS}/pedidos`,
+      orderData
+    )
+    return response.data
   },
 
+  /**
+   * Get all orders for the authenticated client
+   */
   getMyOrders: async (): Promise<ClientOrder[]> => {
-    // TODO: Implement get my orders API call
-    return Promise.resolve([])
+    const response = await axiosInstance.get(
+      `${API_ENDPOINTS.TRAZABILIDAD}/trazabilidad/pedidos/mis-pedidos`
+    )
+    return response.data
   },
 
-  getOrderById: async (id: string): Promise<ClientOrder> => {
-    // TODO: Implement get order by id API call
-    return Promise.resolve({
-      id,
-      restaurantId: '1',
-      status: 'PENDING',
-      items: [],
-      totalAmount: 0,
-      securityPin: '123456',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    })
+  /**
+   * Cancel a pending order
+   */
+  cancelOrder: async (orderId: number): Promise<void> => {
+    await axiosInstance.patch(
+      `${API_ENDPOINTS.PEDIDOS}/pedidos/${orderId}/cancelar`
+    )
   },
 
-  cancelOrder: async (id: string): Promise<ClientOrder> => {
-    // TODO: Implement cancel order API call
-    return Promise.resolve({
-      id,
-      restaurantId: '1',
-      status: 'CANCELLED',
-      items: [],
-      totalAmount: 0,
-      securityPin: '123456',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    })
+  /**
+   * Get PIN for a ready order (CRITICAL for pickup)
+   */
+  getOrderPin: async (orderId: number): Promise<string> => {
+    const response = await axiosInstance.get(
+      `${API_ENDPOINTS.PEDIDOS}/pedidos/${orderId}/pin`
+    )
+    return response.data.pin
   },
 }

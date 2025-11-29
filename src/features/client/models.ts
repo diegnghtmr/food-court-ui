@@ -1,59 +1,76 @@
+import { DishCategory, OrderStatus } from '@shared/types'
+
+/**
+ * Restaurant model matching backend API structure
+ */
 export interface Restaurant {
-  id: string
-  name: string
-  address: string
-  phone: string
-  urlLogo: string
+  id: number
+  nombre: string
   nit: string
+  direccion: string
+  telefono: string
+  urlLogo: string
+  idPropietario: number
 }
 
+/**
+ * Dish model matching backend API structure
+ */
 export interface Dish {
-  id: string
-  name: string
-  description: string
-  price: number
-  imageUrl: string
-  category: string
-  restaurantId: string
-  active: boolean
+  id: number
+  nombre: string
+  precio: number
+  descripcion: string
+  urlImagen: string
+  categoria: DishCategory
+  activo: boolean
+  restauranteId: number
 }
 
+/**
+ * Cart item for local state management
+ */
 export interface CartItem {
-  dishId: string
-  dishName: string
-  price: number
-  quantity: number
-  restaurantId: string
+  plato: Dish
+  cantidad: number
 }
 
+/**
+ * Data transfer object for order creation
+ */
 export interface CreateOrderData {
-  restaurantId: string
-  items: {
-    dishId: string
-    quantity: number
-  }[]
+  restauranteId: number
+  platos: Array<{
+    platoId: number
+    cantidad: number
+  }>
 }
 
+/**
+ * Client order model with full details
+ */
 export interface ClientOrder {
-  id: string
-  restaurantId: string
-  restaurantName?: string
-  status: string
-  items: {
-    dishId: string
-    dishName: string
-    quantity: number
-    price: number
-  }[]
-  totalAmount: number
-  securityPin: string
-  createdAt: string
-  updatedAt: string
+  id: number
+  restauranteId: number
+  restauranteNombre: string
+  items: Array<{
+    platoNombre: string
+    cantidad: number
+    precio: number
+  }>
+  total: number
+  estado: OrderStatus
+  pin?: string
+  fechaCreacion: string
 }
 
-export interface OrderNotification {
-  orderId: string
-  status: string
-  message: string
-  timestamp: string
+/**
+ * Paginated response wrapper
+ */
+export interface PaginatedResponse<T> {
+  content: T[]
+  totalPages: number
+  totalElements: number
+  number: number
+  size: number
 }

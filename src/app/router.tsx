@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
     path: '/login',
     element: (
       <GuestGuard>
-        <Auth mode="login" />
+        <Auth />
       </GuestGuard>
     ),
   },
@@ -55,7 +55,7 @@ export const router = createBrowserRouter([
     path: '/register',
     element: (
       <GuestGuard>
-        <Auth mode="register" />
+        <Auth />
       </GuestGuard>
     ),
   },

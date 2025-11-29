@@ -1,12 +1,23 @@
 import { create } from 'zustand'
-import type { CartItem } from './models'
+import { CartItem, Dish } from './models'
 
+/**
+ * Cart state management with Zustand
+ * Handles shopping cart operations with restaurant validation
+ */
 interface CartState {
   items: CartItem[]
-  restaurantId: string | null
-  addItem: (item: CartItem) => void
-  removeItem: (dishId: string) => void
-  updateQuantity: (dishId: string, quantity: number) => void
+  restaurantId: number | null
+  restaurantName: string
+
+  addItem: (
+    dish: Dish,
+    quantity: number,
+    restaurantId: number,
+    restaurantName: string
+  ) => void
+  removeItem: (dishId: number) => void
+  updateQuantity: (dishId: number, quantity: number) => void
   clearCart: () => void
   getTotalAmount: () => number
   getItemCount: () => number
@@ -15,70 +26,94 @@ interface CartState {
 export const useCartStore = create<CartState>((set, get) => ({
   items: [],
   restaurantId: null,
+  restaurantName: '',
 
-  addItem: (item: CartItem) => {
-    const { items, restaurantId } = get()
+  /**
+   * Add item to cart with restaurant validation
+   * Throws error if trying to add from different restaurant
+   */
+  addItem: (dish, quantity, restaurantId, restaurantName) => {
+    const state = get()
 
-    // Prevent adding items from different restaurants
-    if (restaurantId && restaurantId !== item.restaurantId) {
-      throw new Error('Cannot add items from different restaurants')
+    // Critical validation: Only one restaurant per cart
+    if (state.restaurantId && state.restaurantId !== restaurantId) {
+      throw new Error('Solo puedes pedir de un restaurante a la vez')
     }
 
-    const existingItem = items.find((i) => i.dishId === item.dishId)
+    const existingItem = state.items.find((item) => item.plato.id === dish.id)
 
     if (existingItem) {
       // Update quantity if item already exists
       set({
-        items: items.map((i) =>
-          i.dishId === item.dishId
-            ? { ...i, quantity: i.quantity + item.quantity }
-            : i
+        items: state.items.map((item) =>
+          item.plato.id === dish.id
+            ? { ...item, cantidad: item.cantidad + quantity }
+            : item
         ),
       })
     } else {
-      // Add new item
+      // Add new item and set restaurant
       set({
-        items: [...items, item],
-        restaurantId: item.restaurantId,
+        items: [...state.items, { plato: dish, cantidad: quantity }],
+        restaurantId,
+        restaurantName,
       })
     }
   },
 
-  removeItem: (dishId: string) => {
-    const { items } = get()
-    const updatedItems = items.filter((i) => i.dishId !== dishId)
+  /**
+   * Remove item from cart
+   * Clears restaurant when cart becomes empty
+   */
+  removeItem: (dishId) => {
+    const state = get()
+    const newItems = state.items.filter((item) => item.plato.id !== dishId)
 
     set({
-      items: updatedItems,
-      restaurantId: updatedItems.length > 0 ? get().restaurantId : null,
+      items: newItems,
+      restaurantId: newItems.length === 0 ? null : state.restaurantId,
+      restaurantName: newItems.length === 0 ? '' : state.restaurantName,
     })
   },
 
-  updateQuantity: (dishId: string, quantity: number) => {
+  /**
+   * Update item quantity
+   * Removes item if quantity is 0 or less
+   */
+  updateQuantity: (dishId, quantity) => {
     if (quantity <= 0) {
       get().removeItem(dishId)
       return
     }
 
     set({
-      items: get().items.map((i) =>
-        i.dishId === dishId ? { ...i, quantity } : i
+      items: get().items.map((item) =>
+        item.plato.id === dishId ? { ...item, cantidad: quantity } : item
       ),
     })
   },
 
+  /**
+   * Clear entire cart
+   */
   clearCart: () => {
-    set({ items: [], restaurantId: null })
+    set({ items: [], restaurantId: null, restaurantName: '' })
   },
 
+  /**
+   * Calculate total cart amount
+   */
   getTotalAmount: () => {
     return get().items.reduce(
-      (total, item) => total + item.price * item.quantity,
+      (total, item) => total + item.plato.precio * item.cantidad,
       0
     )
   },
 
+  /**
+   * Get total number of items in cart
+   */
   getItemCount: () => {
-    return get().items.reduce((total, item) => total + item.quantity, 0)
+    return get().items.reduce((count, item) => count + item.cantidad, 0)
   },
 }))

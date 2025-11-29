@@ -7,6 +7,7 @@ interface BrutalistInputProps {
   required?: boolean
   value?: string | number
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  onKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void
   placeholder?: string
   disabled?: boolean
   name?: string
@@ -25,6 +26,7 @@ export const BrutalistInput = React.forwardRef<
       required = false,
       value,
       onChange,
+      onKeyPress,
       placeholder,
       disabled = false,
       name,
@@ -83,6 +85,7 @@ export const BrutalistInput = React.forwardRef<
           type={type}
           value={value}
           onChange={onChange}
+          onKeyPress={onKeyPress}
           placeholder={placeholder}
           disabled={disabled}
           required={required}
