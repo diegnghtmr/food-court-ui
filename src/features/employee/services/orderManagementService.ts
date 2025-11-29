@@ -3,26 +3,95 @@ import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
 import { Order, PinValidationResponse } from '../models'
 import { OrderStatus, isValidOrderStatus } from '@shared/types'
 
-const mapOrder = (data: any): Order => ({
-  id: Number(data.id),
-  restauranteId: data.restaurantId,
-  clienteId: data.clientId,
-  clienteNombre: '',
-  clienteCorreo: '',
-  items: (data.dishes ?? []).map((dish: any) => ({
-    id: dish.dishId,
-    platoId: dish.dishId,
-    platoNombre: `Plato ${dish.dishId}`,
-    cantidad: dish.quantity,
-    precio: 0,
-  })),
-  estado: isValidOrderStatus(data.status)
-    ? (data.status as OrderStatus)
-    : OrderStatus.PENDIENTE,
-  empleadoId: data.chefId ?? undefined,
-  pin: data.pin,
-  fechaCreacion: data.date,
-})
+type DishInfo = { nombre: string; precio: number }
+type DishMap = Map<number, DishInfo>
+type UserInfo = { nombre: string; correo: string }
+
+const dishesCache: Map<number, DishMap> = new Map()
+const userCache: Map<number, UserInfo> = new Map()
+
+const fetchDishesByRestaurant = async (
+  restaurantId: number
+): Promise<DishMap> => {
+  if (dishesCache.has(restaurantId)) {
+    return dishesCache.get(restaurantId) as DishMap
+  }
+
+  const response = await axiosInstance.get(
+    `${API_ENDPOINTS.PLAZOLETA}/dishes/restaurant/${restaurantId}`,
+    { params: { page: 0, size: 200 } }
+  )
+
+  const raw = Array.isArray(response.data)
+    ? response.data
+    : Array.isArray(response.data?.content)
+      ? response.data.content
+      : []
+
+  const map: DishMap = new Map()
+  raw.forEach((d: any) => {
+    if (d?.id) {
+      map.set(Number(d.id), {
+        nombre: d.name ?? `Plato ${d.id}`,
+        precio: Number(d.price) || 0,
+      })
+    }
+  })
+
+  dishesCache.set(restaurantId, map)
+  return map
+}
+
+const fetchUser = async (userId: number): Promise<UserInfo> => {
+  if (userCache.has(userId)) {
+    return userCache.get(userId) as UserInfo
+  }
+
+  const response = await axiosInstance.get(
+    `${API_ENDPOINTS.USUARIOS}/user/${userId}`
+  )
+  const data = response.data
+  const info: UserInfo = {
+    nombre: `${data.firstName ?? ''} ${data.lastName ?? ''}`.trim(),
+    correo: data.email ?? '',
+  }
+  userCache.set(userId, info)
+  return info
+}
+
+const mapOrder = async (data: any): Promise<Order> => {
+  const restaurantId = Number(data.restaurantId)
+  const dishesMap = await fetchDishesByRestaurant(restaurantId)
+  const clienteId = Number(data.clientId)
+  const userInfo = await fetchUser(clienteId)
+
+  const items =
+    (data.dishes ?? []).map((dish: any) => {
+      const dishInfo = dishesMap.get(Number(dish.dishId))
+      return {
+        id: dish.dishId,
+        platoId: dish.dishId,
+        platoNombre: dishInfo?.nombre ?? `Plato ${dish.dishId}`,
+        cantidad: dish.quantity,
+        precio: dishInfo?.precio ?? 0,
+      }
+    }) ?? []
+
+  return {
+    id: Number(data.id),
+    restauranteId: restaurantId,
+    clienteId,
+    clienteNombre: userInfo.nombre || `Cliente ${clienteId}`,
+    clienteCorreo: userInfo.correo,
+    items,
+    estado: isValidOrderStatus(data.status)
+      ? (data.status as OrderStatus)
+      : OrderStatus.PENDIENTE,
+    empleadoId: data.chefId ?? undefined,
+    pin: data.pin,
+    fechaCreacion: data.date,
+  }
+}
 
 /**
  * Order Management Service
@@ -46,7 +115,8 @@ export const orderManagementService = {
     )
     const data = response.data
     const content = Array.isArray(data?.content) ? data.content : data
-    return (content ?? []).map(mapOrder)
+    const orders = content ?? []
+    return Promise.all(orders.map((o: any) => mapOrder(o)))
   },
 
   /**

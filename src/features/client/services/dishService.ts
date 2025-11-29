@@ -39,7 +39,7 @@ export const dishService = {
       { params: { page: 0, size: 50 } }
     )
     const data = response.data
-    const items = Array.isArray(data) ? data : data?.content ?? []
+    const items = Array.isArray(data) ? data : (data?.content ?? [])
     return items.map(mapDish)
   },
 }

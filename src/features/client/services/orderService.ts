@@ -4,11 +4,110 @@ import { getUserId } from '@infrastructure/auth/tokenManager'
 import type { CreateOrderData, ClientOrder } from '../models'
 import { OrderStatus, isValidOrderStatus } from '@shared/types'
 
+type RestaurantMap = Map<number, { nombre: string }>
+type DishInfo = { nombre: string; precio: number }
+type DishMap = Map<number, DishInfo>
+
+const restaurantCache: RestaurantMap = new Map()
+const dishesCache: Map<number, DishMap> = new Map()
+
 const mapOrderStatus = (status: string | undefined): OrderStatus => {
   if (status && isValidOrderStatus(status)) {
     return status
   }
   return OrderStatus.PENDIENTE
+}
+
+const fetchRestaurants = async (): Promise<RestaurantMap> => {
+  if (restaurantCache.size > 0) return restaurantCache
+
+  const response = await axiosInstance.get(
+    `${API_ENDPOINTS.PLAZOLETA}/restaurants`,
+    { params: { page: 0, size: 200 } }
+  )
+
+  const raw = Array.isArray(response.data)
+    ? response.data
+    : Array.isArray(response.data?.content)
+      ? response.data.content
+      : []
+
+  raw.forEach((r: any) => {
+    if (r?.id) {
+      restaurantCache.set(Number(r.id), { nombre: r.name })
+    }
+  })
+
+  return restaurantCache
+}
+
+const fetchDishesByRestaurant = async (
+  restaurantId: number
+): Promise<DishMap> => {
+  if (dishesCache.has(restaurantId)) {
+    return dishesCache.get(restaurantId) as DishMap
+  }
+
+  const response = await axiosInstance.get(
+    `${API_ENDPOINTS.PLAZOLETA}/dishes/restaurant/${restaurantId}`,
+    { params: { page: 0, size: 200 } }
+  )
+
+  const raw = Array.isArray(response.data)
+    ? response.data
+    : Array.isArray(response.data?.content)
+      ? response.data.content
+      : []
+
+  const map: DishMap = new Map()
+  raw.forEach((d: any) => {
+    if (d?.id) {
+      map.set(Number(d.id), {
+        nombre: d.name ?? `Plato ${d.id}`,
+        precio: Number(d.price) || 0,
+      })
+    }
+  })
+
+  dishesCache.set(restaurantId, map)
+  return map
+}
+
+const mapOrderResponse = async (
+  data: any,
+  fallbackStatus?: OrderStatus
+): Promise<ClientOrder> => {
+  const restaurants = await fetchRestaurants()
+  const restaurantId = Number(data.restaurantId)
+  const dishesMap = await fetchDishesByRestaurant(restaurantId)
+
+  const items =
+    (data.dishes ?? []).map((dish: any) => {
+      const dishInfo = dishesMap.get(Number(dish.dishId))
+      return {
+        platoNombre: dishInfo?.nombre ?? `Plato ${dish.dishId}`,
+        cantidad: dish.quantity,
+        precio: dishInfo?.precio ?? 0,
+      }
+    }) ?? []
+
+  const total = items.reduce(
+    (sum, item) => sum + item.precio * item.cantidad,
+    0
+  )
+
+  return {
+    id: Number(data.id),
+    restauranteId: restaurantId,
+    restauranteNombre:
+      restaurants.get(restaurantId)?.nombre ??
+      `Restaurante ${restaurantId}`,
+    items,
+    total,
+    estado: mapOrderStatus(data.status ?? fallbackStatus),
+    pin: data.pin ?? undefined,
+    fechaCreacion: data.date,
+  }
 }
 
 /**
@@ -32,22 +131,8 @@ export const orderService = {
       `${API_ENDPOINTS.PEDIDOS}/orders`,
       payload
     )
-    const data = response.data
 
-    return {
-      id: Number(data.id),
-      restauranteId: data.restaurantId,
-      restauranteNombre: '',
-      items: (data.dishes ?? []).map((dish: any) => ({
-        platoNombre: `Plato ${dish.dishId}`,
-        cantidad: dish.quantity,
-        precio: 0,
-      })),
-      total: 0,
-      estado: mapOrderStatus(data.status),
-      pin: undefined,
-      fechaCreacion: data.date,
-    }
+    return mapOrderResponse(response.data)
   },
 
   /**
@@ -58,24 +143,65 @@ export const orderService = {
     if (!clientId) {
       throw new Error('User not authenticated')
     }
-    const response = await axiosInstance.get(
+    const traceResponse = await axiosInstance.get(
       `${API_ENDPOINTS.TRAZABILIDAD}/trace/client/${clientId}`
     )
-    return response.data
+
+    const traces: Array<any> = Array.isArray(traceResponse.data)
+      ? traceResponse.data
+      : []
+
+    if (traces.length === 0) {
+      return []
+    }
+
+    const latestStatusByOrder: Map<number, OrderStatus> = new Map()
+    traces.forEach((t) => {
+      const orderId = Number(t.orderId)
+      const status = mapOrderStatus(t.newState)
+      latestStatusByOrder.set(orderId, status)
+    })
+
+    const orderIds = Array.from(new Set(traces.map((t) => Number(t.orderId))))
+
+    const ordersDetails = await Promise.all(
+      orderIds.map(async (id) => {
+        try {
+          const res = await axiosInstance.get(
+            `${API_ENDPOINTS.PEDIDOS}/orders/${id}`
+          )
+          return res.data
+        } catch (err) {
+          console.error(`No se pudo obtener el pedido ${id}`, err)
+          return null
+        }
+      })
+    )
+
+    const mappedOrders: ClientOrder[] = []
+    for (const detail of ordersDetails) {
+      if (!detail) continue
+      const orderId = Number(detail.id)
+      const fallbackStatus = latestStatusByOrder.get(orderId)
+      mappedOrders.push(await mapOrderResponse(detail, fallbackStatus))
+    }
+
+    return mappedOrders.sort((a, b) => b.id - a.id)
   },
 
   /**
    * Cancel a pending order
    */
   cancelOrder: async (orderId: number): Promise<void> => {
-    await axiosInstance.patch(`${API_ENDPOINTS.PEDIDOS}/orders/cancel/${orderId}`)
+    await axiosInstance.patch(
+      `${API_ENDPOINTS.PEDIDOS}/orders/cancel/${orderId}`
+    )
   },
 
   /**
-   * Get PIN for a ready order 
+   * Get PIN for a ready order
    */
   getOrderPin: async (orderId: number): Promise<string> => {
-    // Backend does not expose a PIN retrieval endpoint; fallback to order details
     const response = await axiosInstance.get(
       `${API_ENDPOINTS.PEDIDOS}/orders/${orderId}`
     )
