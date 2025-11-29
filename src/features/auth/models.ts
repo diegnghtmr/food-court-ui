@@ -4,7 +4,6 @@
  */
 
 import { z } from 'zod'
-import { UserRole } from '@shared/types'
 
 /**
  * Login Credentials Interface
@@ -22,20 +21,17 @@ export interface RegisterData {
   apellido: string
   documento: string
   celular: string
+  fechaNacimiento: string
   correo: string
   clave: string
 }
 
 /**
  * Auth Response from API
+ * Backend only returns the token, user info is decoded from JWT
  */
 export interface AuthResponse {
   token: string
-  user: {
-    id: string
-    email: string
-    role: UserRole
-  }
 }
 
 /**
@@ -81,6 +77,15 @@ export const registerSchema = z.object({
       /^\+?57?\d{10}$/,
       'El celular debe tener el formato +573001234567 o 3001234567'
     ),
+  fechaNacimiento: z
+    .string()
+    .min(1, 'La fecha de nacimiento es requerida')
+    .refine((date) => {
+      const birthDate = new Date(date)
+      const today = new Date()
+      const age = today.getFullYear() - birthDate.getFullYear()
+      return age >= 18
+    }, 'Debes ser mayor de 18 años'),
   correo: z
     .string()
     .min(1, 'El correo es requerido')

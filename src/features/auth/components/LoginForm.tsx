@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import { AxiosError } from 'axios'
 import { BrutalistInput, BrutalistButton, ErrorAlert } from '@shared/components'
 import { useAuthActions } from '@infrastructure/auth'
-import { getRoleHomePath } from '@infrastructure/auth/tokenManager'
+import { getUserRole, getRoleHomePath } from '@infrastructure/auth/tokenManager'
 import { authService } from '../services/authService'
 import { loginSchema, type LoginFormData } from '../models'
 
@@ -40,10 +40,17 @@ export const LoginForm = ({ onSwitchToRegister }: LoginFormProps) => {
     try {
       const response = await authService.login(data)
 
+      // Save token and update auth state
       login(response.token)
 
-      const homePath = getRoleHomePath(response.user.role)
-      navigate(homePath)
+      // Get role from decoded token and redirect to appropriate home
+      const role = getUserRole()
+      if (role) {
+        const homePath = getRoleHomePath(role)
+        navigate(homePath)
+      } else {
+        setErrorMessage('Error al obtener el rol del usuario.')
+      }
     } catch (error) {
       const axiosError = error as AxiosError<{ message?: string }>
       const message =

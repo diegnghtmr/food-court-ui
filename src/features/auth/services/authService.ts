@@ -14,9 +14,13 @@ export const authService = {
    * @returns Promise with token and user data
    */
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
+    // Map frontend fields (Spanish) to backend fields (English)
     const response = await axiosInstance.post(
-      `${API_ENDPOINTS.USUARIOS}/login`,
-      credentials
+      `${API_ENDPOINTS.USUARIOS}/auth/login`,
+      {
+        email: credentials.correo,
+        password: credentials.clave,
+      }
     )
     return response.data
   },
@@ -27,9 +31,15 @@ export const authService = {
    * @returns Promise<void> - No data returned, just success
    */
   register: async (userData: RegisterData): Promise<void> => {
-    await axiosInstance.post(`${API_ENDPOINTS.USUARIOS}/registrar`, {
-      ...userData,
-      rol: 'CLIENTE',
+    // Map frontend fields (Spanish) to backend fields (English)
+    await axiosInstance.post(`${API_ENDPOINTS.USUARIOS}/user/client`, {
+      firstName: userData.nombre,
+      lastName: userData.apellido,
+      documentNumber: userData.documento,
+      phone: userData.celular,
+      birthDate: userData.fechaNacimiento,
+      email: userData.correo,
+      password: userData.clave,
     })
   },
 }

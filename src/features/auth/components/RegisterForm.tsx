@@ -131,6 +131,16 @@ export const RegisterForm = ({
 
         <div>
           <BrutalistInput
+            label="Fecha de Nacimiento"
+            type="date"
+            error={errors.fechaNacimiento?.message}
+            disabled={isSubmitting}
+            {...register('fechaNacimiento')}
+          />
+        </div>
+
+        <div>
+          <BrutalistInput
             label="Correo Electrónico"
             type="email"
             placeholder="tu@correo.com"

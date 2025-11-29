@@ -7,11 +7,11 @@
  * Base URLs for each microservice
  */
 export const API_ENDPOINTS = {
-  USUARIOS: import.meta.env.VITE_API_USUARIOS_URL || 'http://localhost:8081',
-  PLAZOLETA: import.meta.env.VITE_API_PLAZOLETA_URL || 'http://localhost:8082',
-  PEDIDOS: import.meta.env.VITE_API_PEDIDOS_URL || 'http://localhost:8083',
+  USUARIOS: import.meta.env.VITE_API_USUARIOS_URL || 'http://localhost:8090/user-api',
+  PLAZOLETA: import.meta.env.VITE_API_PLAZOLETA_URL || 'http://localhost:8091/foodcourt-api',
+  PEDIDOS: import.meta.env.VITE_API_PEDIDOS_URL || 'http://localhost:8092/order-api',
   TRAZABILIDAD:
-    import.meta.env.VITE_API_TRAZABILIDAD_URL || 'http://localhost:8084',
+    import.meta.env.VITE_API_TRAZABILIDAD_URL || 'http://localhost:8093/traceability-api',
 } as const
 
 /**

@@ -5,7 +5,11 @@
       "Bash(npm run build:*)",
       "Bash(npx tsc:*)",
       "Bash(npm install:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(npm run lint)",
+      "Bash(if exist node_modules rmdir /s /q node_modules)",
+      "Bash(if exist package-lock.json del /f package-lock.json)"
     ],
     "deny": [],
     "ask": []

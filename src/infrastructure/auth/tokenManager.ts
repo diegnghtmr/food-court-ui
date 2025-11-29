@@ -9,13 +9,15 @@ import { UserRole } from '@shared/types'
 const TOKEN_KEY = 'jwt_token'
 
 /**
- * JWT Payload interface
+ * JWT Payload interface (matches backend token structure)
  */
 interface JwtPayload {
-  sub: string // Subject (usually user ID)
-  role: UserRole // User role
+  sub: string // Subject (email in this backend)
+  id: number // User ID
+  roles: string[] // User roles array
   exp: number // Expiration timestamp
   iat?: number // Issued at timestamp
+  restaurantId?: number // Restaurant ID (for owners/employees)
 }
 
 /**
@@ -65,6 +67,27 @@ export const decodeToken = (token: string): JwtPayload | null => {
 }
 
 /**
+ * Map backend role string to UserRole enum
+ * Backend uses ROLE_ prefix (e.g., ROLE_CLIENT, ROLE_OWNER)
+ */
+const mapRoleToEnum = (role: string): UserRole | null => {
+  // Remove ROLE_ prefix if present
+  const normalizedRole = role.toUpperCase().replace('ROLE_', '')
+  
+  const roleMap: Record<string, UserRole> = {
+    'ADMIN': UserRole.ADMINISTRADOR,
+    'ADMINISTRADOR': UserRole.ADMINISTRADOR,
+    'OWNER': UserRole.PROPIETARIO,
+    'PROPIETARIO': UserRole.PROPIETARIO,
+    'EMPLOYEE': UserRole.EMPLEADO,
+    'EMPLEADO': UserRole.EMPLEADO,
+    'CLIENT': UserRole.CLIENTE,
+    'CLIENTE': UserRole.CLIENTE,
+  }
+  return roleMap[normalizedRole] || null
+}
+
+/**
  * Get user role from token
  */
 export const getUserRole = (): UserRole | null => {
@@ -72,7 +95,10 @@ export const getUserRole = (): UserRole | null => {
   if (!token) return null
 
   const payload = decodeToken(token)
-  return payload?.role || null
+  if (!payload?.roles || payload.roles.length === 0) return null
+  
+  // Get the first role from the array and map it to UserRole enum
+  return mapRoleToEnum(payload.roles[0])
 }
 
 /**
@@ -83,7 +109,7 @@ export const getUserId = (): string | null => {
   if (!token) return null
 
   const payload = decodeToken(token)
-  return payload?.sub || null
+  return payload?.id?.toString() || null
 }
 
 /**
