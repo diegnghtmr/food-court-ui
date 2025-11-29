@@ -9,6 +9,7 @@ import {
 } from '@shared/components'
 import { analyticsService } from '../services/analyticsService'
 import type { EfficiencyReport as EfficiencyReportType } from '../models'
+import { getRestaurantId } from '@infrastructure/auth/tokenManager'
 
 type SortColumn = keyof EfficiencyReportType | null
 type SortDirection = 'asc' | 'desc'
@@ -64,8 +65,7 @@ const downloadBlob = (blob: Blob, filename: string): void => {
 }
 
 export const EfficiencyReport = () => {
-  // TODO: Get restaurantId from authentication context
-  const restaurantId = '1'
+  const restaurantId = getRestaurantId()?.toString() || ''
 
   // State
   const [startDate, setStartDate] = useState<string>('')
@@ -97,6 +97,12 @@ export const EfficiencyReport = () => {
     try {
       setLoading(true)
       setError('')
+
+      if (!restaurantId) {
+        setError('No se pudo determinar el restaurante del propietario.')
+        setReportData([])
+        return
+      }
 
       const data = await analyticsService.getEfficiencyReport(
         restaurantId,
@@ -207,9 +213,10 @@ export const EfficiencyReport = () => {
         endDate || undefined
       )
 
-      const filename = startDate && endDate
-        ? `eficiencia_${startDate}_${endDate}.xlsx`
-        : `eficiencia_${new Date().toISOString().split('T')[0]}.xlsx`
+      const filename =
+        startDate && endDate
+          ? `eficiencia_${startDate}_${endDate}.xlsx`
+          : `eficiencia_${new Date().toISOString().split('T')[0]}.xlsx`
 
       downloadBlob(blob, filename)
       setSuccess('Reporte exportado exitosamente')
@@ -218,9 +225,7 @@ export const EfficiencyReport = () => {
       setTimeout(() => setSuccess(''), 3000)
     } catch (err) {
       const errorMessage =
-        err instanceof Error
-          ? err.message
-          : 'Error al exportar el reporte'
+        err instanceof Error ? err.message : 'Error al exportar el reporte'
       setError(errorMessage)
     } finally {
       setExporting(false)
@@ -329,9 +334,9 @@ export const EfficiencyReport = () => {
               disabled={exporting || reportData.length === 0 || loading}
             >
               {exporting ? 'EXPORTANDO...' : 'EXPORTAR A EXCEL'}
-          </BrutalistButton>
-        </div>
-      </BrutalistCard>
+            </BrutalistButton>
+          </div>
+        </BrutalistCard>
       </div>
 
       {/* Report Table */}

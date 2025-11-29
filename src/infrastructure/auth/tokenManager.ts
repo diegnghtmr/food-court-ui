@@ -113,6 +113,17 @@ export const getUserId = (): string | null => {
 }
 
 /**
+ * Get restaurant ID from token (for owners/employees)
+ */
+export const getRestaurantId = (): number | null => {
+  const token = getToken()
+  if (!token) return null
+
+  const payload = decodeToken(token)
+  return payload?.restaurantId ?? null
+}
+
+/**
  * Check if token is expired
  */
 export const isTokenExpired = (token: string): boolean => {

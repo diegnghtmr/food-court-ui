@@ -22,6 +22,7 @@ import {
 import { dishService } from '../services/dishService'
 import { DishCategory, DISH_CATEGORY_LABELS } from '@shared/types'
 import type { CreateDishData, UpdateDishData, Dish } from '../models'
+import { getRestaurantId } from '@infrastructure/auth/tokenManager'
 
 /**
  * Component props
@@ -110,14 +111,18 @@ const DishFormCreate = () => {
     setSuccessMessage(null)
 
     try {
-      // TODO: Replace hardcoded restaurantId with actual user's restaurant
+      const restaurantId = getRestaurantId()
+      if (!restaurantId) {
+        throw new Error('No se pudo determinar el restaurante del propietario.')
+      }
+
       const createData: CreateDishData = {
         name: data.name,
         description: data.description,
         price: data.price,
         imageUrl: data.imageUrl,
         category: data.category,
-        restaurantId: '1', // TODO: Get from authenticated user context
+        restaurantId: restaurantId.toString(),
       }
 
       await dishService.createDish(createData)

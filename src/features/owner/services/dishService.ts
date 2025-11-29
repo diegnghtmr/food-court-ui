@@ -138,7 +138,8 @@ export const dishService = {
 
     return {
       content: mappedDishes,
-      totalPages: response.data.totalPages || Math.ceil(mappedDishes.length / size),
+      totalPages:
+        response.data.totalPages || Math.ceil(mappedDishes.length / size),
       totalElements: response.data.totalElements || mappedDishes.length,
       number: response.data.number ?? page,
       size: response.data.size ?? size,

@@ -15,6 +15,7 @@ import {
   ErrorAlert,
 } from '@shared/components'
 import { dishService } from '../services/dishService'
+import { getRestaurantId } from '@infrastructure/auth/tokenManager'
 import { DISH_CATEGORY_LABELS, DishCategory } from '@shared/types'
 import type { Dish } from '../models'
 
@@ -23,8 +24,7 @@ const ITEMS_PER_PAGE = 10
 export const DishesTable = () => {
   const navigate = useNavigate()
 
-  // TODO: Get restaurantId from owner profile once auth context is implemented
-  const restaurantId = '1'
+  const restaurantId = getRestaurantId()?.toString() || ''
 
   // State management
   const [dishes, setDishes] = useState<Dish[]>([])
@@ -50,6 +50,13 @@ export const DishesTable = () => {
   // Fetch dishes when page, category filter, or search term changes
   useEffect(() => {
     const fetchDishes = async () => {
+      if (!restaurantId) {
+        setError('No se pudo determinar el restaurante del propietario.')
+        setDishes([])
+        setTotalPages(0)
+        setLoading(false)
+        return
+      }
       try {
         setLoading(true)
         setError(null)
@@ -181,10 +188,12 @@ export const DishesTable = () => {
                 setCurrentPage(0)
               }}
               placeholder="Seleccionar categoría..."
-              options={Object.entries(DISH_CATEGORY_LABELS).map(([key, label]) => ({
-                label,
-                value: key,
-              }))}
+              options={Object.entries(DISH_CATEGORY_LABELS).map(
+                ([key, label]) => ({
+                  label,
+                  value: key,
+                })
+              )}
             />
 
             {/* Search Input */}
@@ -214,12 +223,7 @@ export const DishesTable = () => {
       </BrutalistCard>
 
       {/* Error Alert */}
-      {error && (
-        <ErrorAlert
-          message={error}
-          onClose={() => setError(null)}
-        />
-      )}
+      {error && <ErrorAlert message={error} onClose={() => setError(null)} />}
 
       {/* Table Section */}
       <BrutalistCard>
@@ -408,7 +412,9 @@ export const DishesTable = () => {
                           style={{
                             display: 'inline-block',
                             padding: '0.25rem 0.75rem',
-                            backgroundColor: dish.active ? '#00ff00' : '#ff0000',
+                            backgroundColor: dish.active
+                              ? '#00ff00'
+                              : '#ff0000',
                             color: '#000',
                             fontWeight: 'bold',
                             textTransform: 'uppercase',
@@ -447,8 +453,8 @@ export const DishesTable = () => {
                             {togglingDishId === dish.id
                               ? 'Procesando...'
                               : dish.active
-                              ? 'Desactivar'
-                              : 'Activar'}
+                                ? 'Desactivar'
+                                : 'Activar'}
                           </BrutalistButton>
                         </div>
                       </td>

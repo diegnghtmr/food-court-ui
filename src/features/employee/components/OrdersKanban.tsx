@@ -6,6 +6,7 @@ import { OrderStatus } from '@shared/types'
 import { orderManagementService } from '../services/orderManagementService'
 import { OrderCard } from './OrderCard'
 import { PinValidationModal } from './PinValidationModal'
+import { getRestaurantId } from '@infrastructure/auth/tokenManager'
 
 /**
  * Orders Kanban Board Component
@@ -31,15 +32,19 @@ export const OrdersKanban: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [loadingOrderId, setLoadingOrderId] = useState<number | null>(null)
 
-  // IMPORTANT: For demo purposes, using hardcoded restaurantId
-  // In production, this should come from employee profile or auth context
-  const restaurantId = 1
+  const restaurantId = getRestaurantId()
 
   /**
    * Fetch all orders for all statuses
    */
   const fetchOrders = useCallback(async () => {
     try {
+      if (!restaurantId) {
+        setIsLoading(false)
+        console.error('Restaurant ID no disponible para el empleado')
+        return
+      }
+
       const [pendiente, enPreparacion, listo, entregado] = await Promise.all([
         orderManagementService.getOrdersByStatus(
           restaurantId,

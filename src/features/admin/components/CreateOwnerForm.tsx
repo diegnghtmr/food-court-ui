@@ -46,7 +46,10 @@ const createOwnerSchema = z.object({
     .string()
     .min(10, 'El teléfono debe tener al menos 10 dígitos')
     .max(13, 'El teléfono no puede exceder 13 dígitos')
-    .regex(/^\+?[0-9]+$/, 'El teléfono solo debe contener números y puede empezar con +'),
+    .regex(
+      /^\+?[0-9]+$/,
+      'El teléfono solo debe contener números y puede empezar con +'
+    ),
   birthDate: z
     .string()
     .min(1, 'La fecha de nacimiento es requerida')
@@ -58,9 +61,8 @@ const createOwnerSchema = z.object({
       const dayDiff = today.getDate() - birthDate.getDate()
 
       // Ajustar si aún no ha cumplido años este año
-      const adjustedAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)
-        ? age - 1
-        : age
+      const adjustedAge =
+        monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age
 
       return adjustedAge >= 18
     }, 'El propietario debe ser mayor de 18 años'),
@@ -120,7 +122,9 @@ export const CreateOwner = () => {
         navigate('/admin/dashboard')
       }, 2000)
     } catch (error: any) {
-      const message = error?.response?.data?.message || 'Error al crear propietario. Intenta nuevamente.'
+      const message =
+        error?.response?.data?.message ||
+        'Error al crear propietario. Intenta nuevamente.'
       setErrorMessage(message)
     } finally {
       setIsLoading(false)
