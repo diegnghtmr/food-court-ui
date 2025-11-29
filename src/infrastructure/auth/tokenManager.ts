@@ -73,16 +73,16 @@ export const decodeToken = (token: string): JwtPayload | null => {
 const mapRoleToEnum = (role: string): UserRole | null => {
   // Remove ROLE_ prefix if present
   const normalizedRole = role.toUpperCase().replace('ROLE_', '')
-  
+
   const roleMap: Record<string, UserRole> = {
-    'ADMIN': UserRole.ADMINISTRADOR,
-    'ADMINISTRADOR': UserRole.ADMINISTRADOR,
-    'OWNER': UserRole.PROPIETARIO,
-    'PROPIETARIO': UserRole.PROPIETARIO,
-    'EMPLOYEE': UserRole.EMPLEADO,
-    'EMPLEADO': UserRole.EMPLEADO,
-    'CLIENT': UserRole.CLIENTE,
-    'CLIENTE': UserRole.CLIENTE,
+    ADMIN: UserRole.ADMINISTRADOR,
+    ADMINISTRADOR: UserRole.ADMINISTRADOR,
+    OWNER: UserRole.PROPIETARIO,
+    PROPIETARIO: UserRole.PROPIETARIO,
+    EMPLOYEE: UserRole.EMPLEADO,
+    EMPLEADO: UserRole.EMPLEADO,
+    CLIENT: UserRole.CLIENTE,
+    CLIENTE: UserRole.CLIENTE,
   }
   return roleMap[normalizedRole] || null
 }
@@ -96,7 +96,7 @@ export const getUserRole = (): UserRole | null => {
 
   const payload = decodeToken(token)
   if (!payload?.roles || payload.roles.length === 0) return null
-  
+
   // Get the first role from the array and map it to UserRole enum
   return mapRoleToEnum(payload.roles[0])
 }

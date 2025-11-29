@@ -15,12 +15,23 @@ export const restaurantService = {
     size = 10
   ): Promise<PaginatedResponse<Restaurant>> => {
     const response = await axiosInstance.get(
-      `${API_ENDPOINTS.PLAZOLETA}/plazoleta/restaurantes`,
+      `${API_ENDPOINTS.PLAZOLETA}/restaurants`,
       {
         params: { page, size },
       }
     )
-    return response.data
+    // Backend returns array directly, wrap it in paginated format
+    const data = response.data
+    if (Array.isArray(data)) {
+      return {
+        content: data,
+        totalPages: 1,
+        totalElements: data.length,
+        size: size,
+        number: page,
+      }
+    }
+    return data
   },
 
   /**
@@ -28,7 +39,7 @@ export const restaurantService = {
    */
   getRestaurantById: async (id: number): Promise<Restaurant> => {
     const response = await axiosInstance.get(
-      `${API_ENDPOINTS.PLAZOLETA}/plazoleta/restaurantes/${id}`
+      `${API_ENDPOINTS.PLAZOLETA}/restaurants/${id}`
     )
     return response.data
   },
