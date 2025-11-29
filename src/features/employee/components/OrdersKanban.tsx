@@ -201,10 +201,10 @@ export const OrdersKanban: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* COLUMN 1: PENDIENTES */}
         <div className="space-y-4">
-          <div className="border-2 border-[#808080] bg-[#1a1a1a] p-4">
+          <div className="border-2 border-[#999999] bg-[#1a1a1a] p-4">
             <h3 className="text-xl font-bold text-[#f5f5f5] uppercase tracking-wider flex items-center justify-between">
               <span>PENDIENTES</span>
-              <span className="text-[#808080] text-sm">
+              <span className="text-[#999999] text-sm">
                 ({ordersByStatus.PENDIENTE.length})
               </span>
             </h3>
@@ -212,8 +212,8 @@ export const OrdersKanban: React.FC = () => {
 
           <div className="space-y-4">
             {ordersByStatus.PENDIENTE.length === 0 ? (
-              <div className="text-center p-8 border-2 border-[#808080] border-dashed bg-[#1a1a1a]">
-                <p className="text-[#808080] uppercase tracking-wide text-sm">
+              <div className="text-center p-8 border-2 border-[#999999] border-dashed bg-[#1a1a1a]">
+                <p className="text-[#999999] uppercase tracking-wide text-sm">
                   No hay pedidos pendientes
                 </p>
               </div>
@@ -241,7 +241,7 @@ export const OrdersKanban: React.FC = () => {
                 ({myPreparingOrders.length})
               </span>
             </h3>
-            <p className="text-[#808080] text-xs mt-1 uppercase">
+            <p className="text-[#999999] text-xs mt-1 uppercase">
               Mis pedidos asignados
             </p>
           </div>
@@ -249,7 +249,7 @@ export const OrdersKanban: React.FC = () => {
           <div className="space-y-4">
             {myPreparingOrders.length === 0 ? (
               <div className="text-center p-8 border-2 border-[#ff6b35] border-dashed bg-[#1a1a1a]">
-                <p className="text-[#808080] uppercase tracking-wide text-sm">
+                <p className="text-[#999999] uppercase tracking-wide text-sm">
                   No tienes pedidos en preparación
                 </p>
               </div>
@@ -277,7 +277,7 @@ export const OrdersKanban: React.FC = () => {
                 ({ordersByStatus.LISTO.length})
               </span>
             </h3>
-            <p className="text-[#808080] text-xs mt-1 uppercase">
+            <p className="text-[#999999] text-xs mt-1 uppercase">
               Esperando entrega
             </p>
           </div>
@@ -285,7 +285,7 @@ export const OrdersKanban: React.FC = () => {
           <div className="space-y-4">
             {ordersByStatus.LISTO.length === 0 ? (
               <div className="text-center p-8 border-2 border-[#00ff00] border-dashed bg-[#1a1a1a]">
-                <p className="text-[#808080] uppercase tracking-wide text-sm">
+                <p className="text-[#999999] uppercase tracking-wide text-sm">
                   No hay pedidos listos
                 </p>
               </div>

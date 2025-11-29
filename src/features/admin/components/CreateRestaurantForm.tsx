@@ -103,10 +103,18 @@ export const CreateRestaurant = () => {
       setTimeout(() => {
         navigate('/admin/dashboard')
       }, 2000)
-    } catch (error: any) {
+    } catch (error: unknown) {
       const message =
-        error?.response?.data?.message ||
-        'Error al crear restaurante. Intenta nuevamente.'
+        typeof error === 'object' &&
+        error !== null &&
+        'response' in error &&
+        typeof (error as { response?: { data?: { message?: string } } })
+          .response?.data?.message === 'string'
+          ? (error as { response?: { data?: { message?: string } } }).response!
+              .data!.message
+          : error instanceof Error
+            ? error.message
+            : 'Error al crear restaurante. Intenta nuevamente.'
       setErrorMessage(message)
     } finally {
       setIsLoading(false)

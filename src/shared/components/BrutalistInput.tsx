@@ -62,7 +62,7 @@ export const BrutalistInput = React.forwardRef<
       hasError ? 'border-[#ff0000]' : 'border-[#ffffff]',
       'transition-colors',
       'duration-75',
-      'placeholder:text-[#6a6a6a]',
+      'placeholder:text-[var(--text-disabled)]',
       disabled ? 'opacity-50 cursor-not-allowed bg-[#0a0a0a]' : '',
       !hasError && !disabled
         ? 'hover:border-[#9b59b6] focus:border-[#9b59b6]'

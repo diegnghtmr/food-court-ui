@@ -25,7 +25,7 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
  * Brutalist color palette for order statuses
  */
 export const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
-  [OrderStatus.PENDIENTE]: '#808080', // Neutral gray
+  [OrderStatus.PENDIENTE]: '#999999', // Neutral gray
   [OrderStatus.EN_PREPARACION]: '#ff6b35', // Burnt orange
   [OrderStatus.LISTO]: '#00ff00', // Terminal green
   [OrderStatus.ENTREGADO]: '#9b59b6', // Electric violet

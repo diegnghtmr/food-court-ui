@@ -110,7 +110,7 @@ export const RestaurantsGrid = () => {
                         }}
                       />
                     ) : (
-                      <span className="text-6xl text-[#6a6a6a]">?</span>
+                      <span className="text-6xl text-[#8a8a8a]">?</span>
                     )}
                   </div>
 
@@ -121,15 +121,15 @@ export const RestaurantsGrid = () => {
                     </h2>
 
                     <div className="space-y-1 mb-4">
-                      <p className="text-sm text-[#b0b0b0]">
+                      <p className="text-sm text-[#c0c0c0]">
                         <span className="font-bold">DIRECCION:</span>{' '}
                         {restaurant.direccion}
                       </p>
-                      <p className="text-sm text-[#b0b0b0]">
+                      <p className="text-sm text-[#c0c0c0]">
                         <span className="font-bold">TELEFONO:</span>{' '}
                         {restaurant.telefono}
                       </p>
-                      <p className="text-sm text-[#6a6a6a]">
+                      <p className="text-sm text-[#8a8a8a]">
                         NIT: {restaurant.nit}
                       </p>
                     </div>

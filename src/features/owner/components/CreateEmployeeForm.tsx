@@ -129,10 +129,18 @@ export const CreateEmployee = () => {
       setTimeout(() => {
         navigate('/owner/dashboard')
       }, 2000)
-    } catch (error: any) {
+    } catch (error: unknown) {
       const message =
-        error?.response?.data?.message ||
-        'Error al crear empleado. Intenta nuevamente.'
+        typeof error === 'object' &&
+        error !== null &&
+        'response' in error &&
+        typeof (error as { response?: { data?: { message?: string } } })
+          .response?.data?.message === 'string'
+          ? (error as { response?: { data?: { message?: string } } }).response!
+              .data!.message
+          : error instanceof Error
+            ? error.message
+            : 'Error al crear empleado. Intenta nuevamente.'
       setErrorMessage(message)
     } finally {
       setIsLoading(false)

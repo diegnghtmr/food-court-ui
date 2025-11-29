@@ -2,7 +2,17 @@ import axiosInstance from '@infrastructure/api/axiosInstance'
 import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
 import type { Restaurant, PaginatedResponse } from '../models'
 
-const mapRestaurant = (data: any): Restaurant => ({
+interface RestaurantResponse {
+  id: number
+  name: string
+  nit: string
+  address: string
+  phone: string
+  urlLogo: string
+  ownerId: number
+}
+
+const mapRestaurant = (data: RestaurantResponse): Restaurant => ({
   id: data.id,
   nombre: data.name,
   nit: data.nit,
@@ -69,7 +79,9 @@ export const restaurantService = {
         ? response.data.content
         : []
 
-    const restaurant = data.find((item: any) => item.id === id)
+    const restaurant = (data as RestaurantResponse[]).find(
+      (item) => item.id === id
+    )
     if (!restaurant) {
       throw new Error('Restaurante no encontrado')
     }

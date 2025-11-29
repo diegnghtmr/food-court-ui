@@ -72,7 +72,7 @@ export const BrutalistTable = <T extends Record<string, unknown>>({
             <tr>
               <td
                 colSpan={columns.length}
-                className="px-4 py-8 text-center text-[#6a6a6a] uppercase"
+                className="px-4 py-8 text-center text-[#8a8a8a] uppercase"
               >
                 No hay datos disponibles
               </td>

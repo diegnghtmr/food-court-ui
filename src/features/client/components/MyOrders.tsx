@@ -117,10 +117,10 @@ export const MyOrders = () => {
       {orders.length === 0 && !isLoading && (
         <BrutalistCard>
           <div className="text-center py-12">
-            <p className="text-2xl text-[#b0b0b0] mb-6">
+            <p className="text-2xl text-[#c0c0c0] mb-6">
               No tienes pedidos activos
             </p>
-            <p className="text-[#6a6a6a] mb-6">
+            <p className="text-[#8a8a8a] mb-6">
               Comienza a ordenar de tus restaurantes favoritos
             </p>
           </div>
@@ -132,16 +132,16 @@ export const MyOrders = () => {
         {orders.map((order) => (
           <BrutalistCard key={order.id}>
             {/* Order Header */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 pb-4 border-b-2 border-[#6a6a6a]">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 pb-4 border-b-2 border-[#8a8a8a]">
               <div>
                 <h2 className="text-2xl font-bold text-[#f5f5f5] mb-2 uppercase tracking-wide">
                   PEDIDO #{order.id}
                 </h2>
-                <p className="text-[#b0b0b0] mb-1">
+                <p className="text-[#c0c0c0] mb-1">
                   <span className="font-bold">RESTAURANTE:</span>{' '}
                   {order.restauranteNombre}
                 </p>
-                <p className="text-sm text-[#6a6a6a]">
+                <p className="text-sm text-[#8a8a8a]">
                   {formatDate(order.fechaCreacion)}
                 </p>
               </div>
@@ -167,7 +167,7 @@ export const MyOrders = () => {
                 {order.items.map((item, index) => (
                   <li
                     key={index}
-                    className="flex justify-between items-center text-[#b0b0b0] py-2 border-b border-[#3a3a3a]"
+                    className="flex justify-between items-center text-[#c0c0c0] py-2 border-b border-[#3a3a3a]"
                   >
                     <span>
                       <span className="font-bold text-[#f5f5f5]">
@@ -203,7 +203,7 @@ export const MyOrders = () => {
                   </p>
 
                   <div className="bg-[#000000] border-4 border-[#00ff00] p-6 mb-6">
-                    <p className="text-sm text-[#b0b0b0] mb-3 uppercase tracking-wide">
+                    <p className="text-sm text-[#c0c0c0] mb-3 uppercase tracking-wide">
                       CODIGO DE RETIRO:
                     </p>
                     <p className="text-6xl md:text-8xl font-bold text-[#00ff00] tracking-widest font-mono">
@@ -211,7 +211,7 @@ export const MyOrders = () => {
                     </p>
                   </div>
 
-                  <p className="text-base md:text-lg text-[#b0b0b0]">
+                  <p className="text-base md:text-lg text-[#c0c0c0]">
                     Dicta este codigo al empleado para recibir tu comida.
                   </p>
                 </div>
@@ -221,7 +221,7 @@ export const MyOrders = () => {
             {/* Pending Order - Show Cancel Button */}
             {order.estado === OrderStatus.PENDIENTE && (
               <div className="space-y-3">
-                <p className="text-[#b0b0b0] text-center py-2">
+                <p className="text-[#c0c0c0] text-center py-2">
                   Tu pedido esta esperando confirmacion del restaurante
                 </p>
                 <BrutalistButton
@@ -275,7 +275,7 @@ export const MyOrders = () => {
 
       {/* Auto-refresh indicator */}
       {!isLoading && orders.length > 0 && (
-        <div className="text-center mt-8 text-sm text-[#6a6a6a]">
+        <div className="text-center mt-8 text-sm text-[#8a8a8a]">
           Actualizacion automatica cada 10 segundos
         </div>
       )}

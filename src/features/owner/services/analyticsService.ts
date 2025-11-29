@@ -7,6 +7,15 @@ import axiosInstance from '@infrastructure/api/axiosInstance'
 import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
 import type { EfficiencyReport } from '../models'
 
+interface EfficiencyReportResponse {
+  employeeId?: string | number
+  employeeName?: string
+  completedOrders?: number
+  averageCompletionTime?: number
+  efficiency?: number
+  period?: string
+}
+
 export const analyticsService = {
   /**
    * Get efficiency report for restaurant employees
@@ -33,9 +42,11 @@ export const analyticsService = {
     )
 
     // Map backend response to frontend model
-    const data = Array.isArray(response.data) ? response.data : []
+    const data: EfficiencyReportResponse[] = Array.isArray(response.data)
+      ? response.data
+      : []
 
-    return data.map((report: any) => ({
+    return data.map((report) => ({
       employeeId: report.employeeId?.toString() || '',
       employeeName: report.employeeName || 'Desconocido',
       completedOrders: report.completedOrders || 0,

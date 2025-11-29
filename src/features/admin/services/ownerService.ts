@@ -7,6 +7,16 @@ import axiosInstance from '@infrastructure/api/axiosInstance'
 import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
 import type { CreateOwnerData, Owner } from '../models'
 
+interface OwnerDto {
+  id: string
+  firstName: string
+  lastName: string
+  documentNumber: string
+  phone: string
+  email: string
+  createdAt?: string
+}
+
 export const ownerService = {
   /**
    * Create a new owner (PROPIETARIO)
@@ -49,15 +59,21 @@ export const ownerService = {
       `${API_ENDPOINTS.USUARIOS}/user/owners`
     )
 
+    const owners: OwnerDto[] = Array.isArray(response.data)
+      ? response.data
+      : Array.isArray(response.data?.content)
+        ? response.data.content
+        : []
+
     // Map backend array to frontend models
-    return response.data.map((owner: any) => ({
+    return owners.map((owner) => ({
       id: owner.id,
       name: owner.firstName,
       surname: owner.lastName,
       documentNumber: owner.documentNumber,
       phone: owner.phone,
       email: owner.email,
-      createdAt: owner.createdAt,
+      createdAt: owner.createdAt || new Date().toISOString(),
     }))
   },
 

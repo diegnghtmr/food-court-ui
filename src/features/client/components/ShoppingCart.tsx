@@ -94,7 +94,7 @@ export const ShoppingCart = () => {
 
         <BrutalistCard>
           <div className="text-center py-12">
-            <p className="text-2xl text-[#b0b0b0] mb-6">
+            <p className="text-2xl text-[#c0c0c0] mb-6">
               Tu carrito esta vacio
             </p>
             <BrutalistButton
@@ -131,7 +131,7 @@ export const ShoppingCart = () => {
       {/* Restaurant Name */}
       {restaurantName && (
         <div className="mb-6">
-          <p className="text-xl text-[#b0b0b0]">
+          <p className="text-xl text-[#c0c0c0]">
             <span className="font-bold text-[#f5f5f5]">RESTAURANTE:</span>{' '}
             {restaurantName}
           </p>
@@ -153,7 +153,7 @@ export const ShoppingCart = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <span className="text-4xl text-[#6a6a6a]">?</span>
+                    <span className="text-4xl text-[#8a8a8a]">?</span>
                   )}
                 </div>
 
@@ -163,7 +163,7 @@ export const ShoppingCart = () => {
                     {item.plato.nombre}
                   </h3>
 
-                  <p className="text-sm text-[#b0b0b0] mb-4">
+                  <p className="text-sm text-[#c0c0c0] mb-4">
                     {item.plato.descripcion}
                   </p>
 
@@ -179,7 +179,7 @@ export const ShoppingCart = () => {
                             )
                           }
                           disabled={item.cantidad <= 1}
-                          className="px-3 py-2 bg-[#0a0a0a] text-[#f5f5f5] font-bold hover:bg-[#1a1a1a] disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="px-4 py-3 bg-[#0a0a0a] text-[#f5f5f5] font-bold hover:bg-[#1a1a1a] disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px]"
                         >
                           -
                         </button>
@@ -193,7 +193,7 @@ export const ShoppingCart = () => {
                             )
                           }
                           min="1"
-                          className="w-16 px-2 py-2 text-center bg-[#121212] text-[#f5f5f5] border-x-2 border-[#ffffff] font-bold"
+                          className="w-16 px-2 py-2 text-center bg-[#121212] text-[#f5f5f5] border-x-2 border-[#ffffff] font-bold h-11 min-h-[44px]"
                         />
                         <button
                           onClick={() =>
@@ -202,7 +202,7 @@ export const ShoppingCart = () => {
                               item.cantidad + 1
                             )
                           }
-                          className="px-3 py-2 bg-[#0a0a0a] text-[#f5f5f5] font-bold hover:bg-[#1a1a1a]"
+                          className="px-4 py-3 bg-[#0a0a0a] text-[#f5f5f5] font-bold hover:bg-[#1a1a1a] min-h-[44px] min-w-[44px]"
                         >
                           +
                         </button>
@@ -210,7 +210,7 @@ export const ShoppingCart = () => {
 
                       {/* Price */}
                       <div className="text-right">
-                        <p className="text-sm text-[#6a6a6a]">
+                        <p className="text-sm text-[#8a8a8a]">
                           Precio unitario
                         </p>
                         <p className="text-lg font-bold text-[#00ff00]">
@@ -222,7 +222,7 @@ export const ShoppingCart = () => {
                     {/* Subtotal and Remove */}
                     <div className="flex items-center justify-between sm:justify-end gap-4">
                       <div className="text-right">
-                        <p className="text-sm text-[#6a6a6a]">Subtotal</p>
+                        <p className="text-sm text-[#8a8a8a]">Subtotal</p>
                         <p className="text-xl font-bold text-[#f5f5f5]">
                           {formatCurrency(item.plato.precio * item.cantidad)}
                         </p>
@@ -251,12 +251,12 @@ export const ShoppingCart = () => {
             </h2>
 
             <div className="space-y-4 mb-6">
-              <div className="flex justify-between text-[#b0b0b0]">
+              <div className="flex justify-between text-[#c0c0c0]">
                 <span>Total de items:</span>
                 <span className="font-bold text-[#f5f5f5]">{itemCount}</span>
               </div>
 
-              <div className="flex justify-between text-[#b0b0b0] border-t-2 border-[#6a6a6a] pt-4">
+              <div className="flex justify-between text-[#c0c0c0] border-t-2 border-[#8a8a8a] pt-4">
                 <span className="text-lg font-bold">TOTAL:</span>
                 <span className="text-2xl font-bold text-[#00ff00]">
                   {formatCurrency(totalAmount)}

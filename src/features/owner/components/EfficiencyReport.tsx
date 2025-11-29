@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import {
   BrutalistCard,
   BrutalistInput,
@@ -81,47 +81,47 @@ export const EfficiencyReport = () => {
   })
 
   /**
+   * Fetches efficiency report from API
+   */
+  const loadReportData = useCallback(
+    async (start?: string, end?: string): Promise<void> => {
+      try {
+        setLoading(true)
+        setError('')
+
+        if (!restaurantId) {
+          setError('No se pudo determinar el restaurante del propietario.')
+          setReportData([])
+          return
+        }
+
+        const data = await analyticsService.getEfficiencyReport(
+          restaurantId,
+          start,
+          end
+        )
+
+        setReportData(data)
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error
+            ? err.message
+            : 'Error al cargar el reporte de eficiencia'
+        setError(errorMessage)
+        setReportData([])
+      } finally {
+        setLoading(false)
+      }
+    },
+    [restaurantId]
+  )
+
+  /**
    * Load initial report data without filters
    */
   useEffect(() => {
-    loadReportData()
-  }, [])
-
-  /**
-   * Fetches efficiency report from API
-   */
-  const loadReportData = async (
-    start?: string,
-    end?: string
-  ): Promise<void> => {
-    try {
-      setLoading(true)
-      setError('')
-
-      if (!restaurantId) {
-        setError('No se pudo determinar el restaurante del propietario.')
-        setReportData([])
-        return
-      }
-
-      const data = await analyticsService.getEfficiencyReport(
-        restaurantId,
-        start,
-        end
-      )
-
-      setReportData(data)
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error
-          ? err.message
-          : 'Error al cargar el reporte de eficiencia'
-      setError(errorMessage)
-      setReportData([])
-    } finally {
-      setLoading(false)
-    }
-  }
+    void loadReportData()
+  }, [loadReportData])
 
   /**
    * Validates date range

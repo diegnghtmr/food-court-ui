@@ -39,9 +39,9 @@ export const BrutalistButton = React.forwardRef<
 
     const getSizeClasses = (): string => {
       const sizes = {
-        sm: 'px-4 py-2 text-sm',
-        md: 'px-6 py-3 text-base',
-        lg: 'px-8 py-4 text-lg',
+        sm: 'px-4 py-3 text-sm',
+        md: 'px-6 py-4 text-base',
+        lg: 'px-8 py-5 text-lg',
       }
       return sizes[size]
     }
@@ -57,6 +57,8 @@ export const BrutalistButton = React.forwardRef<
       'transition-all',
       'duration-75',
       'ease-out',
+      'min-h-[44px]',
+      'min-w-[44px]',
       fullWidth ? 'w-full' : '',
       disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
     ]

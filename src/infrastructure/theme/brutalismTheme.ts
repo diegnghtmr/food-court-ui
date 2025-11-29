@@ -20,7 +20,7 @@ export const BRUTALIST_THEME = {
     text: {
       primary: '#f5f5f5', // Bone white
       secondary: '#c0c0c0', // Silver gray
-      disabled: '#6a6a6a', // Disabled gray
+      disabled: '#8a8a8a', // Disabled gray with AA contrast
       inverse: '#000000', // Black (for light backgrounds)
     },
 
@@ -30,7 +30,7 @@ export const BRUTALIST_THEME = {
       warning: '#ff6b35', // Burnt orange
       error: '#ff0000', // Pure red
       info: '#9b59b6', // Electric violet
-      neutral: '#808080', // Neutral gray
+      neutral: '#999999', // Neutral gray with better contrast
     },
 
     // Borders

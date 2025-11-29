@@ -7,6 +7,18 @@ import axiosInstance from '@infrastructure/api/axiosInstance'
 import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
 import type { CreateRestaurantData, Restaurant } from '../models'
 
+interface RestaurantDto {
+  id?: number | string
+  name: string
+  address: string
+  phone: string
+  logoUrl: string
+  nit: string
+  ownerId?: number | string
+  ownerName?: string
+  createdAt?: string
+}
+
 export const restaurantService = {
   /**
    * Create a new restaurant
@@ -62,7 +74,8 @@ export const restaurantService = {
     const data = response.data.content || response.data
 
     // Map backend array to frontend models
-    return data.map((restaurant: any) => ({
+    const restaurants: RestaurantDto[] = Array.isArray(data) ? data : []
+    return restaurants.map((restaurant) => ({
       id: restaurant.id?.toString() || '',
       name: restaurant.name,
       address: restaurant.address,
@@ -71,7 +84,7 @@ export const restaurantService = {
       nit: restaurant.nit,
       ownerId: restaurant.ownerId?.toString() || '',
       ownerName: restaurant.ownerName,
-      createdAt: restaurant.createdAt,
+      createdAt: restaurant.createdAt || new Date().toISOString(),
     }))
   },
 

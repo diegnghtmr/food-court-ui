@@ -7,6 +7,17 @@ import axiosInstance from '@infrastructure/api/axiosInstance'
 import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
 import type { Employee, CreateEmployeeData } from '../models'
 
+interface EmployeeDto {
+  id?: string | number
+  firstName: string
+  lastName: string
+  documentNumber: string
+  phone: string
+  email: string
+  restaurantId?: string | number
+  createdAt?: string
+}
+
 export const employeeService = {
   /**
    * Create a new employee (EMPLEADO)
@@ -53,7 +64,13 @@ export const employeeService = {
     )
 
     // Map backend array to frontend models
-    return response.data.map((employee: any) => ({
+    const employees: EmployeeDto[] = Array.isArray(response.data)
+      ? response.data
+      : Array.isArray(response.data?.content)
+        ? response.data.content
+        : []
+
+    return employees.map((employee) => ({
       id: employee.id?.toString() || '',
       name: employee.firstName,
       surname: employee.lastName,
@@ -61,7 +78,7 @@ export const employeeService = {
       phone: employee.phone,
       email: employee.email,
       restaurantId: employee.restaurantId?.toString() || restaurantId,
-      createdAt: employee.createdAt,
+      createdAt: employee.createdAt || new Date().toISOString(),
     }))
   },
 

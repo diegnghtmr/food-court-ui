@@ -172,7 +172,7 @@ export const RestaurantMenu = () => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="text-6xl text-[#6a6a6a]">?</span>
+              <span className="text-6xl text-[#8a8a8a]">?</span>
             )}
           </div>
 
@@ -181,11 +181,11 @@ export const RestaurantMenu = () => {
               {restaurant.nombre}
             </h1>
             <div className="space-y-2">
-              <p className="text-[#b0b0b0]">
+              <p className="text-[#c0c0c0]">
                 <span className="font-bold">DIRECCION:</span>{' '}
                 {restaurant.direccion}
               </p>
-              <p className="text-[#b0b0b0]">
+              <p className="text-[#c0c0c0]">
                 <span className="font-bold">TELEFONO:</span>{' '}
                 {restaurant.telefono}
               </p>
@@ -230,7 +230,7 @@ export const RestaurantMenu = () => {
                               }}
                             />
                           ) : (
-                            <span className="text-6xl text-[#6a6a6a]">?</span>
+                            <span className="text-6xl text-[#8a8a8a]">?</span>
                           )}
                         </div>
 
@@ -240,7 +240,7 @@ export const RestaurantMenu = () => {
                             {dish.nombre}
                           </h3>
 
-                          <p className="text-sm text-[#b0b0b0] mb-4 line-clamp-3">
+                          <p className="text-sm text-[#c0c0c0] mb-4 line-clamp-3">
                             {dish.descripcion}
                           </p>
 

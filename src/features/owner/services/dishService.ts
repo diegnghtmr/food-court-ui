@@ -18,6 +18,18 @@ interface PaginatedResponse<T> {
   size: number
 }
 
+interface DishResponse {
+  id?: string | number
+  name: string
+  description: string
+  price: number
+  imageUrl: string
+  category: string
+  restaurantId?: string | number
+  active: boolean
+  createdAt?: string
+}
+
 export const dishService = {
   /**
    * Create a new dish
@@ -122,9 +134,9 @@ export const dishService = {
 
     // Backend might return paginated response
     const content = response.data.content || response.data
-    const dishes = Array.isArray(content) ? content : []
+    const dishes: DishResponse[] = Array.isArray(content) ? content : []
 
-    const mappedDishes = dishes.map((dish: any) => ({
+    const mappedDishes = dishes.map((dish) => ({
       id: dish.id?.toString() || '',
       name: dish.name,
       description: dish.description,

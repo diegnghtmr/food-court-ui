@@ -3,7 +3,18 @@ import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
 import type { Dish } from '../models'
 import { DishCategory, isValidDishCategory } from '@shared/types'
 
-const mapDish = (data: any): Dish => {
+interface DishResponse {
+  id: number
+  name: string
+  price: number
+  description: string
+  urlImage: string
+  categoryName?: string
+  active?: boolean
+  restaurantId: number
+}
+
+const mapDish = (data: DishResponse): Dish => {
   const normalizedCategory =
     typeof data.categoryName === 'string'
       ? data.categoryName.toUpperCase().replace(/\s+/g, '_')

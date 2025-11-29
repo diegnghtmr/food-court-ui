@@ -47,7 +47,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
         <p className="text-[#f5f5f5] font-semibold mb-1">
           CLIENTE: {order.clienteNombre}
         </p>
-        <p className="text-[#808080] text-sm">{order.clienteCorreo}</p>
+        <p className="text-[#999999] text-sm">{order.clienteCorreo}</p>
       </div>
 
       {/* Order items */}
@@ -67,7 +67,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
                 </span>{' '}
                 {item.platoNombre}
               </span>
-              <span className="text-[#808080] font-mono">
+              <span className="text-[#999999] font-mono">
                 ${(item.precio * item.cantidad).toFixed(2)}
               </span>
             </li>

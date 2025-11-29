@@ -8,6 +8,36 @@ type RestaurantMap = Map<number, { nombre: string }>
 type DishInfo = { nombre: string; precio: number }
 type DishMap = Map<number, DishInfo>
 
+interface RestaurantResponse {
+  id: number | string
+  name?: string
+}
+
+interface DishResponse {
+  id: number | string
+  name?: string
+  price?: number
+}
+
+interface OrderDishResponse {
+  dishId: number | string
+  quantity: number
+}
+
+interface OrderResponse {
+  id: number | string
+  restaurantId: number | string
+  dishes?: OrderDishResponse[]
+  status?: string
+  pin?: string
+  date: string
+}
+
+interface TraceResponse {
+  orderId: number | string
+  newState?: string
+}
+
 const restaurantCache: RestaurantMap = new Map()
 const dishesCache: Map<number, DishMap> = new Map()
 
@@ -32,9 +62,10 @@ const fetchRestaurants = async (): Promise<RestaurantMap> => {
       ? response.data.content
       : []
 
-  raw.forEach((r: any) => {
-    if (r?.id) {
-      restaurantCache.set(Number(r.id), { nombre: r.name })
+  const restaurants: RestaurantResponse[] = raw
+  restaurants.forEach((r) => {
+    if (r?.id !== undefined && r?.id !== null) {
+      restaurantCache.set(Number(r.id), { nombre: r.name ?? `Restaurante ${r.id}` })
     }
   })
 
@@ -60,8 +91,9 @@ const fetchDishesByRestaurant = async (
       : []
 
   const map: DishMap = new Map()
-  raw.forEach((d: any) => {
-    if (d?.id) {
+  const dishes: DishResponse[] = raw
+  dishes.forEach((d) => {
+    if (d?.id !== undefined && d?.id !== null) {
       map.set(Number(d.id), {
         nombre: d.name ?? `Plato ${d.id}`,
         precio: Number(d.price) || 0,
@@ -74,25 +106,27 @@ const fetchDishesByRestaurant = async (
 }
 
 const mapOrderResponse = async (
-  data: any,
+  data: OrderResponse,
   fallbackStatus?: OrderStatus
 ): Promise<ClientOrder> => {
   const restaurants = await fetchRestaurants()
-  const restaurantId = Number(data.restaurantId)
+  const restaurantId = Number(data.restaurantId ?? 0)
   const dishesMap = await fetchDishesByRestaurant(restaurantId)
 
+  const dishes = Array.isArray(data.dishes) ? data.dishes : []
   const items =
-    (data.dishes ?? []).map((dish: any) => {
-      const dishInfo = dishesMap.get(Number(dish.dishId))
+    dishes.map((dish) => {
+      const dishId = Number(dish.dishId)
+      const dishInfo = dishesMap.get(dishId)
       return {
-        platoNombre: dishInfo?.nombre ?? `Plato ${dish.dishId}`,
+        platoNombre: dishInfo?.nombre ?? `Plato ${dishId}`,
         cantidad: dish.quantity,
         precio: dishInfo?.precio ?? 0,
       }
     }) ?? []
 
   const total = items.reduce(
-    (sum: number, item: any) => sum + item.precio * item.cantidad,
+    (sum: number, item) => sum + item.precio * item.cantidad,
     0
   )
 
@@ -146,7 +180,7 @@ export const orderService = {
       `${API_ENDPOINTS.TRAZABILIDAD}/trace/client/${clientId}`
     )
 
-    const traces: Array<any> = Array.isArray(traceResponse.data)
+    const traces: TraceResponse[] = Array.isArray(traceResponse.data)
       ? traceResponse.data
       : []
 

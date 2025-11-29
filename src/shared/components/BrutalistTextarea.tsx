@@ -58,7 +58,7 @@ export const BrutalistTextarea = React.forwardRef<
       hasError ? 'border-[#ff0000]' : 'border-[#ffffff]',
       'transition-colors',
       'duration-75',
-      'placeholder:text-[#6a6a6a]',
+      'placeholder:text-[var(--text-disabled)]',
       'resize-y',
       disabled ? 'opacity-50 cursor-not-allowed bg-[#0a0a0a]' : '',
       !hasError && !disabled
