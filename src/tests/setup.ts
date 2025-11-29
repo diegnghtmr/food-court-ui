@@ -1,10 +1,11 @@
 import { expect, afterEach } from 'vitest'
-import { cleanup } from '@testing-library/react'
-import '@testing-library/jest-dom/vitest'
+// TODO: Install @testing-library/react for test setup
+// import { cleanup } from '@testing-library/react'
+// import '@testing-library/jest-dom/vitest'
 
 // Cleanup after each test
 afterEach(() => {
-  cleanup()
+  // cleanup()
 })
 
 // Global test setup

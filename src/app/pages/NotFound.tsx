@@ -48,7 +48,7 @@ export const NotFound = () => {
           <div
             style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}
           >
-            <BrutalistButton onClick={() => navigate(-1)} variant="secondary">
+            <BrutalistButton onClick={() => navigate(-1)} variant="neutral">
               Go Back
             </BrutalistButton>
             <BrutalistButton onClick={() => navigate('/')} variant="primary">

@@ -92,7 +92,7 @@ const mapOrderResponse = async (
     }) ?? []
 
   const total = items.reduce(
-    (sum, item) => sum + item.precio * item.cantidad,
+    (sum: number, item: any) => sum + item.precio * item.cantidad,
     0
   )
 
@@ -100,8 +100,7 @@ const mapOrderResponse = async (
     id: Number(data.id),
     restauranteId: restaurantId,
     restauranteNombre:
-      restaurants.get(restaurantId)?.nombre ??
-      `Restaurante ${restaurantId}`,
+      restaurants.get(restaurantId)?.nombre ?? `Restaurante ${restaurantId}`,
     items,
     total,
     estado: mapOrderStatus(data.status ?? fallbackStatus),

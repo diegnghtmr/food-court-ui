@@ -67,7 +67,7 @@ export const Owner = () => {
             </BrutalistButton>
             <BrutalistButton
               onClick={() => navigate('/owner/dish/create')}
-              variant="secondary"
+              variant="neutral"
             >
               Create New Dish
             </BrutalistButton>
@@ -95,7 +95,7 @@ export const Owner = () => {
             </BrutalistButton>
             <BrutalistButton
               onClick={() => navigate('/owner/analytics')}
-              variant="secondary"
+              variant="neutral"
             >
               View Analytics
             </BrutalistButton>

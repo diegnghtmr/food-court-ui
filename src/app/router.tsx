@@ -18,10 +18,10 @@ import { CreateRestaurant } from '@features/admin/components/CreateRestaurantFor
 
 // Owner Feature
 import { Owner } from '@features/owner/owner'
-import { DishesManager } from '@features/owner/components/DishesTable'
+import { DishesManager } from '@features/owner/components/DishesManager'
 import { DishForm } from '@features/owner/components/DishForm'
 import { CreateEmployee } from '@features/owner/components/CreateEmployeeForm'
-import { OwnerAnalytics } from '@features/owner/components/EfficiencyReport'
+import { EfficiencyReport } from '@features/owner/components/EfficiencyReport'
 
 // Employee Feature
 import { Employee } from '@features/employee/employee'
@@ -127,7 +127,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'analytics',
-        element: <OwnerAnalytics />,
+        element: <EfficiencyReport />,
       },
     ],
   },
