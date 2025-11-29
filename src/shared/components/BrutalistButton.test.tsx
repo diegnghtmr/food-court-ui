@@ -32,7 +32,9 @@ describe('BrutalistButton', () => {
   })
 
   it('applies correct size classes', () => {
-    const { rerender } = render(<BrutalistButton size="sm">Small</BrutalistButton>)
+    const { rerender } = render(
+      <BrutalistButton size="sm">Small</BrutalistButton>
+    )
     expect(screen.getByText('Small')).toHaveClass('text-sm')
 
     rerender(<BrutalistButton size="md">Medium</BrutalistButton>)
@@ -68,7 +70,9 @@ describe('BrutalistButton', () => {
   })
 
   it('sets correct button type', () => {
-    const { rerender } = render(<BrutalistButton type="submit">Submit</BrutalistButton>)
+    const { rerender } = render(
+      <BrutalistButton type="submit">Submit</BrutalistButton>
+    )
     expect(screen.getByText('Submit')).toHaveAttribute('type', 'submit')
 
     rerender(<BrutalistButton type="reset">Reset</BrutalistButton>)

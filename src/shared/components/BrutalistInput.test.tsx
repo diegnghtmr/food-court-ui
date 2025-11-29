@@ -20,11 +20,7 @@ describe('BrutalistInput', () => {
 
   it('displays placeholder', () => {
     render(
-      <BrutalistInput
-        label="Name"
-        type="text"
-        placeholder="Enter your name"
-      />
+      <BrutalistInput label="Name" type="text" placeholder="Enter your name" />
     )
     expect(screen.getByPlaceholderText('Enter your name')).toBeInTheDocument()
   })
@@ -47,23 +43,13 @@ describe('BrutalistInput', () => {
 
   it('displays error message when error prop is provided', () => {
     render(
-      <BrutalistInput
-        label="Email"
-        type="email"
-        error="Email is required"
-      />
+      <BrutalistInput label="Email" type="email" error="Email is required" />
     )
     expect(screen.getByText('Email is required')).toBeInTheDocument()
   })
 
   it('applies error styles when error exists', () => {
-    render(
-      <BrutalistInput
-        label="Email"
-        type="email"
-        error="Invalid email"
-      />
-    )
+    render(<BrutalistInput label="Email" type="email" error="Invalid email" />)
     const input = screen.getByRole('textbox')
     expect(input).toHaveClass('border-[#ff0000]')
   })
@@ -86,7 +72,9 @@ describe('BrutalistInput', () => {
   })
 
   it('accepts controlled value', () => {
-    render(<BrutalistInput label="Name" type="text" value="John Doe" readOnly />)
+    render(
+      <BrutalistInput label="Name" type="text" value="John Doe" readOnly />
+    )
     expect(screen.getByRole('textbox')).toHaveValue('John Doe')
   })
 })
