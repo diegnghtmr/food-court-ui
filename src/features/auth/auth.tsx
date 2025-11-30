@@ -61,10 +61,6 @@ export const Auth = () => {
             />
           )}
         </BrutalistCard>
-
-        <p className="mt-6 text-center text-xs text-[var(--text-secondary)]">
-          Sistema de Gestión de Restaurantes - Food Court
-        </p>
       </div>
     </div>
   )
