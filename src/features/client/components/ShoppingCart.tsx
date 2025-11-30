@@ -88,13 +88,13 @@ export const ShoppingCart = () => {
   if (items.length === 0 && !successMessage) {
     return (
       <div className="p-4 md:p-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-[#f5f5f5] mb-8 uppercase tracking-wide">
+        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8 uppercase tracking-wide">
           CARRITO DE COMPRAS
         </h1>
 
         <BrutalistCard>
           <div className="text-center py-12">
-            <p className="text-2xl text-[#c0c0c0] mb-6">
+            <p className="text-2xl text-muted-foreground mb-6">
               Tu carrito esta vacio
             </p>
             <BrutalistButton
@@ -111,7 +111,7 @@ export const ShoppingCart = () => {
 
   return (
     <div className="p-4 md:p-8">
-      <h1 className="text-3xl md:text-4xl font-bold text-[#f5f5f5] mb-8 uppercase tracking-wide">
+      <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8 uppercase tracking-wide">
         CARRITO DE COMPRAS
       </h1>
 
@@ -131,8 +131,8 @@ export const ShoppingCart = () => {
       {/* Restaurant Name */}
       {restaurantName && (
         <div className="mb-6">
-          <p className="text-xl text-[#c0c0c0]">
-            <span className="font-bold text-[#f5f5f5]">RESTAURANTE:</span>{' '}
+          <p className="text-xl text-muted-foreground">
+            <span className="font-bold text-foreground">RESTAURANTE:</span>{' '}
             {restaurantName}
           </p>
         </div>
@@ -145,7 +145,7 @@ export const ShoppingCart = () => {
             <BrutalistCard key={item.plato.id}>
               <div className="flex flex-col md:flex-row gap-4">
                 {/* Dish Image */}
-                <div className="w-full md:w-32 h-32 bg-[#0a0a0a] border-2 border-[#ffffff] flex items-center justify-center overflow-hidden flex-shrink-0">
+                <div className="w-full md:w-32 h-32 bg-muted border-2 border-border flex items-center justify-center overflow-hidden flex-shrink-0">
                   {item.plato.urlImagen ? (
                     <img
                       src={item.plato.urlImagen}
@@ -153,24 +153,24 @@ export const ShoppingCart = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <span className="text-4xl text-[#8a8a8a]">?</span>
+                    <span className="text-4xl text-muted-foreground">?</span>
                   )}
                 </div>
 
                 {/* Item Details */}
                 <div className="flex-1">
-                  <h3 className="text-lg font-bold text-[#f5f5f5] mb-2 uppercase tracking-wide">
+                  <h3 className="text-lg font-bold text-card-foreground mb-2 uppercase tracking-wide">
                     {item.plato.nombre}
                   </h3>
 
-                  <p className="text-sm text-[#c0c0c0] mb-4">
+                  <p className="text-sm text-muted-foreground mb-4">
                     {item.plato.descripcion}
                   </p>
 
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex items-center gap-4">
                       {/* Quantity Controls */}
-                      <div className="flex items-center border-2 border-[#ffffff]">
+                      <div className="flex items-center border-2 border-border">
                         <button
                           onClick={() =>
                             handleQuantityChange(
@@ -179,7 +179,7 @@ export const ShoppingCart = () => {
                             )
                           }
                           disabled={item.cantidad <= 1}
-                          className="px-4 py-3 bg-[#0a0a0a] text-[#f5f5f5] font-bold hover:bg-[#1a1a1a] disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px]"
+                          className="px-4 py-3 bg-muted text-foreground font-bold hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px]"
                         >
                           -
                         </button>
@@ -193,7 +193,7 @@ export const ShoppingCart = () => {
                             )
                           }
                           min="1"
-                          className="w-16 px-2 py-2 text-center bg-[#121212] text-[#f5f5f5] border-x-2 border-[#ffffff] font-bold h-11 min-h-[44px]"
+                          className="w-16 px-2 py-2 text-center bg-input text-foreground border-x-2 border-border font-bold h-11 min-h-[44px]"
                         />
                         <button
                           onClick={() =>
@@ -202,7 +202,7 @@ export const ShoppingCart = () => {
                               item.cantidad + 1
                             )
                           }
-                          className="px-4 py-3 bg-[#0a0a0a] text-[#f5f5f5] font-bold hover:bg-[#1a1a1a] min-h-[44px] min-w-[44px]"
+                          className="px-4 py-3 bg-muted text-foreground font-bold hover:bg-accent min-h-[44px] min-w-[44px]"
                         >
                           +
                         </button>
@@ -210,10 +210,10 @@ export const ShoppingCart = () => {
 
                       {/* Price */}
                       <div className="text-right">
-                        <p className="text-sm text-[#8a8a8a]">
+                        <p className="text-sm text-muted-foreground">
                           Precio unitario
                         </p>
-                        <p className="text-lg font-bold text-[#00ff00]">
+                        <p className="text-lg font-bold text-[var(--color-success)]">
                           {formatCurrency(item.plato.precio)}
                         </p>
                       </div>
@@ -222,8 +222,8 @@ export const ShoppingCart = () => {
                     {/* Subtotal and Remove */}
                     <div className="flex items-center justify-between sm:justify-end gap-4">
                       <div className="text-right">
-                        <p className="text-sm text-[#8a8a8a]">Subtotal</p>
-                        <p className="text-xl font-bold text-[#f5f5f5]">
+                        <p className="text-sm text-muted-foreground">Subtotal</p>
+                        <p className="text-xl font-bold text-card-foreground">
                           {formatCurrency(item.plato.precio * item.cantidad)}
                         </p>
                       </div>
@@ -246,19 +246,19 @@ export const ShoppingCart = () => {
         {/* Order Summary */}
         <div className="lg:col-span-1">
           <BrutalistCard className="sticky top-4">
-            <h2 className="text-xl font-bold text-[#f5f5f5] mb-6 uppercase tracking-wide border-b-2 border-[#ffffff] pb-2">
+            <h2 className="text-xl font-bold text-card-foreground mb-6 uppercase tracking-wide border-b-2 border-border pb-2">
               RESUMEN DEL PEDIDO
             </h2>
 
             <div className="space-y-4 mb-6">
-              <div className="flex justify-between text-[#c0c0c0]">
+              <div className="flex justify-between text-muted-foreground">
                 <span>Total de items:</span>
-                <span className="font-bold text-[#f5f5f5]">{itemCount}</span>
+                <span className="font-bold text-card-foreground">{itemCount}</span>
               </div>
 
-              <div className="flex justify-between text-[#c0c0c0] border-t-2 border-[#8a8a8a] pt-4">
+              <div className="flex justify-between text-muted-foreground border-t-2 border-border pt-4">
                 <span className="text-lg font-bold">TOTAL:</span>
-                <span className="text-2xl font-bold text-[#00ff00]">
+                <span className="text-2xl font-bold text-[var(--color-success)]">
                   {formatCurrency(totalAmount)}
                 </span>
               </div>

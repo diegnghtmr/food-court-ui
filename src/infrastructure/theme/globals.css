@@ -3,16 +3,124 @@
 @tailwind utilities;
 
 /**
- * BRUTALISM NOCTURNAL - Global Styles
- * Dark brutalist design with high contrast and zero rounded corners
+ * BRUTALISM THEME - Global Styles
+ * Supports Light and Dark modes with high contrast and zero rounded corners
  */
 
 @layer base {
   /* Import Fonts */
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;700;900&display=swap');
 
-  /* CSS Custom Properties for Brutalist Theme */
   :root {
+    color-scheme: light;
+    /* -------------------------
+       TAILWIND HSL VARIABLES (Light Mode Default)
+       ------------------------- */
+    --background: 0 0% 100%; /* #ffffff */
+    --foreground: 0 0% 0%;   /* #000000 */
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+
+    --primary: 271 45% 53%; /* #9b59b6 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 96%; /* #f5f5f5 */
+    --secondary-foreground: 0 0% 0%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 0%; /* Black border for light mode */
+    --input: 0 0% 94%;
+    --ring: 271 45% 53%;
+
+    --radius: 0; /* Brutalism always 0 */
+
+    /* -------------------------
+       LEGACY BRUTALIST VARIABLES (Light Mode)
+       ------------------------- */
+    /* Backgrounds */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f5;
+    --bg-card: #ffffff;
+    --bg-hover: #ebebeb;
+
+    /* Text */
+    --text-primary: #000000;
+    --text-secondary: #404040;
+    --text-disabled: #a0a0a0;
+    --text-inverse: #ffffff;
+
+    /* Status Colors */
+    --color-success: #00aa00; /* Darker green for light mode readability */
+    --color-warning: #ff6b35;
+    --color-error: #ff0000;
+    --color-info: #9b59b6;
+    --color-neutral: #999999;
+
+    /* Borders */
+    --border-default: #000000;
+    --border-subtle: #e5e5e5;
+    --border-error: #ff0000;
+
+    /* Shadows (Hard, no blur) */
+    --shadow-hard: 4px 4px 0px #000000;
+    --shadow-hard-lg: 8px 8px 0px #000000;
+    --shadow-hard-xl: 12px 12px 0px #000000;
+    --shadow-color: #000000;
+    --shadow-hover: 6px 6px 0px #000000;
+
+    /* Typography */
+    --font-primary: 'Space Mono', 'Courier New', monospace;
+    --font-secondary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .dark {
+    color-scheme: dark;
+    /* -------------------------
+       TAILWIND HSL VARIABLES (Dark Mode)
+       ------------------------- */
+    --background: 0 0% 4%; /* #0a0a0a */
+    --foreground: 0 0% 96%; /* #f5f5f5 */
+
+    --card: 0 0% 10%; /* #1a1a1a */
+    --card-foreground: 0 0% 96%;
+
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 96%;
+
+    --primary: 271 45% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 7%; /* #121212 */
+    --secondary-foreground: 0 0% 96%;
+
+    --muted: 0 0% 7%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 0 0% 7%;
+    --accent-foreground: 0 0% 96%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 96%;
+
+    --border: 0 0% 100%; /* White border for dark mode */
+    --input: 0 0% 7%;
+    --ring: 271 45% 53%;
+
+    /* -------------------------
+       LEGACY BRUTALIST VARIABLES (Dark Mode)
+       ------------------------- */
     /* Backgrounds */
     --bg-primary: #0a0a0a;
     --bg-secondary: #121212;
@@ -25,29 +133,20 @@
     --text-disabled: #8a8a8a;
     --text-inverse: #000000;
 
-    /* Status Colors */
-    --color-success: #00ff00;
-    --color-warning: #ff6b35;
-    --color-error: #ff0000;
-    --color-info: #9b59b6;
-    --color-neutral: #999999;
-
     /* Borders */
     --border-default: #ffffff;
     --border-subtle: #404040;
     --border-error: #ff0000;
 
-    /* Shadows (Hard, no blur) */
-    --shadow-hard: 4px 4px 0px #000000;
-    --shadow-hard-lg: 8px 8px 0px #000000;
-    --shadow-hard-xl: 12px 12px 0px #000000;
+    /* Status Colors - Bright for dark backgrounds */
+    --color-success: #00ff00; /* Neon green for dark mode */
 
-    /* Border Radius (ALWAYS 0 for brutalism) */
-    --radius: 0;
-
-    /* Typography */
-    --font-primary: 'Space Mono', 'Courier New', monospace;
-    --font-secondary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* Shadows use white for visibility on dark backgrounds */
+    --shadow-hard: 4px 4px 0px #ffffff;
+    --shadow-hard-lg: 8px 8px 0px #ffffff;
+    --shadow-hard-xl: 12px 12px 0px #ffffff;
+    --shadow-color: #ffffff;
+    --shadow-hover: 6px 6px 0px #ffffff;
   }
 
   /* Base Reset */
@@ -57,6 +156,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    border-color: var(--border-default); /* Default border color matches theme */
   }
 
   /* HTML & Body */
@@ -87,31 +187,15 @@
     line-height: 1.2;
     text-transform: uppercase;
     letter-spacing: 0.02em;
+    color: var(--text-primary);
   }
 
-  h1 {
-    font-size: 4rem; /* 64px */
-  }
-
-  h2 {
-    font-size: 3rem; /* 48px */
-  }
-
-  h3 {
-    font-size: 2rem; /* 32px */
-  }
-
-  h4 {
-    font-size: 1.5rem; /* 24px */
-  }
-
-  h5 {
-    font-size: 1.25rem; /* 20px */
-  }
-
-  h6 {
-    font-size: 1rem; /* 16px */
-  }
+  h1 { font-size: 4rem; }
+  h2 { font-size: 3rem; }
+  h3 { font-size: 2rem; }
+  h4 { font-size: 1.5rem; }
+  h5 { font-size: 1.25rem; }
+  h6 { font-size: 1rem; }
 
   /* Links */
   a {
@@ -187,12 +271,12 @@
   /* Selection */
   ::selection {
     background: var(--color-info);
-    color: var(--text-inverse);
+    color: #000000; /* Selection text always black for readability on purple */
   }
 
   ::-moz-selection {
     background: var(--color-info);
-    color: var(--text-inverse);
+    color: #000000;
   }
 }
 
@@ -217,6 +301,7 @@
     border: 2px solid var(--border-default);
     box-shadow: var(--shadow-hard);
     padding: 1.5rem;
+    color: var(--text-primary);
   }
 
   .brutalist-input {
@@ -265,7 +350,7 @@
 
   .brutalist-button:hover:not(:disabled) {
     transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px #000000;
+    box-shadow: 6px 6px 0px var(--shadow-color);
   }
 
   .brutalist-button:active:not(:disabled) {
@@ -281,33 +366,21 @@
   /* Button variants */
   .brutalist-button.primary {
     background-color: var(--color-info);
-    color: var(--text-inverse);
+    color: #ffffff; /* Always white on purple? Or black? Current: text-inverse */
     border-color: var(--color-info);
   }
-
-  .brutalist-button.success {
-    background-color: var(--color-success);
-    color: var(--text-inverse);
-    border-color: var(--color-success);
-  }
-
-  .brutalist-button.danger {
-    background-color: var(--color-error);
-    color: var(--text-primary);
-    border-color: var(--color-error);
-  }
-
-  .brutalist-button.warning {
-    background-color: var(--color-warning);
-    color: var(--text-inverse);
-    border-color: var(--color-warning);
-  }
+  
+  /* Force text colors for variants to ensure contrast */
+  .brutalist-button.primary { color: #ffffff; }
+  .brutalist-button.success { background-color: var(--color-success); color: #000000; border-color: var(--color-success); }
+  .brutalist-button.danger { background-color: var(--color-error); color: #ffffff; border-color: var(--color-error); }
+  .brutalist-button.warning { background-color: var(--color-warning); color: #000000; border-color: var(--color-warning); }
 
   /* Modal overlay */
   .brutalist-overlay {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.95);
+    background-color: rgba(0, 0, 0, 0.7); /* Slightly transparent black */
     z-index: 1300;
   }
 
@@ -350,7 +423,7 @@
   /* Alert variants */
   .alert-success {
     background-color: var(--color-success);
-    color: var(--text-inverse);
+    color: #000000;
     border: 2px solid var(--color-success);
     padding: 1rem 1.5rem;
     font-weight: 700;
@@ -358,7 +431,7 @@
 
   .alert-error {
     background-color: var(--color-error);
-    color: var(--text-primary);
+    color: #ffffff;
     border: 2px solid var(--color-error);
     padding: 1rem 1.5rem;
     font-weight: 700;
@@ -366,7 +439,7 @@
 
   .alert-warning {
     background-color: var(--color-warning);
-    color: var(--text-inverse);
+    color: #000000;
     border: 2px solid var(--color-warning);
     padding: 1rem 1.5rem;
     font-weight: 700;
@@ -374,7 +447,7 @@
 
   .alert-info {
     background-color: var(--color-info);
-    color: var(--text-primary);
+    color: #ffffff;
     border: 2px solid var(--color-info);
     padding: 1rem 1.5rem;
     font-weight: 700;
@@ -397,30 +470,56 @@
     transition: none !important;
   }
 
-  /* Status badge utilities */
+  /* Status badge utilities - Light mode */
   .badge-pending {
     background-color: var(--color-neutral);
-    color: var(--text-primary);
+    color: #000000;
   }
 
   .badge-preparing {
     background-color: var(--color-warning);
-    color: var(--text-inverse);
+    color: #000000;
   }
 
   .badge-ready {
     background-color: var(--color-success);
-    color: var(--text-inverse);
+    color: #000000;
   }
 
   .badge-delivered {
     background-color: var(--color-info);
-    color: var(--text-primary);
+    color: #ffffff;
   }
 
   .badge-cancelled {
     background-color: var(--color-error);
-    color: var(--text-primary);
+    color: #ffffff;
+  }
+
+  /* Status badge utilities - Dark mode */
+  .dark .badge-pending {
+    background-color: #666666;
+    color: #ffffff;
+  }
+
+  .dark .badge-preparing {
+    background-color: #cc5529;
+    color: #ffffff;
+  }
+
+  .dark .badge-ready {
+    background-color: #00cc00;
+    color: #000000;
+  }
+
+  .dark .badge-delivered {
+    background-color: #7d47a0;
+    color: #ffffff;
+  }
+
+  .dark .badge-cancelled {
+    background-color: #cc0000;
+    color: #ffffff;
   }
 
   .sr-only {
@@ -452,7 +551,7 @@
     left: 1rem;
     padding: 0.75rem 1rem;
     background: var(--color-info);
-    color: var(--text-primary);
+    color: #ffffff;
     border: 2px solid var(--border-default);
     box-shadow: var(--shadow-hard);
     text-transform: uppercase;

@@ -16,19 +16,27 @@ describe('BrutalistButton', () => {
   it('applies primary variant styles', () => {
     render(<BrutalistButton variant="primary">Primary</BrutalistButton>)
     const button = screen.getByText('Primary')
-    expect(button).toHaveClass('bg-[#9b59b6]')
+    expect(button).toHaveClass('bg-primary', 'text-primary-foreground', 'border-primary')
   })
 
   it('applies success variant styles', () => {
     render(<BrutalistButton variant="success">Success</BrutalistButton>)
     const button = screen.getByText('Success')
-    expect(button).toHaveClass('bg-[#00ff00]')
+    expect(button).toHaveClass(
+      'bg-[var(--color-success)]',
+      'text-black',
+      'border-[var(--color-success)]'
+    )
   })
 
   it('applies danger variant styles', () => {
     render(<BrutalistButton variant="danger">Danger</BrutalistButton>)
     const button = screen.getByText('Danger')
-    expect(button).toHaveClass('bg-[#ff0000]')
+    expect(button).toHaveClass(
+      'bg-destructive',
+      'text-destructive-foreground',
+      'border-destructive'
+    )
   })
 
   it('applies correct size classes', () => {

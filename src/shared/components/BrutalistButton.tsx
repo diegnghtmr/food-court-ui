@@ -28,11 +28,11 @@ export const BrutalistButton = React.forwardRef<
   ) => {
     const getVariantClasses = (): string => {
       const variants = {
-        primary: 'bg-[#9b59b6] text-[#f5f5f5] border-[#9b59b6]',
-        success: 'bg-[#00ff00] text-[#000000] border-[#00ff00]',
-        danger: 'bg-[#ff0000] text-[#f5f5f5] border-[#ff0000]',
-        warning: 'bg-[#ff6b35] text-[#000000] border-[#ff6b35]',
-        neutral: 'bg-[#121212] text-[#f5f5f5] border-[#ffffff]',
+        primary: 'bg-primary text-primary-foreground border-primary',
+        success: 'bg-[var(--color-success)] text-black border-[var(--color-success)]',
+        danger: 'bg-destructive text-destructive-foreground border-destructive',
+        warning: 'bg-[var(--color-warning)] text-black border-[var(--color-warning)]',
+        neutral: 'bg-secondary text-secondary-foreground border-border',
       }
       return variants[variant]
     }
@@ -65,13 +65,13 @@ export const BrutalistButton = React.forwardRef<
       .filter(Boolean)
       .join(' ')
 
-    const shadowClass = 'shadow-[4px_4px_0px_#000000]'
+    const shadowClass = ''
     const hoverShadowClass = disabled
       ? ''
-      : 'hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#000000]'
+      : 'hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#000000] dark:hover:shadow-[6px_6px_0px_#ffffff]'
     const activeShadowClass = disabled
       ? ''
-      : 'active:translate-x-0 active:translate-y-0 active:shadow-[4px_4px_0px_#000000]'
+      : 'active:translate-x-0 active:translate-y-0 active:shadow-none'
 
     const combinedClasses = `${baseClasses} ${getVariantClasses()} ${getSizeClasses()} ${shadowClass} ${hoverShadowClass} ${activeShadowClass}`
 

@@ -51,7 +51,7 @@ describe('BrutalistInput', () => {
   it('applies error styles when error exists', () => {
     render(<BrutalistInput label="Email" type="email" error="Invalid email" />)
     const input = screen.getByRole('textbox')
-    expect(input).toHaveClass('border-[#ff0000]')
+    expect(input).toHaveClass('border-destructive')
   })
 
   it('is disabled when disabled prop is true', () => {

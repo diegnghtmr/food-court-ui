@@ -5,7 +5,7 @@
 
 import { Outlet, Link, useNavigate } from 'react-router-dom'
 import { useAuthActions } from '@infrastructure/auth'
-import { BrutalistButton, SkipLink } from '@shared/components'
+import { BrutalistButton, SkipLink, ThemeToggle } from '@shared/components'
 
 export const ClientLayout = () => {
   const { logout } = useAuthActions()
@@ -42,6 +42,8 @@ export const ClientLayout = () => {
               >
                 Mis Pedidos
               </Link>
+
+              <ThemeToggle />
 
               <BrutalistButton
                 variant="danger"

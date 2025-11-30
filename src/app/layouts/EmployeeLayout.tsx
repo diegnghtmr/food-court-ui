@@ -5,7 +5,7 @@
 
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useAuthActions } from '@infrastructure/auth'
-import { BrutalistButton, SkipLink } from '@shared/components'
+import { BrutalistButton, SkipLink, ThemeToggle } from '@shared/components'
 
 export const EmployeeLayout = () => {
   const { logout } = useAuthActions()
@@ -28,9 +28,12 @@ export const EmployeeLayout = () => {
               Panel de Cocina
             </h1>
 
-            <BrutalistButton variant="danger" onClick={handleLogout}>
-              Cerrar Sesion
-            </BrutalistButton>
+            <div className="flex items-center gap-4">
+              <ThemeToggle />
+              <BrutalistButton variant="danger" onClick={handleLogout}>
+                Cerrar Sesion
+              </BrutalistButton>
+            </div>
           </div>
         </header>
 

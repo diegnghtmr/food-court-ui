@@ -46,7 +46,7 @@ export const BrutalistInput = React.forwardRef<
       'uppercase',
       'tracking-wide',
       'mb-2',
-      hasError ? 'text-[#ff0000]' : 'text-[#f5f5f5]',
+      hasError ? 'text-destructive' : 'text-foreground',
     ]
       .filter(Boolean)
       .join(' ')
@@ -56,29 +56,29 @@ export const BrutalistInput = React.forwardRef<
       'px-4',
       'py-3',
       'text-base',
-      'bg-[#121212]',
-      'text-[#f5f5f5]',
+      'bg-input',
+      'text-foreground',
       'border-2',
-      hasError ? 'border-[#ff0000]' : 'border-[#ffffff]',
+      hasError ? 'border-destructive' : 'border-border',
       'transition-colors',
       'duration-75',
-      'placeholder:text-[var(--text-disabled)]',
-      disabled ? 'opacity-50 cursor-not-allowed bg-[#0a0a0a]' : '',
+      'placeholder:text-muted-foreground',
+      disabled ? 'opacity-50 cursor-not-allowed bg-muted' : '',
       !hasError && !disabled
-        ? 'hover:border-[#9b59b6] focus:border-[#9b59b6]'
+        ? 'hover:border-primary focus:border-primary'
         : '',
     ]
       .filter(Boolean)
       .join(' ')
 
     const errorClasses =
-      'mt-2 text-sm font-bold text-[#ff0000] uppercase tracking-wide'
+      'mt-2 text-sm font-bold text-destructive uppercase tracking-wide'
 
     return (
       <div className="w-full">
         <label htmlFor={inputId} className={labelClasses}>
           {label}
-          {required && <span className="ml-1 text-[#ff0000]">*</span>}
+          {required && <span className="ml-1 text-destructive">*</span>}
         </label>
         <input
           ref={ref}

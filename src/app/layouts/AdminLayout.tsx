@@ -5,7 +5,7 @@
 
 import { Outlet, Link, useNavigate } from 'react-router-dom'
 import { useAuthActions } from '@infrastructure/auth'
-import { BrutalistButton, SkipLink } from '@shared/components'
+import { BrutalistButton, SkipLink, ThemeToggle } from '@shared/components'
 
 export const AdminLayout = () => {
   const { logout } = useAuthActions()
@@ -49,7 +49,11 @@ export const AdminLayout = () => {
               Crear Restaurante
             </Link>
 
-            <div className="pt-8">
+            <div className="pt-8 flex flex-col gap-4">
+              <div className="flex items-center justify-between px-1">
+                <span className="text-sm font-bold text-[var(--text-primary)] uppercase">Tema</span>
+                <ThemeToggle />
+              </div>
               <BrutalistButton
                 variant="danger"
                 onClick={handleLogout}

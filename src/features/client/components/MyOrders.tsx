@@ -9,8 +9,21 @@ import {
 import {
   OrderStatus,
   ORDER_STATUS_LABELS,
-  ORDER_STATUS_COLORS,
 } from '@shared/types'
+
+/**
+ * Maps order status to CSS badge class for theme-aware styling
+ */
+const getStatusBadgeClass = (status: OrderStatus): string => {
+  const badgeClasses: Record<OrderStatus, string> = {
+    [OrderStatus.PENDIENTE]: 'badge-pending',
+    [OrderStatus.EN_PREPARACION]: 'badge-preparing',
+    [OrderStatus.LISTO]: 'badge-ready',
+    [OrderStatus.ENTREGADO]: 'badge-delivered',
+    [OrderStatus.CANCELADO]: 'badge-cancelled',
+  }
+  return badgeClasses[status]
+}
 import { orderService } from '../services/orderService'
 import { ClientOrder } from '../models'
 
@@ -96,7 +109,7 @@ export const MyOrders = () => {
 
   return (
     <div className="p-4 md:p-8">
-      <h1 className="text-3xl md:text-4xl font-bold text-[#f5f5f5] mb-8 uppercase tracking-wide">
+      <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8 uppercase tracking-wide">
         MIS PEDIDOS
       </h1>
 
@@ -117,10 +130,10 @@ export const MyOrders = () => {
       {orders.length === 0 && !isLoading && (
         <BrutalistCard>
           <div className="text-center py-12">
-            <p className="text-2xl text-[#c0c0c0] mb-6">
+            <p className="text-2xl text-muted-foreground mb-6">
               No tienes pedidos activos
             </p>
-            <p className="text-[#8a8a8a] mb-6">
+            <p className="text-muted-foreground/80 mb-6">
               Comienza a ordenar de tus restaurantes favoritos
             </p>
           </div>
@@ -132,27 +145,23 @@ export const MyOrders = () => {
         {orders.map((order) => (
           <BrutalistCard key={order.id}>
             {/* Order Header */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 pb-4 border-b-2 border-[#8a8a8a]">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 pb-4 border-b-2 border-border">
               <div>
-                <h2 className="text-2xl font-bold text-[#f5f5f5] mb-2 uppercase tracking-wide">
+                <h2 className="text-2xl font-bold text-card-foreground mb-2 uppercase tracking-wide">
                   PEDIDO #{order.id}
                 </h2>
-                <p className="text-[#c0c0c0] mb-1">
-                  <span className="font-bold">RESTAURANTE:</span>{' '}
+                <p className="text-muted-foreground mb-1">
+                  <span className="font-bold text-card-foreground">RESTAURANTE:</span>{' '}
                   {order.restauranteNombre}
                 </p>
-                <p className="text-sm text-[#8a8a8a]">
+                <p className="text-sm text-muted-foreground">
                   {formatDate(order.fechaCreacion)}
                 </p>
               </div>
 
               {/* Status Badge */}
               <div
-                className="mt-4 md:mt-0 inline-block px-6 py-3 border-2 border-[#ffffff] font-bold uppercase tracking-wide text-center"
-                style={{
-                  backgroundColor: ORDER_STATUS_COLORS[order.estado],
-                  color: '#000000',
-                }}
+                className={`mt-4 md:mt-0 inline-block px-6 py-3 border-2 border-border font-bold uppercase tracking-wide text-center ${getStatusBadgeClass(order.estado)}`}
               >
                 {ORDER_STATUS_LABELS[order.estado]}
               </div>
@@ -160,22 +169,22 @@ export const MyOrders = () => {
 
             {/* Order Items */}
             <div className="mb-6">
-              <h3 className="text-lg font-bold text-[#f5f5f5] mb-3 uppercase tracking-wide">
+              <h3 className="text-lg font-bold text-card-foreground mb-3 uppercase tracking-wide">
                 ITEMS:
               </h3>
               <ul className="space-y-2">
                 {order.items.map((item, index) => (
                   <li
                     key={index}
-                    className="flex justify-between items-center text-[#c0c0c0] py-2 border-b border-[#3a3a3a]"
+                    className="flex justify-between items-center text-muted-foreground py-2 border-b border-border/50"
                   >
                     <span>
-                      <span className="font-bold text-[#f5f5f5]">
+                      <span className="font-bold text-card-foreground">
                         {item.cantidad}x
                       </span>{' '}
                       {item.platoNombre}
                     </span>
-                    <span className="font-bold text-[#00ff00]">
+                    <span className="font-bold text-[var(--color-success)]">
                       {formatCurrency(item.precio * item.cantidad)}
                     </span>
                   </li>
@@ -184,34 +193,34 @@ export const MyOrders = () => {
             </div>
 
             {/* Total */}
-            <div className="flex justify-between items-center mb-6 py-4 border-t-2 border-[#ffffff]">
-              <span className="text-xl font-bold text-[#f5f5f5] uppercase tracking-wide">
+            <div className="flex justify-between items-center mb-6 py-4 border-t-2 border-border">
+              <span className="text-xl font-bold text-card-foreground uppercase tracking-wide">
                 TOTAL:
               </span>
-              <span className="text-3xl font-bold text-[#00ff00]">
+              <span className="text-3xl font-bold text-[var(--color-success)]">
                 {formatCurrency(order.total)}
               </span>
             </div>
 
             {/* Status-specific Actions and Displays */}
-            {/* CRITICAL: PIN Display for Ready Orders */}
+            {/* CRITICAL: PIN Display for Ready Orders - KEPT DARK/TERMINAL STYLE INTENTIONALLY */}
             {order.estado === OrderStatus.LISTO && order.pin && (
-              <div className="border-4 border-[#00ff00] p-8 mt-4 bg-[#0a0a0a] animate-pulse">
+              <div className="border-4 border-[var(--color-success)] p-8 mt-4 bg-black animate-pulse">
                 <div className="text-center">
-                  <p className="text-xl md:text-2xl font-bold text-[#00ff00] mb-6 uppercase tracking-wide">
+                  <p className="text-xl md:text-2xl font-bold text-[var(--color-success)] mb-6 uppercase tracking-wide">
                     TU PEDIDO ESTA LISTO PARA RECOGER
                   </p>
 
-                  <div className="bg-[#000000] border-4 border-[#00ff00] p-6 mb-6">
-                    <p className="text-sm text-[#c0c0c0] mb-3 uppercase tracking-wide">
+                  <div className="bg-black border-4 border-[var(--color-success)] p-6 mb-6">
+                    <p className="text-sm text-gray-400 mb-3 uppercase tracking-wide">
                       CODIGO DE RETIRO:
                     </p>
-                    <p className="text-6xl md:text-8xl font-bold text-[#00ff00] tracking-widest font-mono">
+                    <p className="text-6xl md:text-8xl font-bold text-[var(--color-success)] tracking-widest font-mono">
                       {order.pin}
                     </p>
                   </div>
 
-                  <p className="text-base md:text-lg text-[#c0c0c0]">
+                  <p className="text-base md:text-lg text-gray-400">
                     Dicta este codigo al empleado para recibir tu comida.
                   </p>
                 </div>
@@ -221,7 +230,7 @@ export const MyOrders = () => {
             {/* Pending Order - Show Cancel Button */}
             {order.estado === OrderStatus.PENDIENTE && (
               <div className="space-y-3">
-                <p className="text-[#c0c0c0] text-center py-2">
+                <p className="text-muted-foreground text-center py-2">
                   Tu pedido esta esperando confirmacion del restaurante
                 </p>
                 <BrutalistButton
@@ -236,11 +245,11 @@ export const MyOrders = () => {
 
             {/* In Preparation - Show Progress Message */}
             {order.estado === OrderStatus.EN_PREPARACION && (
-              <div className="bg-[#ff6b35] border-2 border-[#ffffff] p-6 text-center">
-                <p className="text-xl font-bold text-[#000000] uppercase tracking-wide">
+              <div className="bg-[var(--color-warning)] border-2 border-border p-6 text-center">
+                <p className="text-xl font-bold text-black uppercase tracking-wide">
                   TU PEDIDO SE ESTA COCINANDO...
                 </p>
-                <p className="text-sm text-[#000000] mt-2">
+                <p className="text-sm text-black mt-2">
                   El restaurante esta preparando tu orden
                 </p>
               </div>
@@ -248,11 +257,11 @@ export const MyOrders = () => {
 
             {/* Delivered - Show Success Message */}
             {order.estado === OrderStatus.ENTREGADO && (
-              <div className="bg-[#9b59b6] border-2 border-[#ffffff] p-6 text-center">
-                <p className="text-xl font-bold text-[#ffffff] uppercase tracking-wide">
+              <div className="bg-primary border-2 border-border p-6 text-center">
+                <p className="text-xl font-bold text-primary-foreground uppercase tracking-wide">
                   PEDIDO ENTREGADO
                 </p>
-                <p className="text-sm text-[#f5f5f5] mt-2">
+                <p className="text-sm text-primary-foreground/90 mt-2">
                   Esperamos que hayas disfrutado tu comida!
                 </p>
               </div>
@@ -260,11 +269,11 @@ export const MyOrders = () => {
 
             {/* Cancelled - Show Cancelled Message */}
             {order.estado === OrderStatus.CANCELADO && (
-              <div className="bg-[#ff0000] border-2 border-[#ffffff] p-6 text-center">
-                <p className="text-xl font-bold text-[#ffffff] uppercase tracking-wide">
+              <div className="bg-destructive border-2 border-border p-6 text-center">
+                <p className="text-xl font-bold text-destructive-foreground uppercase tracking-wide">
                   PEDIDO CANCELADO
                 </p>
-                <p className="text-sm text-[#f5f5f5] mt-2">
+                <p className="text-sm text-destructive-foreground/90 mt-2">
                   Este pedido ha sido cancelado
                 </p>
               </div>
@@ -275,7 +284,7 @@ export const MyOrders = () => {
 
       {/* Auto-refresh indicator */}
       {!isLoading && orders.length > 0 && (
-        <div className="text-center mt-8 text-sm text-[#8a8a8a]">
+        <div className="text-center mt-8 text-sm text-muted-foreground">
           Actualizacion automatica cada 10 segundos
         </div>
       )}

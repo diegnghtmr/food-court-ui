@@ -10,10 +10,11 @@ export const BrutalistCard = React.forwardRef<
   BrutalistCardProps
 >(({ children, className = '' }, ref) => {
   const baseClasses = [
-    'bg-[#1a1a1a]',
+    'bg-card',
+    'text-card-foreground',
     'border-2',
-    'border-[#ffffff]',
-    'shadow-[4px_4px_0px_#000000]',
+    'border-border',
+    'shadow-[var(--shadow-hard)]',
     'p-6',
     className,
   ]

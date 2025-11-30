@@ -72,7 +72,7 @@ export const RestaurantsGrid = () => {
 
   return (
     <div className="p-4 md:p-8">
-      <h1 className="text-3xl md:text-4xl font-bold text-[#f5f5f5] mb-8 uppercase tracking-wide">
+      <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8 uppercase tracking-wide">
         RESTAURANTES DISPONIBLES
       </h1>
 
@@ -84,7 +84,7 @@ export const RestaurantsGrid = () => {
 
       {restaurants.length === 0 && !isLoading && !error && (
         <BrutalistCard>
-          <p className="text-[#f5f5f5] text-center py-8">
+          <p className="text-card-foreground text-center py-8">
             No hay restaurantes disponibles en este momento.
           </p>
         </BrutalistCard>
@@ -97,7 +97,7 @@ export const RestaurantsGrid = () => {
               <BrutalistCard key={restaurant.id}>
                 <div className="flex flex-col h-full">
                   {/* Restaurant Logo */}
-                  <div className="w-full h-48 bg-[#0a0a0a] border-2 border-[#ffffff] mb-4 flex items-center justify-center overflow-hidden">
+                  <div className="w-full h-48 bg-muted border-2 border-border mb-4 flex items-center justify-center overflow-hidden">
                     {restaurant.urlLogo ? (
                       <img
                         src={restaurant.urlLogo}
@@ -110,26 +110,26 @@ export const RestaurantsGrid = () => {
                         }}
                       />
                     ) : (
-                      <span className="text-6xl text-[#8a8a8a]">?</span>
+                      <span className="text-6xl text-muted-foreground">?</span>
                     )}
                   </div>
 
                   {/* Restaurant Info */}
                   <div className="flex-1">
-                    <h2 className="text-xl font-bold text-[#f5f5f5] mb-2 uppercase tracking-wide">
+                    <h2 className="text-xl font-bold text-card-foreground mb-2 uppercase tracking-wide">
                       {restaurant.nombre}
                     </h2>
 
                     <div className="space-y-1 mb-4">
-                      <p className="text-sm text-[#c0c0c0]">
-                        <span className="font-bold">DIRECCION:</span>{' '}
+                      <p className="text-sm text-muted-foreground">
+                        <span className="font-bold text-card-foreground">DIRECCION:</span>{' '}
                         {restaurant.direccion}
                       </p>
-                      <p className="text-sm text-[#c0c0c0]">
-                        <span className="font-bold">TELEFONO:</span>{' '}
+                      <p className="text-sm text-muted-foreground">
+                        <span className="font-bold text-card-foreground">TELEFONO:</span>{' '}
                         {restaurant.telefono}
                       </p>
-                      <p className="text-sm text-[#8a8a8a]">
+                      <p className="text-sm text-muted-foreground/80">
                         NIT: {restaurant.nit}
                       </p>
                     </div>

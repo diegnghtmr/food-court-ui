@@ -128,10 +128,10 @@ export const RestaurantMenu = () => {
         <div className="fixed bottom-6 right-6 z-50">
           <button
             onClick={() => navigate('/client/cart')}
-            className="relative bg-[#9b59b6] text-[#f5f5f5] p-4 border-4 border-[#ffffff] font-bold uppercase tracking-wide hover:bg-[#8e44ad] transition-colors shadow-xl"
+            className="relative bg-primary text-primary-foreground p-4 border-4 border-border font-bold uppercase tracking-wide hover:bg-primary/90 transition-colors shadow-xl"
           >
             <span className="text-2xl">CARRITO</span>
-            <span className="absolute -top-2 -right-2 bg-[#ff0000] text-[#ffffff] w-10 h-10 flex items-center justify-center border-2 border-[#ffffff] font-bold text-lg">
+            <span className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground w-10 h-10 flex items-center justify-center border-2 border-border font-bold text-lg">
               {cartItemCount}
             </span>
           </button>
@@ -164,7 +164,7 @@ export const RestaurantMenu = () => {
       {/* Restaurant Header */}
       <BrutalistCard className="mb-8">
         <div className="flex flex-col md:flex-row gap-6">
-          <div className="w-full md:w-48 h-48 bg-[#0a0a0a] border-2 border-[#ffffff] flex items-center justify-center overflow-hidden flex-shrink-0">
+          <div className="w-full md:w-48 h-48 bg-muted border-2 border-border flex items-center justify-center overflow-hidden flex-shrink-0">
             {restaurant.urlLogo ? (
               <img
                 src={restaurant.urlLogo}
@@ -172,21 +172,21 @@ export const RestaurantMenu = () => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="text-6xl text-[#8a8a8a]">?</span>
+              <span className="text-6xl text-muted-foreground">?</span>
             )}
           </div>
 
           <div className="flex-1">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#f5f5f5] mb-4 uppercase tracking-wide">
+            <h1 className="text-3xl md:text-4xl font-bold text-card-foreground mb-4 uppercase tracking-wide">
               {restaurant.nombre}
             </h1>
             <div className="space-y-2">
-              <p className="text-[#c0c0c0]">
-                <span className="font-bold">DIRECCION:</span>{' '}
+              <p className="text-muted-foreground">
+                <span className="font-bold text-card-foreground">DIRECCION:</span>{' '}
                 {restaurant.direccion}
               </p>
-              <p className="text-[#c0c0c0]">
-                <span className="font-bold">TELEFONO:</span>{' '}
+              <p className="text-muted-foreground">
+                <span className="font-bold text-card-foreground">TELEFONO:</span>{' '}
                 {restaurant.telefono}
               </p>
             </div>
@@ -197,7 +197,7 @@ export const RestaurantMenu = () => {
       {/* Menu by Category */}
       {dishes.length === 0 ? (
         <BrutalistCard>
-          <p className="text-[#f5f5f5] text-center py-8">
+          <p className="text-card-foreground text-center py-8">
             Este restaurante no tiene platos disponibles en este momento.
           </p>
         </BrutalistCard>
@@ -208,7 +208,7 @@ export const RestaurantMenu = () => {
 
             return (
               <div key={category}>
-                <h2 className="text-2xl font-bold text-[#f5f5f5] mb-4 uppercase tracking-wide border-b-4 border-[#9b59b6] pb-2">
+                <h2 className="text-2xl font-bold text-foreground mb-4 uppercase tracking-wide border-b-4 border-primary pb-2">
                   {DISH_CATEGORY_LABELS[category as DishCategory]}
                 </h2>
 
@@ -217,7 +217,7 @@ export const RestaurantMenu = () => {
                     <BrutalistCard key={dish.id}>
                       <div className="flex flex-col h-full">
                         {/* Dish Image */}
-                        <div className="w-full h-48 bg-[#0a0a0a] border-2 border-[#ffffff] mb-4 flex items-center justify-center overflow-hidden">
+                        <div className="w-full h-48 bg-muted border-2 border-border mb-4 flex items-center justify-center overflow-hidden">
                           {dish.urlImagen ? (
                             <img
                               src={dish.urlImagen}
@@ -230,21 +230,21 @@ export const RestaurantMenu = () => {
                               }}
                             />
                           ) : (
-                            <span className="text-6xl text-[#8a8a8a]">?</span>
+                            <span className="text-6xl text-muted-foreground">?</span>
                           )}
                         </div>
 
                         {/* Dish Info */}
                         <div className="flex-1">
-                          <h3 className="text-lg font-bold text-[#f5f5f5] mb-2 uppercase tracking-wide">
+                          <h3 className="text-lg font-bold text-card-foreground mb-2 uppercase tracking-wide">
                             {dish.nombre}
                           </h3>
 
-                          <p className="text-sm text-[#c0c0c0] mb-4 line-clamp-3">
+                          <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
                             {dish.descripcion}
                           </p>
 
-                          <p className="text-2xl font-bold text-[#00ff00] mb-4">
+                          <p className="text-2xl font-bold text-[var(--color-success)] mb-4">
                             {formatCurrency(dish.precio)}
                           </p>
                         </div>
