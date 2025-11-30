@@ -5,7 +5,7 @@
 
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { BrutalistCard, BrutalistButton, ErrorAlert } from '@shared/components'
+import { BrutalistCard, BrutalistButton, ErrorAlert, ThemeToggle } from '@shared/components'
 import { LoginForm } from './components/LoginForm'
 import { RegisterForm } from './components/RegisterForm'
 
@@ -22,7 +22,12 @@ export const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center p-4 relative">
+      {/* Theme Toggle */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
+
       <div className="w-full max-w-md">
         <h1 className="text-4xl font-bold text-center mb-8 text-[var(--text-primary)]">
           PLAZOLETA DE COMIDAS
