@@ -87,6 +87,7 @@ const mapOrder = async (data: OrderResponse): Promise<Order> => {
   const dishesMap = await fetchDishesByRestaurant(restaurantId)
   const clienteId = Number(data.clientId ?? 0)
   const userInfo = await fetchUser(clienteId)
+  const orderId = String(data.id ?? '')
 
   const dishes = Array.isArray(data.dishes) ? data.dishes : []
   const items =
@@ -103,16 +104,16 @@ const mapOrder = async (data: OrderResponse): Promise<Order> => {
     }) ?? []
 
   return {
-    id: Number(data.id),
+    id: orderId,
     restauranteId: restaurantId,
     clienteId,
     clienteNombre: userInfo.nombre || `Cliente ${clienteId}`,
     clienteCorreo: userInfo.correo,
     items,
-    estado: isValidOrderStatus(data.status)
+    estado: isValidOrderStatus(data.status ?? '')
       ? (data.status as OrderStatus)
       : OrderStatus.PENDIENTE,
-    empleadoId: data.chefId ?? undefined,
+    empleadoId: data.chefId ? String(data.chefId) : undefined,
     pin: data.pin,
     fechaCreacion: data.date,
   }
@@ -151,7 +152,7 @@ export const orderManagementService = {
    * @returns Updated order
    */
   assignOrderToEmployee: async (
-    orderId: number,
+    orderId: string,
     _employeeId: number
   ): Promise<Order> => {
     void _employeeId
@@ -166,7 +167,7 @@ export const orderManagementService = {
    * @param orderId - Order ID
    * @returns Updated order with PIN
    */
-  markOrderReady: async (orderId: number): Promise<Order> => {
+  markOrderReady: async (orderId: string): Promise<Order> => {
     const response = await axiosInstance.patch(
       `${API_ENDPOINTS.PEDIDOS}/orders/${orderId}/ready`
     )
@@ -180,7 +181,7 @@ export const orderManagementService = {
    * @returns Validation response
    */
   deliverOrder: async (
-    orderId: number,
+    orderId: string,
     pin: string
   ): Promise<PinValidationResponse> => {
     await axiosInstance.post(

@@ -45,7 +45,7 @@ export const MyOrders = () => {
     }
   }
 
-  const handleCancelOrder = async (orderId: number) => {
+  const handleCancelOrder = async (orderId: string) => {
     if (
       !window.confirm(
         'Estas seguro de que deseas cancelar este pedido? Esta accion no se puede deshacer.'

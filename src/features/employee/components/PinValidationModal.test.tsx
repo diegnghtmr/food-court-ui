@@ -22,7 +22,7 @@ describe('PinValidationModal - Critical Flow', () => {
         isOpen={true}
         onClose={mockOnClose}
         onValidate={mockOnValidate}
-        orderId={123}
+        orderId={'123'}
       />
     )
 
@@ -38,7 +38,7 @@ describe('PinValidationModal - Critical Flow', () => {
         isOpen={false}
         onClose={mockOnClose}
         onValidate={mockOnValidate}
-        orderId={123}
+        orderId={'123'}
       />
     )
 
@@ -55,7 +55,7 @@ describe('PinValidationModal - Critical Flow', () => {
         isOpen={true}
         onClose={mockOnClose}
         onValidate={mockOnValidate}
-        orderId={123}
+        orderId={'123'}
       />
     )
 
@@ -76,7 +76,7 @@ describe('PinValidationModal - Critical Flow', () => {
         isOpen={true}
         onClose={mockOnClose}
         onValidate={mockOnValidate}
-        orderId={123}
+        orderId={'123'}
       />
     )
 
@@ -95,7 +95,7 @@ describe('PinValidationModal - Critical Flow', () => {
         isOpen={true}
         onClose={mockOnClose}
         onValidate={mockOnValidate}
-        orderId={123}
+        orderId={'123'}
       />
     )
 
@@ -114,7 +114,7 @@ describe('PinValidationModal - Critical Flow', () => {
         isOpen={true}
         onClose={mockOnClose}
         onValidate={mockOnValidate}
-        orderId={123}
+        orderId={'123'}
       />
     )
 
@@ -137,7 +137,7 @@ describe('PinValidationModal - Critical Flow', () => {
         isOpen={true}
         onClose={mockOnClose}
         onValidate={mockOnValidate}
-        orderId={123}
+        orderId={'123'}
       />
     )
 
@@ -161,7 +161,7 @@ describe('PinValidationModal - Critical Flow', () => {
         isOpen={true}
         onClose={mockOnClose}
         onValidate={mockOnValidate}
-        orderId={123}
+        orderId={'123'}
       />
     )
 
@@ -187,7 +187,7 @@ describe('PinValidationModal - Critical Flow', () => {
         isOpen={true}
         onClose={mockOnClose}
         onValidate={mockOnValidate}
-        orderId={123}
+        orderId={'123'}
       />
     )
 
@@ -227,7 +227,7 @@ describe('PinValidationModal - Critical Flow', () => {
         isOpen={true}
         onClose={mockOnClose}
         onValidate={mockOnValidate}
-        orderId={123}
+        orderId={'123'}
       />
     )
 
@@ -248,7 +248,7 @@ describe('PinValidationModal - Critical Flow', () => {
         isOpen={true}
         onClose={mockOnClose}
         onValidate={mockOnValidate}
-        orderId={123}
+        orderId={'123'}
       />
     )
 
@@ -264,7 +264,7 @@ describe('PinValidationModal - Critical Flow', () => {
         isOpen={true}
         onClose={mockOnClose}
         onValidate={mockOnValidate}
-        orderId={123}
+        orderId={'123'}
       />
     )
 
@@ -282,7 +282,7 @@ describe('PinValidationModal - Critical Flow', () => {
         isOpen={true}
         onClose={mockOnClose}
         onValidate={mockOnValidate}
-        orderId={123}
+        orderId={'123'}
       />
     )
 

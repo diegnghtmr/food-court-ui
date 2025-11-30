@@ -5,7 +5,7 @@ import { ORDER_STATUS_COLORS, ORDER_STATUS_LABELS } from '@shared/types'
 
 interface OrderCardProps {
   order: Order
-  onAction: (orderId: number, action: 'assign' | 'ready' | 'deliver') => void
+  onAction: (orderId: string, action: 'assign' | 'ready' | 'deliver') => void
   actionLabel: string
   action: 'assign' | 'ready' | 'deliver'
   isLoading?: boolean

@@ -86,7 +86,7 @@ export const dishService = {
       category: response.data.category,
       restaurantId: response.data.restaurantId?.toString() || '',
       active: response.data.active,
-      createdAt: response.data.createdAt,
+      createdAt: response.data.createdAt ?? '',
     }
   },
 
@@ -145,7 +145,7 @@ export const dishService = {
       category: dish.category,
       restaurantId: dish.restaurantId?.toString() || restaurantId,
       active: dish.active,
-      createdAt: dish.createdAt,
+      createdAt: dish.createdAt ?? '',
     }))
 
     return {

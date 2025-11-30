@@ -10,7 +10,7 @@ interface PinValidationModalProps {
   isOpen: boolean
   onClose: () => void
   onValidate: (pin: string) => Promise<boolean>
-  orderId: number
+  orderId: string
 }
 
 /**

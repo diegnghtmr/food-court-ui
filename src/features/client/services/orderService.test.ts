@@ -35,7 +35,7 @@ describe('orderService', () => {
   it('crea un pedido y mapea la respuesta', async () => {
     mockPost.mockResolvedValueOnce({
       data: {
-        id: 5,
+        id: '5',
         restaurantId: 10,
         dishes: [{ dishId: 1, quantity: 2 }],
         status: OrderStatus.PENDIENTE,
@@ -62,7 +62,7 @@ describe('orderService', () => {
       dishes: [{ dishId: 1, quantity: 2 }],
     })
     expect(result).toMatchObject({
-      id: 5,
+      id: '5',
       restauranteId: 10,
       restauranteNombre: 'Rest A',
       total: 2000,
@@ -79,7 +79,7 @@ describe('orderService', () => {
       })
       .mockResolvedValueOnce({
         data: {
-          id: 20,
+          id: '20',
           restaurantId: 30,
           dishes: [{ dishId: 2, quantity: 1 }],
           status: OrderStatus.EN_PREPARACION,
@@ -100,7 +100,7 @@ describe('orderService', () => {
       expect.stringContaining('/trace/client/7')
     )
     expect(orders[0]).toMatchObject({
-      id: 20,
+      id: '20',
       estado: OrderStatus.EN_PREPARACION, // prioriza el status del detalle
       restauranteNombre: 'Rest B',
       total: 5000,
@@ -122,7 +122,7 @@ describe('orderService', () => {
       // Detalle 31 ok
       .mockResolvedValueOnce({
         data: {
-          id: 31,
+          id: '31',
           restaurantId: 40,
           dishes: [{ dishId: 3, quantity: 1 }],
           status: OrderStatus.PENDIENTE,
@@ -142,7 +142,7 @@ describe('orderService', () => {
     const orders = await orderService.getMyOrders()
 
     expect(orders).toHaveLength(1)
-    expect(orders[0].id).toBe(31)
+    expect(orders[0].id).toBe('31')
   })
 
   it('lanza si falla la obtención de trazas', async () => {
@@ -157,7 +157,7 @@ describe('orderService', () => {
     const orderService = await loadService()
     mockPatch.mockResolvedValueOnce({})
 
-    await orderService.cancelOrder(55)
+    await orderService.cancelOrder('55')
 
     expect(mockPatch).toHaveBeenCalledWith(
       expect.stringContaining('/orders/cancel/55')

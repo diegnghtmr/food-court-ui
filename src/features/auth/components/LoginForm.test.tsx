@@ -50,7 +50,7 @@ describe('LoginForm Integration', () => {
 
   it('renders login form with all fields', () => {
     const router = createMemoryRouter([{ path: '/', element: <LoginForm /> }], {
-      future: { v7_startTransition: true, v7_relativeSplatPath: true },
+      future: { v7_relativeSplatPath: true },
     })
 
     render(<RouterProvider router={router} />)
@@ -64,7 +64,7 @@ describe('LoginForm Integration', () => {
 
   it('shows validation errors for empty fields', async () => {
     const router = createMemoryRouter([{ path: '/', element: <LoginForm /> }], {
-      future: { v7_startTransition: true, v7_relativeSplatPath: true },
+      future: { v7_relativeSplatPath: true },
     })
 
     render(<RouterProvider router={router} />)
@@ -81,7 +81,7 @@ describe('LoginForm Integration', () => {
 
   it('shows validation error for invalid email', async () => {
     const router = createMemoryRouter([{ path: '/', element: <LoginForm /> }], {
-      future: { v7_startTransition: true, v7_relativeSplatPath: true },
+      future: { v7_relativeSplatPath: true },
     })
 
     render(<RouterProvider router={router} />)
@@ -115,7 +115,7 @@ describe('LoginForm Integration', () => {
     tokenMocks.getRoleHomePath.mockReturnValue('/client/restaurants')
 
     const router = createMemoryRouter([{ path: '/', element: <LoginForm /> }], {
-      future: { v7_startTransition: true, v7_relativeSplatPath: true },
+      future: { v7_relativeSplatPath: true },
     })
 
     render(<RouterProvider router={router} />)
@@ -150,7 +150,7 @@ describe('LoginForm Integration', () => {
     })
 
     const router = createMemoryRouter([{ path: '/', element: <LoginForm /> }], {
-      future: { v7_startTransition: true, v7_relativeSplatPath: true },
+      future: { v7_relativeSplatPath: true },
     })
 
     render(<RouterProvider router={router} />)
@@ -176,7 +176,7 @@ describe('LoginForm Integration', () => {
     )
 
     const router = createMemoryRouter([{ path: '/', element: <LoginForm /> }], {
-      future: { v7_startTransition: true, v7_relativeSplatPath: true },
+      future: { v7_relativeSplatPath: true },
     })
 
     render(<RouterProvider router={router} />)

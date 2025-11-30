@@ -53,7 +53,7 @@ describe('ShoppingCart integration', () => {
 
     const router = createMemoryRouter(
       [{ path: '/', element: <ShoppingCart /> }],
-      { future: { v7_startTransition: true, v7_relativeSplatPath: true } }
+      { future: { v7_relativeSplatPath: true } }
     )
 
     render(<RouterProvider router={router} />)
@@ -84,7 +84,7 @@ describe('ShoppingCart integration', () => {
 
     const router = createMemoryRouter(
       [{ path: '/', element: <ShoppingCart /> }],
-      { future: { v7_startTransition: true, v7_relativeSplatPath: true } }
+      { future: { v7_relativeSplatPath: true } }
     )
 
     render(<RouterProvider router={router} />)
@@ -112,7 +112,7 @@ describe('ShoppingCart integration', () => {
 
     const router = createMemoryRouter(
       [{ path: '/', element: <ShoppingCart /> }],
-      { future: { v7_startTransition: true, v7_relativeSplatPath: true } }
+      { future: { v7_relativeSplatPath: true } }
     )
 
     render(<RouterProvider router={router} />)

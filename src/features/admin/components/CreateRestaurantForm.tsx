@@ -67,8 +67,8 @@ type CreateRestaurantFormData = z.infer<typeof createRestaurantSchema>
 export const CreateRestaurant = () => {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
-  const [successMessage, setSuccessMessage] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState<string>('')
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   const {
     register,
@@ -104,7 +104,7 @@ export const CreateRestaurant = () => {
         navigate('/admin/dashboard')
       }, 2000)
     } catch (error: unknown) {
-      const message =
+      const rawMessage =
         typeof error === 'object' &&
         error !== null &&
         'response' in error &&
@@ -114,7 +114,9 @@ export const CreateRestaurant = () => {
               .data!.message
           : error instanceof Error
             ? error.message
-            : 'Error al crear restaurante. Intenta nuevamente.'
+            : undefined
+      const message =
+        rawMessage ?? 'Error al crear restaurante. Intenta nuevamente.'
       setErrorMessage(message)
     } finally {
       setIsLoading(false)

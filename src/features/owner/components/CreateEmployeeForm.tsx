@@ -86,8 +86,8 @@ type CreateEmployeeFormData = z.infer<typeof createEmployeeSchema>
 export const CreateEmployee = () => {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
-  const [successMessage, setSuccessMessage] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState<string>('')
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   const {
     register,
@@ -130,7 +130,7 @@ export const CreateEmployee = () => {
         navigate('/owner/dashboard')
       }, 2000)
     } catch (error: unknown) {
-      const message =
+      const rawMessage =
         typeof error === 'object' &&
         error !== null &&
         'response' in error &&
@@ -140,7 +140,9 @@ export const CreateEmployee = () => {
               .data!.message
           : error instanceof Error
             ? error.message
-            : 'Error al crear empleado. Intenta nuevamente.'
+            : undefined
+      const message =
+        rawMessage ?? 'Error al crear empleado. Intenta nuevamente.'
       setErrorMessage(message)
     } finally {
       setIsLoading(false)

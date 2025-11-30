@@ -17,14 +17,14 @@ export interface OrderItem {
  * Represents a complete order in the system
  */
 export interface Order {
-  id: number
+  id: string
   restauranteId: number
   clienteId: number
   clienteNombre: string
   clienteCorreo: string
   items: OrderItem[]
   estado: OrderStatus
-  empleadoId?: number
+  empleadoId?: string
   pin?: string // Only visible when estado = LISTO
   fechaCreacion: string
   fechaActualizacion?: string

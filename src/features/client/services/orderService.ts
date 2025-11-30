@@ -114,6 +114,7 @@ const mapOrderResponse = async (
   const restaurants = await fetchRestaurants()
   const restaurantId = Number(data.restaurantId ?? 0)
   const dishesMap = await fetchDishesByRestaurant(restaurantId)
+  const orderId = String(data.id)
 
   const dishes = Array.isArray(data.dishes) ? data.dishes : []
   const items =
@@ -133,7 +134,7 @@ const mapOrderResponse = async (
   )
 
   return {
-    id: Number(data.id),
+    id: orderId,
     restauranteId: restaurantId,
     restauranteNombre:
       restaurants.get(restaurantId)?.nombre ?? `Restaurante ${restaurantId}`,
@@ -190,14 +191,14 @@ export const orderService = {
       return []
     }
 
-    const latestStatusByOrder: Map<number, OrderStatus> = new Map()
+    const latestStatusByOrder: Map<string, OrderStatus> = new Map()
     traces.forEach((t) => {
-      const orderId = Number(t.orderId)
+      const orderId = String(t.orderId)
       const status = mapOrderStatus(t.newState)
       latestStatusByOrder.set(orderId, status)
     })
 
-    const orderIds = Array.from(new Set(traces.map((t) => Number(t.orderId))))
+    const orderIds = Array.from(new Set(traces.map((t) => String(t.orderId))))
 
     const ordersDetails = await Promise.all(
       orderIds.map(async (id) => {
@@ -216,18 +217,21 @@ export const orderService = {
     const mappedOrders: ClientOrder[] = []
     for (const detail of ordersDetails) {
       if (!detail) continue
-      const orderId = Number(detail.id)
+      const orderId = String(detail.id)
       const fallbackStatus = latestStatusByOrder.get(orderId)
       mappedOrders.push(await mapOrderResponse(detail, fallbackStatus))
     }
 
-    return mappedOrders.sort((a, b) => b.id - a.id)
+    return mappedOrders.sort(
+      (a, b) =>
+        new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime()
+    )
   },
 
   /**
    * Cancel a pending order
    */
-  cancelOrder: async (orderId: number): Promise<void> => {
+  cancelOrder: async (orderId: string): Promise<void> => {
     await axiosInstance.patch(
       `${API_ENDPOINTS.PEDIDOS}/orders/cancel/${orderId}`
     )

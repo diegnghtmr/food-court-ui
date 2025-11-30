@@ -30,7 +30,7 @@ export const OrdersKanban: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const [isPinModalOpen, setIsPinModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [loadingOrderId, setLoadingOrderId] = useState<number | null>(null)
+  const [loadingOrderId, setLoadingOrderId] = useState<string | null>(null)
 
   const restaurantId = getRestaurantId()
 
@@ -94,7 +94,7 @@ export const OrdersKanban: React.FC = () => {
   /**
    * Assign order to employee (PENDIENTE -> EN_PREPARACION)
    */
-  const handleAssignOrder = async (orderId: number) => {
+  const handleAssignOrder = async (orderId: string) => {
     if (!userId) return
 
     setLoadingOrderId(orderId)
@@ -114,7 +114,7 @@ export const OrdersKanban: React.FC = () => {
   /**
    * Mark order as ready (EN_PREPARACION -> LISTO)
    */
-  const handleMarkReady = async (orderId: number) => {
+  const handleMarkReady = async (orderId: string) => {
     setLoadingOrderId(orderId)
     try {
       await orderManagementService.markOrderReady(orderId)
@@ -166,7 +166,7 @@ export const OrdersKanban: React.FC = () => {
    * Handle action based on order status
    */
   const handleOrderAction = (
-    orderId: number,
+    orderId: string,
     action: 'assign' | 'ready' | 'deliver'
   ) => {
     if (action === 'assign') {
@@ -185,7 +185,7 @@ export const OrdersKanban: React.FC = () => {
    * Filter EN_PREPARACION orders by current employee
    */
   const myPreparingOrders = ordersByStatus.EN_PREPARACION.filter(
-    (order) => order.empleadoId === Number(userId)
+    (order) => order.empleadoId === (userId ?? '')
   )
 
   if (isLoading) {
@@ -313,7 +313,7 @@ export const OrdersKanban: React.FC = () => {
           setSelectedOrder(null)
         }}
         onValidate={handlePinValidation}
-        orderId={selectedOrder?.id || 0}
+        orderId={selectedOrder?.id || ''}
       />
     </>
   )

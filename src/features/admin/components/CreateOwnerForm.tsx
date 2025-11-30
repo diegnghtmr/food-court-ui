@@ -84,8 +84,8 @@ type CreateOwnerFormData = z.infer<typeof createOwnerSchema>
 export const CreateOwner = () => {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
-  const [successMessage, setSuccessMessage] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState<string>('')
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   const {
     register,
@@ -122,7 +122,7 @@ export const CreateOwner = () => {
         navigate('/admin/dashboard')
       }, 2000)
     } catch (error: unknown) {
-      const message =
+      const rawMessage =
         typeof error === 'object' &&
         error !== null &&
         'response' in error &&
@@ -132,7 +132,8 @@ export const CreateOwner = () => {
               .data!.message
           : error instanceof Error
             ? error.message
-            : 'Error al crear propietario. Intenta nuevamente.'
+            : undefined
+      const message = rawMessage ?? 'Error al crear propietario. Intenta nuevamente.'
       setErrorMessage(message)
     } finally {
       setIsLoading(false)

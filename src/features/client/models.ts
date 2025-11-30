@@ -50,7 +50,7 @@ export interface CreateOrderData {
  * Client order model with full details
  */
 export interface ClientOrder {
-  id: number
+  id: string
   restauranteId: number
   restauranteNombre: string
   items: Array<{

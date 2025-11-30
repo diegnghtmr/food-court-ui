@@ -30,7 +30,7 @@ describe('orderManagementService', () => {
         data: {
           content: [
             {
-              id: 10,
+              id: '10',
               restaurantId: 50,
               clientId: 99,
               status: OrderStatus.PENDIENTE,
@@ -59,7 +59,7 @@ describe('orderManagementService', () => {
 
     expect(orders).toHaveLength(1)
     expect(orders[0]).toMatchObject({
-      id: 10,
+      id: '10',
       restauranteId: 50,
       clienteId: 99,
       clienteNombre: 'Jane Doe',
@@ -77,7 +77,7 @@ describe('orderManagementService', () => {
   it('asigna orden a empleado y retorna orden mapeada', async () => {
     mockPatch.mockResolvedValueOnce({
       data: {
-        id: 5,
+        id: '5',
         restaurantId: 20,
         clientId: 88,
         status: OrderStatus.EN_PREPARACION,
@@ -97,7 +97,7 @@ describe('orderManagementService', () => {
       })
 
     const orderManagementService = await loadService()
-    const order = await orderManagementService.assignOrderToEmployee(5, 7)
+    const order = await orderManagementService.assignOrderToEmployee('5', 7)
 
     expect(mockPatch).toHaveBeenCalledWith(
       expect.stringContaining('/orders/5/assign')
@@ -109,7 +109,7 @@ describe('orderManagementService', () => {
   it('marca orden como lista', async () => {
     mockPatch.mockResolvedValueOnce({
       data: {
-        id: 6,
+        id: '6',
         restaurantId: 22,
         clientId: 90,
         status: OrderStatus.LISTO,
@@ -133,7 +133,7 @@ describe('orderManagementService', () => {
       })
 
     const orderManagementService = await loadService()
-    const order = await orderManagementService.markOrderReady(6)
+    const order = await orderManagementService.markOrderReady('6')
 
     expect(order.estado).toBe(OrderStatus.LISTO)
     expect(order.items[0].platoNombre).toBe('Taco')
@@ -144,7 +144,7 @@ describe('orderManagementService', () => {
     mockPost.mockResolvedValueOnce({})
     const orderManagementService = await loadService()
 
-    const result = await orderManagementService.deliverOrder(9, '9999')
+    const result = await orderManagementService.deliverOrder('9', '9999')
 
     expect(mockPost).toHaveBeenCalledWith(
       expect.stringContaining('/deliver/9/9999')
@@ -164,7 +164,7 @@ describe('orderManagementService', () => {
     mockPost.mockRejectedValueOnce(new Error('deliver fail'))
     const orderManagementService = await loadService()
     await expect(
-      orderManagementService.deliverOrder(99, '0000')
+      orderManagementService.deliverOrder('99', '0000')
     ).rejects.toThrow(/deliver fail/i)
   })
 })
