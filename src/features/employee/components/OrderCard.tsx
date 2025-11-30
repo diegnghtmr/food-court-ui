@@ -29,7 +29,9 @@ export const OrderCard: React.FC<OrderCardProps> = ({
     <BrutalistCard className="mb-4">
       {/* Header with order number and status badge */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-bold text-card-foreground">PEDIDO #{order.id}</h3>
+        <h3 className="text-xl font-bold text-card-foreground">
+          PEDIDO #{order.id}
+        </h3>
         <div
           className="px-3 py-1 border-2 font-bold text-xs uppercase tracking-wider bg-secondary/50"
           style={{
