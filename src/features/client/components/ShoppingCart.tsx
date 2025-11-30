@@ -222,7 +222,9 @@ export const ShoppingCart = () => {
                     {/* Subtotal and Remove */}
                     <div className="flex items-center justify-between sm:justify-end gap-4">
                       <div className="text-right">
-                        <p className="text-sm text-muted-foreground">Subtotal</p>
+                        <p className="text-sm text-muted-foreground">
+                          Subtotal
+                        </p>
                         <p className="text-xl font-bold text-card-foreground">
                           {formatCurrency(item.plato.precio * item.cantidad)}
                         </p>
@@ -253,7 +255,9 @@ export const ShoppingCart = () => {
             <div className="space-y-4 mb-6">
               <div className="flex justify-between text-muted-foreground">
                 <span>Total de items:</span>
-                <span className="font-bold text-card-foreground">{itemCount}</span>
+                <span className="font-bold text-card-foreground">
+                  {itemCount}
+                </span>
               </div>
 
               <div className="flex justify-between text-muted-foreground border-t-2 border-border pt-4">

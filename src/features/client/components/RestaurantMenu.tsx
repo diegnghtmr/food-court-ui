@@ -182,11 +182,15 @@ export const RestaurantMenu = () => {
             </h1>
             <div className="space-y-2">
               <p className="text-muted-foreground">
-                <span className="font-bold text-card-foreground">DIRECCION:</span>{' '}
+                <span className="font-bold text-card-foreground">
+                  DIRECCION:
+                </span>{' '}
                 {restaurant.direccion}
               </p>
               <p className="text-muted-foreground">
-                <span className="font-bold text-card-foreground">TELEFONO:</span>{' '}
+                <span className="font-bold text-card-foreground">
+                  TELEFONO:
+                </span>{' '}
                 {restaurant.telefono}
               </p>
             </div>
@@ -230,7 +234,9 @@ export const RestaurantMenu = () => {
                               }}
                             />
                           ) : (
-                            <span className="text-6xl text-muted-foreground">?</span>
+                            <span className="text-6xl text-muted-foreground">
+                              ?
+                            </span>
                           )}
                         </div>
 

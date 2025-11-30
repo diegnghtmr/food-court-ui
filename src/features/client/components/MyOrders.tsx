@@ -6,10 +6,7 @@ import {
   ErrorAlert,
   SuccessAlert,
 } from '@shared/components'
-import {
-  OrderStatus,
-  ORDER_STATUS_LABELS,
-} from '@shared/types'
+import { OrderStatus, ORDER_STATUS_LABELS } from '@shared/types'
 
 /**
  * Maps order status to CSS badge class for theme-aware styling
@@ -151,7 +148,9 @@ export const MyOrders = () => {
                   PEDIDO #{order.id}
                 </h2>
                 <p className="text-muted-foreground mb-1">
-                  <span className="font-bold text-card-foreground">RESTAURANTE:</span>{' '}
+                  <span className="font-bold text-card-foreground">
+                    RESTAURANTE:
+                  </span>{' '}
                   {order.restauranteNombre}
                 </p>
                 <p className="text-sm text-muted-foreground">

@@ -16,7 +16,11 @@ describe('BrutalistButton', () => {
   it('applies primary variant styles', () => {
     render(<BrutalistButton variant="primary">Primary</BrutalistButton>)
     const button = screen.getByText('Primary')
-    expect(button).toHaveClass('bg-primary', 'text-primary-foreground', 'border-primary')
+    expect(button).toHaveClass(
+      'bg-primary',
+      'text-primary-foreground',
+      'border-primary'
+    )
   })
 
   it('applies success variant styles', () => {

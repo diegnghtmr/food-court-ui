@@ -29,9 +29,11 @@ export const BrutalistButton = React.forwardRef<
     const getVariantClasses = (): string => {
       const variants = {
         primary: 'bg-primary text-primary-foreground border-primary',
-        success: 'bg-[var(--color-success)] text-black border-[var(--color-success)]',
+        success:
+          'bg-[var(--color-success)] text-black border-[var(--color-success)]',
         danger: 'bg-destructive text-destructive-foreground border-destructive',
-        warning: 'bg-[var(--color-warning)] text-black border-[var(--color-warning)]',
+        warning:
+          'bg-[var(--color-warning)] text-black border-[var(--color-warning)]',
         neutral: 'bg-secondary text-secondary-foreground border-border',
       }
       return variants[variant]

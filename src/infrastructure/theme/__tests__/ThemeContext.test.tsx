@@ -159,7 +159,9 @@ describe('ThemeToggle', () => {
     )
 
     const user = userEvent.setup()
-    const toggle = screen.getByRole('button', { name: /cambiar a modo oscuro/i })
+    const toggle = screen.getByRole('button', {
+      name: /cambiar a modo oscuro/i,
+    })
 
     expect(toggle).toHaveAttribute('aria-pressed', 'false')
     await user.click(toggle)

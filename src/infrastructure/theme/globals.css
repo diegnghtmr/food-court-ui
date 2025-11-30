@@ -17,7 +17,7 @@
        TAILWIND HSL VARIABLES (Light Mode Default)
        ------------------------- */
     --background: 0 0% 100%; /* #ffffff */
-    --foreground: 0 0% 0%;   /* #000000 */
+    --foreground: 0 0% 0%; /* #000000 */
 
     --card: 0 0% 100%;
     --card-foreground: 0 0% 0%;
@@ -156,7 +156,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    border-color: var(--border-default); /* Default border color matches theme */
+    border-color: var(
+      --border-default
+    ); /* Default border color matches theme */
   }
 
   /* HTML & Body */
@@ -190,12 +192,24 @@
     color: var(--text-primary);
   }
 
-  h1 { font-size: 4rem; }
-  h2 { font-size: 3rem; }
-  h3 { font-size: 2rem; }
-  h4 { font-size: 1.5rem; }
-  h5 { font-size: 1.25rem; }
-  h6 { font-size: 1rem; }
+  h1 {
+    font-size: 4rem;
+  }
+  h2 {
+    font-size: 3rem;
+  }
+  h3 {
+    font-size: 2rem;
+  }
+  h4 {
+    font-size: 1.5rem;
+  }
+  h5 {
+    font-size: 1.25rem;
+  }
+  h6 {
+    font-size: 1rem;
+  }
 
   /* Links */
   a {
@@ -369,12 +383,26 @@
     color: #ffffff; /* Always white on purple? Or black? Current: text-inverse */
     border-color: var(--color-info);
   }
-  
+
   /* Force text colors for variants to ensure contrast */
-  .brutalist-button.primary { color: #ffffff; }
-  .brutalist-button.success { background-color: var(--color-success); color: #000000; border-color: var(--color-success); }
-  .brutalist-button.danger { background-color: var(--color-error); color: #ffffff; border-color: var(--color-error); }
-  .brutalist-button.warning { background-color: var(--color-warning); color: #000000; border-color: var(--color-warning); }
+  .brutalist-button.primary {
+    color: #ffffff;
+  }
+  .brutalist-button.success {
+    background-color: var(--color-success);
+    color: #000000;
+    border-color: var(--color-success);
+  }
+  .brutalist-button.danger {
+    background-color: var(--color-error);
+    color: #ffffff;
+    border-color: var(--color-error);
+  }
+  .brutalist-button.warning {
+    background-color: var(--color-warning);
+    color: #000000;
+    border-color: var(--color-warning);
+  }
 
   /* Modal overlay */
   .brutalist-overlay {

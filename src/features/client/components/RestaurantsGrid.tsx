@@ -122,11 +122,15 @@ export const RestaurantsGrid = () => {
 
                     <div className="space-y-1 mb-4">
                       <p className="text-sm text-muted-foreground">
-                        <span className="font-bold text-card-foreground">DIRECCION:</span>{' '}
+                        <span className="font-bold text-card-foreground">
+                          DIRECCION:
+                        </span>{' '}
                         {restaurant.direccion}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        <span className="font-bold text-card-foreground">TELEFONO:</span>{' '}
+                        <span className="font-bold text-card-foreground">
+                          TELEFONO:
+                        </span>{' '}
                         {restaurant.telefono}
                       </p>
                       <p className="text-sm text-muted-foreground/80">

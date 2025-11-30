@@ -51,7 +51,9 @@ export const AdminLayout = () => {
 
             <div className="pt-8 flex flex-col gap-4">
               <div className="flex items-center justify-between px-1">
-                <span className="text-sm font-bold text-[var(--text-primary)] uppercase">Tema</span>
+                <span className="text-sm font-bold text-[var(--text-primary)] uppercase">
+                  Tema
+                </span>
                 <ThemeToggle />
               </div>
               <BrutalistButton
