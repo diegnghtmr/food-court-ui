@@ -64,11 +64,7 @@ export const OwnerLayout = () => {
             <div className="flex justify-center">
               <ThemeToggle />
             </div>
-            <BrutalistButton
-              variant="danger"
-              onClick={handleLogout}
-              fullWidth
-            >
+            <BrutalistButton variant="danger" onClick={handleLogout} fullWidth>
               Cerrar Sesion
             </BrutalistButton>
           </div>
