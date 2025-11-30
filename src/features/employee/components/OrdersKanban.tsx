@@ -201,10 +201,10 @@ export const OrdersKanban: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* COLUMN 1: PENDIENTES */}
         <div className="space-y-4">
-          <div className="border-2 border-[#999999] bg-[#1a1a1a] p-4">
-            <h3 className="text-xl font-bold text-[#f5f5f5] uppercase tracking-wider flex items-center justify-between">
+          <div className="border-2 border-[var(--color-neutral)] bg-secondary p-4">
+            <h3 className="text-xl font-bold text-card-foreground uppercase tracking-wider flex items-center justify-between">
               <span>PENDIENTES</span>
-              <span className="text-[#999999] text-sm">
+              <span className="text-muted-foreground text-sm">
                 ({ordersByStatus.PENDIENTE.length})
               </span>
             </h3>
@@ -212,8 +212,8 @@ export const OrdersKanban: React.FC = () => {
 
           <div className="space-y-4">
             {ordersByStatus.PENDIENTE.length === 0 ? (
-              <div className="text-center p-8 border-2 border-[#999999] border-dashed bg-[#1a1a1a]">
-                <p className="text-[#999999] uppercase tracking-wide text-sm">
+              <div className="text-center p-8 border-2 border-[var(--color-neutral)] border-dashed bg-secondary">
+                <p className="text-muted-foreground uppercase tracking-wide text-sm">
                   No hay pedidos pendientes
                 </p>
               </div>
@@ -234,22 +234,19 @@ export const OrdersKanban: React.FC = () => {
 
         {/* COLUMN 2: EN PREPARACIÓN (only employee's orders) */}
         <div className="space-y-4">
-          <div className="border-2 border-[#ff6b35] bg-[#1a1a1a] p-4">
-            <h3 className="text-xl font-bold text-[#f5f5f5] uppercase tracking-wider flex items-center justify-between">
+          <div className="border-2 border-[var(--color-warning)] bg-secondary p-4">
+            <h3 className="text-xl font-bold text-card-foreground uppercase tracking-wider flex items-center justify-between">
               <span>EN PREPARACIÓN</span>
-              <span className="text-[#ff6b35] text-sm">
+              <span className="text-[var(--color-warning)] text-sm">
                 ({myPreparingOrders.length})
               </span>
             </h3>
-            <p className="text-[#999999] text-xs mt-1 uppercase">
-              Mis pedidos asignados
-            </p>
           </div>
 
           <div className="space-y-4">
             {myPreparingOrders.length === 0 ? (
-              <div className="text-center p-8 border-2 border-[#ff6b35] border-dashed bg-[#1a1a1a]">
-                <p className="text-[#999999] uppercase tracking-wide text-sm">
+              <div className="text-center p-8 border-2 border-[var(--color-warning)] border-dashed bg-secondary">
+                <p className="text-muted-foreground uppercase tracking-wide text-sm">
                   No tienes pedidos en preparación
                 </p>
               </div>
@@ -270,22 +267,19 @@ export const OrdersKanban: React.FC = () => {
 
         {/* COLUMN 3: LISTOS PARA ENTREGAR */}
         <div className="space-y-4">
-          <div className="border-2 border-[#00ff00] bg-[#1a1a1a] p-4">
-            <h3 className="text-xl font-bold text-[#f5f5f5] uppercase tracking-wider flex items-center justify-between">
+          <div className="border-2 border-[var(--color-success)] bg-secondary p-4">
+            <h3 className="text-xl font-bold text-card-foreground uppercase tracking-wider flex items-center justify-between">
               <span>LISTOS</span>
-              <span className="text-[#00ff00] text-sm">
+              <span className="text-[var(--color-success)] text-sm">
                 ({ordersByStatus.LISTO.length})
               </span>
             </h3>
-            <p className="text-[#999999] text-xs mt-1 uppercase">
-              Esperando entrega
-            </p>
           </div>
 
           <div className="space-y-4">
             {ordersByStatus.LISTO.length === 0 ? (
-              <div className="text-center p-8 border-2 border-[#00ff00] border-dashed bg-[#1a1a1a]">
-                <p className="text-[#999999] uppercase tracking-wide text-sm">
+              <div className="text-center p-8 border-2 border-[var(--color-success)] border-dashed bg-secondary">
+                <p className="text-muted-foreground uppercase tracking-wide text-sm">
                   No hay pedidos listos
                 </p>
               </div>

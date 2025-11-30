@@ -10,10 +10,10 @@ export const Employee: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-[#f5f5f5] uppercase tracking-wider mb-2">
+        <h1 className="text-4xl font-bold text-foreground uppercase tracking-wider mb-2">
           TABLERO DE PEDIDOS
         </h1>
-        <p className="text-[#999999] uppercase text-sm tracking-wide">
+        <p className="text-muted-foreground uppercase text-sm tracking-wide">
           Gestiona los pedidos de tu restaurante
         </p>
       </div>
