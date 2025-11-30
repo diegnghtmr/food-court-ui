@@ -224,7 +224,8 @@ export const orderService = {
 
     return mappedOrders.sort(
       (a, b) =>
-        new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime()
+        new Date(b.fechaCreacion).getTime() -
+        new Date(a.fechaCreacion).getTime()
     )
   },
 

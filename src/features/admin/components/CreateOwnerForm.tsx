@@ -133,7 +133,8 @@ export const CreateOwner = () => {
           : error instanceof Error
             ? error.message
             : undefined
-      const message = rawMessage ?? 'Error al crear propietario. Intenta nuevamente.'
+      const message =
+        rawMessage ?? 'Error al crear propietario. Intenta nuevamente.'
       setErrorMessage(message)
     } finally {
       setIsLoading(false)
