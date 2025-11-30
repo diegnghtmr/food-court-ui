@@ -22,49 +22,49 @@ export const AdminLayout = () => {
 
       <div className="flex min-h-screen bg-[var(--bg-primary)]">
         {/* Sidebar */}
-        <aside className="w-64 border-r-2 border-[var(--border-default)] bg-[var(--bg-secondary)] p-6">
-          <h1 className="text-2xl font-bold mb-8 text-[var(--text-primary)] uppercase">
-            Panel Admin
-          </h1>
+        <aside className="w-64 border-r-2 border-[var(--border-default)] bg-[var(--bg-secondary)] p-6 flex flex-col justify-between">
+          <div>
+            <h1 className="text-2xl font-bold mb-8 text-[var(--text-primary)] uppercase">
+              Panel Admin
+            </h1>
 
-          <nav className="space-y-4">
-            <Link
-              to="/admin/dashboard"
-              className="block px-4 py-3 border-2 border-[var(--border-default)] bg-[var(--bg-card)] hover:bg-[var(--bg-hover)] transition-colors no-underline"
-            >
-              Dashboard
-            </Link>
-
-            <Link
-              to="/admin/create-owner"
-              className="block px-4 py-3 border-2 border-[var(--border-default)] bg-[var(--bg-card)] hover:bg-[var(--bg-hover)] transition-colors no-underline"
-            >
-              Crear Propietario
-            </Link>
-
-            <Link
-              to="/admin/create-restaurant"
-              className="block px-4 py-3 border-2 border-[var(--border-default)] bg-[var(--bg-card)] hover:bg-[var(--bg-hover)] transition-colors no-underline"
-            >
-              Crear Restaurante
-            </Link>
-
-            <div className="pt-8 flex flex-col gap-4">
-              <div className="flex items-center justify-between px-1">
-                <span className="text-sm font-bold text-[var(--text-primary)] uppercase">
-                  Tema
-                </span>
-                <ThemeToggle />
-              </div>
-              <BrutalistButton
-                variant="danger"
-                onClick={handleLogout}
-                fullWidth
+            <nav className="space-y-4">
+              <Link
+                to="/admin/dashboard"
+                className="block px-4 py-3 border-2 border-[var(--border-default)] bg-[var(--bg-card)] hover:bg-[var(--bg-hover)] transition-colors no-underline"
               >
-                Cerrar Sesion
-              </BrutalistButton>
+                Dashboard
+              </Link>
+
+              <Link
+                to="/admin/create-owner"
+                className="block px-4 py-3 border-2 border-[var(--border-default)] bg-[var(--bg-card)] hover:bg-[var(--bg-hover)] transition-colors no-underline"
+              >
+                Crear Propietario
+              </Link>
+
+              <Link
+                to="/admin/create-restaurant"
+                className="block px-4 py-3 border-2 border-[var(--border-default)] bg-[var(--bg-card)] hover:bg-[var(--bg-hover)] transition-colors no-underline"
+              >
+                Crear Restaurante
+              </Link>
+            </nav>
+          </div>
+
+          {/* Bottom Actions */}
+          <div className="space-y-4">
+            <div className="flex justify-center">
+              <ThemeToggle />
             </div>
-          </nav>
+            <BrutalistButton
+              variant="danger"
+              onClick={handleLogout}
+              fullWidth
+            >
+              Cerrar Sesion
+            </BrutalistButton>
+          </div>
         </aside>
 
         {/* Content Area */}

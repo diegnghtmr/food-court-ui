@@ -22,7 +22,6 @@ import {
   SuccessAlert,
   ErrorAlert,
   LoadingSpinner,
-  InfoAlert,
 } from '@shared/components'
 import { restaurantService } from '../services/restaurantService'
 import type { CreateRestaurantData } from '../models'
@@ -222,9 +221,6 @@ export const CreateRestaurant = () => {
                 placeholder="123"
                 disabled={isLoading}
               />
-              <div className="mt-2">
-                <InfoAlert message="Ingresa el ID numérico del propietario. Puedes obtenerlo desde la lista de propietarios registrados." />
-              </div>
             </div>
 
             {/* Submit Button */}
