@@ -5,7 +5,12 @@
 
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { BrutalistCard, BrutalistButton, ErrorAlert, ThemeToggle } from '@shared/components'
+import {
+  BrutalistCard,
+  BrutalistButton,
+  ErrorAlert,
+  ThemeToggle,
+} from '@shared/components'
 import { LoginForm } from './components/LoginForm'
 import { RegisterForm } from './components/RegisterForm'
 
