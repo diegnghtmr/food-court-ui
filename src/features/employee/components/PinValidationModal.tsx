@@ -106,10 +106,10 @@ export const PinValidationModal: React.FC<PinValidationModalProps> = ({
       <div className="space-y-6">
         {/* Subtitle */}
         <div className="text-center">
-          <p className="text-[#999999] text-sm uppercase tracking-wider">
+          <p className="text-muted-foreground text-sm uppercase tracking-wider">
             Pedido #{orderId}
           </p>
-          <p className="text-[#f5f5f5] mt-2 text-sm">
+          <p className="text-card-foreground mt-2 text-sm">
             Solicita el código de retiro al cliente
           </p>
         </div>
@@ -127,7 +127,7 @@ export const PinValidationModal: React.FC<PinValidationModalProps> = ({
             required
             name="pin"
           />
-          <p className="text-[#999999] text-xs mt-2 uppercase tracking-wide">
+          <p className="text-muted-foreground text-xs mt-2 uppercase tracking-wide">
             6 CARACTERES ALFANUMÉRICOS
           </p>
         </div>
@@ -156,11 +156,11 @@ export const PinValidationModal: React.FC<PinValidationModalProps> = ({
         </div>
 
         {/* Help Text */}
-        <div className="text-center pt-4 border-t-2 border-[#ffffff]/20">
-          <p className="text-[#999999] text-xs">
+        <div className="text-center pt-4 border-t-2 border-border/20">
+          <p className="text-muted-foreground text-xs">
             El PIN incorrecto no cerrará esta ventana.
           </p>
-          <p className="text-[#999999] text-xs">
+          <p className="text-muted-foreground text-xs">
             Puedes intentar múltiples veces.
           </p>
         </div>

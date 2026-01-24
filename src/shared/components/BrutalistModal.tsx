@@ -55,8 +55,7 @@ export const BrutalistModal: React.FC<BrutalistModalProps> = ({
   const overlayClasses = [
     'fixed',
     'inset-0',
-    'bg-black',
-    'bg-opacity-95',
+    'bg-black/80',
     'z-[1300]',
     'flex',
     'items-center',
@@ -65,10 +64,10 @@ export const BrutalistModal: React.FC<BrutalistModalProps> = ({
   ].join(' ')
 
   const modalClasses = [
-    'bg-[#1a1a1a]',
+    'bg-card',
     'border-[3px]',
-    'border-[#ffffff]',
-    'shadow-[8px_8px_0px_#000000]',
+    'border-border',
+    'shadow-[var(--shadow-hard-lg)]',
     'w-full',
     getSizeClasses(),
     'max-h-[90vh]',
@@ -82,29 +81,29 @@ export const BrutalistModal: React.FC<BrutalistModalProps> = ({
     'justify-between',
     'p-6',
     'border-b-2',
-    'border-[#ffffff]',
+    'border-border',
   ].join(' ')
 
   const titleClasses =
-    'text-2xl font-bold uppercase tracking-wide text-[#f5f5f5]'
+    'text-2xl font-bold uppercase tracking-wide text-card-foreground'
 
   const closeButtonClasses = [
-    'text-[#f5f5f5]',
+    'text-card-foreground',
     'text-3xl',
     'font-bold',
     'leading-none',
-    'hover:text-[#ff0000]',
+    'hover:text-destructive',
     'transition-colors',
     'duration-75',
     'cursor-pointer',
     'border-2',
-    'border-[#ffffff]',
+    'border-border',
     'w-11',
     'h-11',
     'flex',
     'items-center',
     'justify-center',
-    'hover:border-[#ff0000]',
+    'hover:border-destructive',
   ].join(' ')
 
   const contentClasses = 'p-6'

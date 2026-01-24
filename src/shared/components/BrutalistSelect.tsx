@@ -71,9 +71,7 @@ export const BrutalistSelect = React.forwardRef<
       'duration-75',
       'cursor-pointer',
       disabled ? 'opacity-50 cursor-not-allowed bg-muted' : '',
-      !hasError && !disabled
-        ? 'hover:border-primary focus:border-primary'
-        : '',
+      !hasError && !disabled ? 'hover:border-primary focus:border-primary' : '',
     ]
       .filter(Boolean)
       .join(' ')
