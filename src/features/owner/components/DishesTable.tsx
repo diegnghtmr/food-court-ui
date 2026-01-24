@@ -243,13 +243,13 @@ export const DishesTable = () => {
             style={{
               textAlign: 'center',
               padding: '3rem 1rem',
-              color: '#999',
+              color: 'var(--text-secondary)',
             }}
           >
-            <p style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>
+            <p style={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
               No hay platos para mostrar
             </p>
-            <p style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+            <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
               {categoryFilter || debouncedSearchTerm
                 ? 'Intente ajustar los filtros de búsqueda.'
                 : 'Comience creando su primer plato.'}
@@ -269,8 +269,8 @@ export const DishesTable = () => {
                 <thead>
                   <tr
                     style={{
-                      borderBottom: '4px solid #000',
-                      backgroundColor: '#1a1a1a',
+                      borderBottom: '4px solid var(--border-default)',
+                      backgroundColor: 'var(--bg-secondary)',
                     }}
                   >
                     <th
@@ -280,7 +280,7 @@ export const DishesTable = () => {
                         fontWeight: 'bold',
                         textTransform: 'uppercase',
                         fontSize: '0.875rem',
-                        color: '#f5f5f5',
+                        color: 'var(--text-primary)',
                         width: '80px',
                       }}
                     >
@@ -293,7 +293,7 @@ export const DishesTable = () => {
                         fontWeight: 'bold',
                         textTransform: 'uppercase',
                         fontSize: '0.875rem',
-                        color: '#f5f5f5',
+                        color: 'var(--text-primary)',
                       }}
                     >
                       Nombre
@@ -305,7 +305,7 @@ export const DishesTable = () => {
                         fontWeight: 'bold',
                         textTransform: 'uppercase',
                         fontSize: '0.875rem',
-                        color: '#f5f5f5',
+                        color: 'var(--text-primary)',
                       }}
                     >
                       Categoría
@@ -317,7 +317,7 @@ export const DishesTable = () => {
                         fontWeight: 'bold',
                         textTransform: 'uppercase',
                         fontSize: '0.875rem',
-                        color: '#f5f5f5',
+                        color: 'var(--text-primary)',
                       }}
                     >
                       Precio
@@ -329,7 +329,7 @@ export const DishesTable = () => {
                         fontWeight: 'bold',
                         textTransform: 'uppercase',
                         fontSize: '0.875rem',
-                        color: '#f5f5f5',
+                        color: 'var(--text-primary)',
                       }}
                     >
                       Estado
@@ -341,7 +341,7 @@ export const DishesTable = () => {
                         fontWeight: 'bold',
                         textTransform: 'uppercase',
                         fontSize: '0.875rem',
-                        color: '#f5f5f5',
+                        color: 'var(--text-primary)',
                         width: '280px',
                       }}
                     >
@@ -354,8 +354,8 @@ export const DishesTable = () => {
                     <tr
                       key={dish.id}
                       style={{
-                        borderBottom: '2px solid #333',
-                        backgroundColor: '#0a0a0a',
+                        borderBottom: '2px solid var(--border-subtle)',
+                        backgroundColor: 'var(--bg-card)',
                       }}
                     >
                       {/* Image */}
@@ -367,13 +367,13 @@ export const DishesTable = () => {
                             width: '64px',
                             height: '64px',
                             objectFit: 'cover',
-                            border: '2px solid #000',
-                            backgroundColor: '#333',
+                            border: '2px solid var(--border-default)',
+                            backgroundColor: 'var(--bg-secondary)',
                           }}
                           onError={(e) => {
                             const target = e.target as HTMLImageElement
                             target.src =
-                              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="64" height="64"%3E%3Crect fill="%23333" width="64" height="64"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="monospace" font-size="10"%3ENo Image%3C/text%3E%3C/svg%3E'
+                              'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="64" height="64"%3E%3Crect fill="%23f5f5f5" width="64" height="64"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="monospace" font-size="10"%3ENo Image%3C/text%3E%3C/svg%3E'
                           }}
                         />
                       </td>
@@ -383,14 +383,14 @@ export const DishesTable = () => {
                         style={{
                           padding: '1rem',
                           fontWeight: '600',
-                          color: '#f5f5f5',
+                          color: 'var(--text-primary)',
                         }}
                       >
                         {dish.name}
                       </td>
 
                       {/* Category */}
-                      <td style={{ padding: '1rem', color: '#ccc' }}>
+                      <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>
                         {DISH_CATEGORY_LABELS[dish.category as DishCategory] ||
                           dish.category}
                       </td>
@@ -400,7 +400,7 @@ export const DishesTable = () => {
                         style={{
                           padding: '1rem',
                           fontWeight: '600',
-                          color: '#f5f5f5',
+                          color: 'var(--text-primary)',
                         }}
                       >
                         {formatPrice(dish.price)}
@@ -413,14 +413,14 @@ export const DishesTable = () => {
                             display: 'inline-block',
                             padding: '0.25rem 0.75rem',
                             backgroundColor: dish.active
-                              ? '#00ff00'
-                              : '#ff0000',
-                            color: '#000',
+                              ? 'var(--color-success)'
+                              : 'var(--color-error)',
+                            color: 'var(--text-inverse)',
                             fontWeight: 'bold',
                             textTransform: 'uppercase',
                             fontSize: '0.75rem',
-                            border: '2px solid #000',
-                            boxShadow: '2px 2px 0 #000',
+                            border: '2px solid var(--border-default)',
+                            boxShadow: 'var(--shadow-hard)',
                           }}
                         >
                           {dish.active ? 'Activo' : 'Inactivo'}

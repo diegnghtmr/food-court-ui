@@ -27,7 +27,7 @@ export const DishesManager = () => {
           style={{
             fontSize: '2rem',
             fontWeight: 'bold',
-            color: '#f5f5f5',
+            color: 'var(--text-primary)',
             textTransform: 'uppercase',
           }}
         >
