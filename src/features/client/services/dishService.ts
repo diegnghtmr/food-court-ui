@@ -8,7 +8,7 @@ interface DishResponse {
   name: string
   price: number
   description: string
-  urlImage: string
+  imageUrl: string
   categoryName?: string
   active?: boolean
   restaurantId: number
@@ -29,7 +29,7 @@ const mapDish = (data: DishResponse): Dish => {
     nombre: data.name,
     precio: Number(data.price),
     descripcion: data.description,
-    urlImagen: data.urlImage,
+    urlImagen: data.imageUrl,
     categoria,
     activo: Boolean(data.active),
     restauranteId: data.restaurantId,
