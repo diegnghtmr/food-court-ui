@@ -246,10 +246,22 @@ export const DishesTable = () => {
               color: 'var(--text-secondary)',
             }}
           >
-            <p style={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+            <p
+              style={{
+                fontSize: '1.125rem',
+                fontWeight: 'bold',
+                color: 'var(--text-primary)',
+              }}
+            >
               No hay platos para mostrar
             </p>
-            <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+            <p
+              style={{
+                marginTop: '0.5rem',
+                fontSize: '0.875rem',
+                color: 'var(--text-secondary)',
+              }}
+            >
               {categoryFilter || debouncedSearchTerm
                 ? 'Intente ajustar los filtros de búsqueda.'
                 : 'Comience creando su primer plato.'}
@@ -390,7 +402,12 @@ export const DishesTable = () => {
                       </td>
 
                       {/* Category */}
-                      <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>
+                      <td
+                        style={{
+                          padding: '1rem',
+                          color: 'var(--text-secondary)',
+                        }}
+                      >
                         {DISH_CATEGORY_LABELS[dish.category as DishCategory] ||
                           dish.category}
                       </td>

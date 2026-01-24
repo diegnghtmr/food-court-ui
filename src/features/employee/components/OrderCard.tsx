@@ -28,12 +28,15 @@ export const OrderCard: React.FC<OrderCardProps> = ({
   return (
     <BrutalistCard className="mb-4">
       {/* Header with order number and status badge */}
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-bold text-card-foreground">
-          PEDIDO #{order.id}
+      <div className="flex items-start justify-between gap-2 mb-4">
+        <h3 className="text-lg font-bold text-card-foreground min-w-0 break-all">
+          PEDIDO
+          <span className="block text-sm font-mono opacity-80">
+            #{order.id.length > 12 ? `${order.id.slice(0, 12)}...` : order.id}
+          </span>
         </h3>
         <div
-          className="px-3 py-1 border-2 font-bold text-xs uppercase tracking-wider bg-secondary/50"
+          className="px-3 py-1 border-2 font-bold text-xs uppercase tracking-wider bg-secondary/50 flex-shrink-0 whitespace-nowrap"
           style={{
             borderColor: statusColor,
             color: statusColor,

@@ -145,7 +145,13 @@ export const MyOrders = () => {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 pb-4 border-b-2 border-border">
               <div>
                 <h2 className="text-2xl font-bold text-card-foreground mb-2 uppercase tracking-wide">
-                  PEDIDO #{order.id}
+                  PEDIDO{' '}
+                  <span className="text-lg font-mono opacity-80">
+                    #
+                    {order.id.length > 12
+                      ? `${order.id.slice(0, 12)}...`
+                      : order.id}
+                  </span>
                 </h2>
                 <p className="text-muted-foreground mb-1">
                   <span className="font-bold text-card-foreground">
@@ -202,16 +208,16 @@ export const MyOrders = () => {
             </div>
 
             {/* Status-specific Actions and Displays */}
-            {/* CRITICAL: PIN Display for Ready Orders - KEPT DARK/TERMINAL STYLE INTENTIONALLY */}
+            {/* CRITICAL: PIN Display for Ready Orders */}
             {order.estado === OrderStatus.LISTO && order.pin && (
-              <div className="border-4 border-[var(--color-success)] p-8 mt-4 bg-black animate-pulse">
+              <div className="border-4 border-[var(--color-success)] p-8 mt-4 bg-secondary animate-pulse">
                 <div className="text-center">
                   <p className="text-xl md:text-2xl font-bold text-[var(--color-success)] mb-6 uppercase tracking-wide">
                     TU PEDIDO ESTA LISTO PARA RECOGER
                   </p>
 
-                  <div className="bg-black border-4 border-[var(--color-success)] p-6 mb-6">
-                    <p className="text-sm text-gray-400 mb-3 uppercase tracking-wide">
+                  <div className="bg-card border-4 border-[var(--color-success)] p-6 mb-6">
+                    <p className="text-sm text-muted-foreground mb-3 uppercase tracking-wide">
                       CODIGO DE RETIRO:
                     </p>
                     <p className="text-6xl md:text-8xl font-bold text-[var(--color-success)] tracking-widest font-mono">
@@ -219,7 +225,7 @@ export const MyOrders = () => {
                     </p>
                   </div>
 
-                  <p className="text-base md:text-lg text-gray-400">
+                  <p className="text-base md:text-lg text-muted-foreground">
                     Dicta este codigo al empleado para recibir tu comida.
                   </p>
                 </div>
