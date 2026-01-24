@@ -473,7 +473,7 @@ export const EfficiencyReport = () => {
               <tbody>
                 {sortedData.map((report, index) => (
                   <tr
-                    key={report.employeeId}
+                    key={`${report.employeeId}-${index}`}
                     style={{
                       backgroundColor: index % 2 === 0 ? '#fff' : '#f5f5f5',
                       transition: 'background-color 0.2s',

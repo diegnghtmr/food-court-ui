@@ -44,7 +44,7 @@ export const dishService = {
         description: data.description,
         price: data.price,
         imageUrl: data.imageUrl,
-        category: data.category,
+        categoryId: data.categoryId,
         restaurantId: Number(data.restaurantId),
       }
     )
@@ -55,7 +55,7 @@ export const dishService = {
       description: response.data.description || data.description,
       price: response.data.price || data.price,
       imageUrl: response.data.imageUrl || data.imageUrl,
-      category: response.data.category || data.category,
+      category: response.data.category || '', // Response might have category name or ID
       restaurantId: response.data.restaurantId?.toString() || data.restaurantId,
       active: response.data.active !== undefined ? response.data.active : true,
       createdAt: response.data.createdAt || new Date().toISOString(),

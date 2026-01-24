@@ -37,7 +37,7 @@ export const analyticsService = {
     if (endDate) params.endDate = endDate
 
     const response = await axiosInstance.get(
-      `${API_ENDPOINTS.TRAZABILIDAD}/trace/efficiency`,
+      `${API_ENDPOINTS.TRAZABILIDAD}/trace/efficiency/employees`,
       { params }
     )
 

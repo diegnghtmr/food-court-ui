@@ -15,7 +15,7 @@ export interface CreateDishData {
   description: string
   price: number
   imageUrl: string
-  category: string
+  categoryId: number
   restaurantId: string
 }
 
