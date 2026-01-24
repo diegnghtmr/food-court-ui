@@ -108,13 +108,17 @@ const DishFormCreate = () => {
   // Map category enum to database IDs
   const getCategoryId = (category: string): number => {
     switch (category) {
-      case 'ENTRADA': return 1;
-      case 'PLATO_FUERTE': return 2;
-      case 'POSTRE': return 3;
-      case 'BEBIDA': return 4;
-      default: 
-        console.error('Invalid category:', category);
-        return 0;
+      case 'ENTRADA':
+        return 1
+      case 'PLATO_FUERTE':
+        return 2
+      case 'POSTRE':
+        return 3
+      case 'BEBIDA':
+        return 4
+      default:
+        console.error('Invalid category:', category)
+        return 0
     }
   }
 
@@ -129,7 +133,7 @@ const DishFormCreate = () => {
         throw new Error('No se pudo determinar el restaurante del propietario.')
       }
 
-      const catId = getCategoryId(data.category);
+      const catId = getCategoryId(data.category)
 
       const createData: CreateDishData = {
         name: data.name,
