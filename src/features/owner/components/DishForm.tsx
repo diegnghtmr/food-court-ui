@@ -269,7 +269,7 @@ const DishFormCreate = () => {
             <BrutalistInput
               type="url"
               label="URL de Imagen"
-              placeholder="https://example.com/image.jpg"
+              placeholder="https://loremflickr.com/640/480/food"
               error={errors.imageUrl?.message}
               disabled={isSubmitting}
               {...register('imageUrl')}
