@@ -77,9 +77,14 @@ export const ShoppingCart = () => {
       setTimeout(() => {
         navigate('/client/orders')
       }, 1500)
-    } catch (err) {
-      setError('Error al crear el pedido. Por favor, intenta de nuevo.')
+    } catch (err: unknown) {
       console.error('Error creating order:', err)
+      const axiosError = err as { response?: { status?: number } }
+      const errorMessage =
+        axiosError.response?.status === 409
+          ? 'Ya tienes un pedido en curso. No puedes realizar otro hasta que finalice el actual.'
+          : 'Error al crear el pedido. Por favor, intenta de nuevo.'
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }

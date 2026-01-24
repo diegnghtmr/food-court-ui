@@ -8,7 +8,6 @@ import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
 import type { EfficiencyReport } from '../models'
 
 interface EfficiencyReportResponse {
-  employeeId?: string | number
   employeeName?: string
   completedOrders?: number
   averageCompletionTime?: number
@@ -46,8 +45,8 @@ export const analyticsService = {
       ? response.data
       : []
 
-    return data.map((report) => ({
-      employeeId: report.employeeId?.toString() || '',
+    return data.map((report, index) => ({
+      employeeId: `emp-${index}`,
       employeeName: report.employeeName || 'Desconocido',
       completedOrders: report.completedOrders || 0,
       averageCompletionTime: report.averageCompletionTime || 0,

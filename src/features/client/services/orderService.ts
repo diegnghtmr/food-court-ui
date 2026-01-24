@@ -207,8 +207,9 @@ export const orderService = {
             `${API_ENDPOINTS.PEDIDOS}/orders/${id}`
           )
           return res.data
-        } catch (err) {
-          console.error(`No se pudo obtener el pedido ${id}`, err)
+        } catch {
+          // Silently ignore 404s for old traces pointing to deleted orders
+          // console.error(`No se pudo obtener el pedido ${id}`, err)
           return null
         }
       })
