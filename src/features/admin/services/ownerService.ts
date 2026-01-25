@@ -46,7 +46,7 @@ export const ownerService = {
       documentNumber: response.data.documentNumber || data.documentNumber,
       phone: response.data.phone || data.phone,
       email: response.data.email || data.email,
-      createdAt: response.data.createdAt || new Date().toISOString(),
+      createdAt: response.data.createdAt ?? '',
     }
   },
 
@@ -73,7 +73,7 @@ export const ownerService = {
       documentNumber: owner.documentNumber,
       phone: owner.phone,
       email: owner.email,
-      createdAt: owner.createdAt || new Date().toISOString(),
+      createdAt: owner.createdAt ?? '',
     }))
   },
 

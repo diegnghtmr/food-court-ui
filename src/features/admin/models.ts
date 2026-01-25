@@ -44,3 +44,19 @@ export interface AdminStats {
   totalRestaurants: number
   activeRestaurants: number
 }
+
+export const ADMIN_ACTIVITY_TYPES = {
+  OWNER: 'OWNER',
+  RESTAURANT: 'RESTAURANT',
+} as const
+
+export type AdminActivityType =
+  (typeof ADMIN_ACTIVITY_TYPES)[keyof typeof ADMIN_ACTIVITY_TYPES]
+
+export interface AdminActivity {
+  id: string
+  type: AdminActivityType
+  title: string
+  description: string
+  createdAt: string
+}

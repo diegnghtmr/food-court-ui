@@ -49,7 +49,7 @@ export const restaurantService = {
       nit: response.data.nit || data.nit,
       ownerId: response.data.ownerId?.toString() || data.ownerId,
       ownerName: response.data.ownerName,
-      createdAt: response.data.createdAt || new Date().toISOString(),
+      createdAt: response.data.createdAt ?? '',
     }
   },
 
@@ -84,7 +84,7 @@ export const restaurantService = {
       nit: restaurant.nit,
       ownerId: restaurant.ownerId?.toString() || '',
       ownerName: restaurant.ownerName,
-      createdAt: restaurant.createdAt || new Date().toISOString(),
+      createdAt: restaurant.createdAt ?? '',
     }))
   },
 

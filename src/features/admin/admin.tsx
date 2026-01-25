@@ -7,13 +7,21 @@ import {
 } from '@shared/components'
 import { useNavigate } from 'react-router-dom'
 import { adminStatsService } from './services/adminStatsService'
-import type { AdminStats } from './models'
+import { adminActivityService } from './services/adminActivityService'
+import {
+  ADMIN_ACTIVITY_TYPES,
+  type AdminActivity,
+  type AdminStats,
+} from './models'
 
 export const Admin = () => {
   const navigate = useNavigate()
   const [stats, setStats] = useState<AdminStats | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [activity, setActivity] = useState<AdminActivity[]>([])
+  const [activityLoading, setActivityLoading] = useState(true)
+  const [activityError, setActivityError] = useState<string | null>(null)
 
   useEffect(() => {
     const loadStats = async () => {
@@ -37,6 +45,53 @@ export const Admin = () => {
 
     void loadStats()
   }, [])
+
+  useEffect(() => {
+    const loadActivity = async () => {
+      setActivityLoading(true)
+      setActivityError(null)
+
+      try {
+        const data = await adminActivityService.getRecentActivity()
+        setActivity(data)
+      } catch (err) {
+        const message =
+          err instanceof Error
+            ? err.message
+            : 'Error al cargar la actividad reciente.'
+        setActivityError(message)
+        setActivity([])
+      } finally {
+        setActivityLoading(false)
+      }
+    }
+
+    void loadActivity()
+  }, [])
+
+  const formatDate = (dateString: string): string => {
+    if (!dateString) return 'Sin fecha'
+    const parsed = new Date(dateString)
+    if (Number.isNaN(parsed.getTime())) return 'Sin fecha'
+    return parsed.toLocaleString('es-CO', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  }
+
+  const getActivityLabel = (type: AdminActivity['type']): string => {
+    switch (type) {
+      case ADMIN_ACTIVITY_TYPES.OWNER:
+        return 'Propietario'
+      case ADMIN_ACTIVITY_TYPES.RESTAURANT:
+        return 'Restaurante'
+      default:
+        return 'Actividad'
+    }
+  }
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -225,9 +280,86 @@ export const Admin = () => {
           >
             Actividad Reciente
           </h2>
-          <p style={{ color: '#666', fontSize: '0.875rem' }}>
-            TODO: Mostrar propietarios y restaurantes creados recientemente
-          </p>
+
+          {activityError && (
+            <div style={{ marginBottom: '1rem' }}>
+              <ErrorAlert message={activityError} />
+            </div>
+          )}
+
+          {!activityError && activityLoading && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '150px',
+              }}
+            >
+              <LoadingSpinner size="md" />
+            </div>
+          )}
+
+          {!activityError && !activityLoading && activity.length === 0 && (
+            <p style={{ color: '#666', fontSize: '0.875rem' }}>
+              No hay actividad reciente.
+            </p>
+          )}
+
+          {!activityError && !activityLoading && activity.length > 0 && (
+            <ul
+              style={{
+                display: 'grid',
+                gap: '0.75rem',
+              }}
+            >
+              {activity.map((item) => (
+                <li
+                  key={item.id}
+                  style={{
+                    border: '2px solid #000',
+                    padding: '0.75rem',
+                    backgroundColor: '#f6f6f6',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '0.5rem',
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: '0.7rem',
+                        fontWeight: 700,
+                        border: '2px solid #000',
+                        padding: '0.15rem 0.45rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.08em',
+                        backgroundColor:
+                          item.type === ADMIN_ACTIVITY_TYPES.OWNER
+                            ? '#ffe066'
+                            : '#7bed9f',
+                      }}
+                    >
+                      {getActivityLabel(item.type)}
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: '#333' }}>
+                      {formatDate(item.createdAt)}
+                    </span>
+                  </div>
+                  <div style={{ fontWeight: 700, marginBottom: '0.25rem' }}>
+                    {item.title}
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: '#444' }}>
+                    {item.description}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </BrutalistCard>
       </div>
     </div>
