@@ -161,6 +161,22 @@
     ); /* Default border color matches theme */
   }
 
+  /* Theme Transition - Smooth color change for all elements */
+  @media (prefers-reduced-motion: no-preference) {
+    html.theme-transition,
+    html.theme-transition *,
+    html.theme-transition *::before,
+    html.theme-transition *::after {
+      transition:
+        background-color 300ms ease-out,
+        border-color 300ms ease-out,
+        color 300ms ease-out,
+        fill 300ms ease-out,
+        stroke 300ms ease-out,
+        box-shadow 300ms ease-out !important;
+    }
+  }
+
   /* HTML & Body */
   html {
     font-size: 16px;

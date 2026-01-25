@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   BrutalistCard,
   BrutalistButton,
@@ -7,6 +7,76 @@ import {
   SuccessAlert,
 } from '@shared/components'
 import { OrderStatus, ORDER_STATUS_LABELS } from '@shared/types'
+
+/**
+ * Formats order ID for display: shows first 8 and last 4 characters
+ * Example: "697581C65329ABC" -> "697581C6...9ABC"
+ */
+const formatOrderId = (id: string): string => {
+  if (id.length <= 14) return id
+  return `${id.slice(0, 8)}...${id.slice(-4)}`
+}
+
+/**
+ * OrderIdBadge Component
+ * Displays order ID with copy functionality in brutalist style
+ */
+const OrderIdBadge = ({ orderId }: { orderId: string }) => {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(orderId)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy order ID:', err)
+    }
+  }, [orderId])
+
+  return (
+    <div className="flex items-center gap-2 mt-2">
+      <span
+        className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary border-2 border-border font-mono text-sm text-card-foreground tracking-wider cursor-pointer hover:bg-muted transition-colors"
+        onClick={handleCopy}
+        title={`ID completo: ${orderId} (clic para copiar)`}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            handleCopy()
+          }
+        }}
+        aria-label={`ID del pedido: ${orderId}. Clic para copiar`}
+      >
+        <span className="text-muted-foreground">#</span>
+        <span className="font-bold">{formatOrderId(orderId)}</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="text-muted-foreground"
+          aria-hidden="true"
+        >
+          <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+          <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+        </svg>
+      </span>
+      {copied && (
+        <span className="text-xs text-[var(--color-success)] font-bold uppercase animate-pulse">
+          Copiado!
+        </span>
+      )}
+    </div>
+  )
+}
 
 /**
  * Maps order status to CSS badge class for theme-aware styling
@@ -144,16 +214,11 @@ export const MyOrders = () => {
             {/* Order Header */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 pb-4 border-b-2 border-border">
               <div>
-                <h2 className="text-2xl font-bold text-card-foreground mb-2 uppercase tracking-wide">
-                  PEDIDO{' '}
-                  <span className="text-lg font-mono opacity-80">
-                    #
-                    {order.id.length > 12
-                      ? `${order.id.slice(0, 12)}...`
-                      : order.id}
-                  </span>
+                <h2 className="text-2xl font-bold text-card-foreground uppercase tracking-wide">
+                  PEDIDO
                 </h2>
-                <p className="text-muted-foreground mb-1">
+                <OrderIdBadge orderId={order.id} />
+                <p className="text-muted-foreground mb-1 mt-3">
                   <span className="font-bold text-card-foreground">
                     RESTAURANTE:
                   </span>{' '}

@@ -59,6 +59,7 @@ export function ThemeProvider({
   const [systemTheme, setSystemTheme] = useState<ResolvedTheme>(() =>
     typeof window !== 'undefined' ? getSystemTheme() : 'light'
   )
+  const [isInitialMount, setIsInitialMount] = useState(true)
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
@@ -78,12 +79,27 @@ export function ThemeProvider({
     const root = window.document.documentElement
     const resolvedTheme = theme === 'system' ? systemTheme : theme
 
+    // Only add transition class after initial mount (not on page load)
+    if (!isInitialMount) {
+      root.classList.add('theme-transition')
+    }
+
     root.classList.remove('light', 'dark')
     root.classList.add(resolvedTheme)
     root.style.colorScheme = resolvedTheme
 
     localStorage.setItem(storageKey, theme)
-  }, [theme, storageKey, systemTheme])
+
+    // Remove transition class after animation completes
+    const timeout = setTimeout(() => {
+      root.classList.remove('theme-transition')
+      if (isInitialMount) {
+        setIsInitialMount(false)
+      }
+    }, 300)
+
+    return () => clearTimeout(timeout)
+  }, [theme, storageKey, systemTheme, isInitialMount])
 
   const value = useMemo(
     () => ({
