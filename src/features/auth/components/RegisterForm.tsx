@@ -4,11 +4,12 @@
  */
 
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AxiosError } from 'axios'
 import {
   BrutalistInput,
+  BrutalistPhoneInput,
   BrutalistButton,
   ErrorAlert,
   SuccessAlert,
@@ -34,6 +35,7 @@ export const RegisterForm = ({
     handleSubmit,
     formState: { errors },
     reset,
+    control,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     mode: 'onBlur',
@@ -105,28 +107,31 @@ export const RegisterForm = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <BrutalistInput
-              label="Documento"
-              type="text"
-              placeholder="1234567890"
-              error={errors.documento?.message}
-              disabled={isSubmitting}
-              {...register('documento')}
-            />
-          </div>
+        <div>
+          <BrutalistInput
+            label="Documento"
+            type="text"
+            placeholder="1234567890"
+            error={errors.documento?.message}
+            disabled={isSubmitting}
+            {...register('documento')}
+          />
+        </div>
 
-          <div>
-            <BrutalistInput
-              label="Celular"
-              type="text"
-              placeholder="+573001234567"
-              error={errors.celular?.message}
-              disabled={isSubmitting}
-              {...register('celular')}
-            />
-          </div>
+        <div>
+          <Controller
+            name="celular"
+            control={control}
+            render={({ field }) => (
+              <BrutalistPhoneInput
+                label="Celular"
+                value={field.value}
+                onChange={field.onChange}
+                error={errors.celular?.message}
+                disabled={isSubmitting}
+              />
+            )}
+          />
         </div>
 
         <div>

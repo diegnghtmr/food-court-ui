@@ -5,6 +5,7 @@
 
 export { BrutalistButton } from './BrutalistButton'
 export { BrutalistInput } from './BrutalistInput'
+export { BrutalistPhoneInput } from './BrutalistPhoneInput'
 export { BrutalistTextarea } from './BrutalistTextarea'
 export { BrutalistSelect } from './BrutalistSelect'
 export { BrutalistCard } from './BrutalistCard'
