@@ -64,6 +64,17 @@ src/
 ![Order Flow Diagram](docs/order-flow-diagram.png)
 ![NoSQL Entities Diagram](docs/nosql-entities-diagram.png)
 
+## UI Screenshots
+![Login](docs/00-login.png)
+![Client Screen 1](docs/01-client.png)
+![Client Screen 2](docs/02-client.png)
+![Client Screen 3](docs/03-client.png)
+![Client Screen 4](docs/04-client.png)
+![Employee Screen](docs/05-employee.png)
+![Owner Screen 1](docs/06-owner.png)
+![Owner Screen 2](docs/07-owner.png)
+![Admin Screen](docs/08-admin.png)
+
 ## Related Repositories
 - [user-microservice](https://github.com/diegnghtmr/user-microservice)
 - [food-court-microservice](https://github.com/diegnghtmr/food-court-microservice)
