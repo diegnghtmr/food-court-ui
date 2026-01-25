@@ -165,9 +165,16 @@ export const Admin = () => {
                 <div className="text-5xl font-bold text-[var(--color-info)] mb-2">
                   {stats.totalOwners}
                 </div>
-                <div className="text-sm text-[var(--text-secondary)] uppercase tracking-wider font-medium">
+                <div className="text-sm text-[var(--text-secondary)] uppercase tracking-wider font-medium mb-3">
                   Propietarios Registrados
                 </div>
+                <BrutalistButton
+                  onClick={() => navigate('/admin/create-owner')}
+                  variant="neutral"
+                  size="sm"
+                >
+                  + Nuevo
+                </BrutalistButton>
               </div>
             </BrutalistCard>
 
@@ -193,9 +200,16 @@ export const Admin = () => {
                 <div className="text-5xl font-bold text-[var(--color-success)] mb-2">
                   {stats.totalRestaurants}
                 </div>
-                <div className="text-sm text-[var(--text-secondary)] uppercase tracking-wider font-medium">
+                <div className="text-sm text-[var(--text-secondary)] uppercase tracking-wider font-medium mb-3">
                   Restaurantes Creados
                 </div>
+                <BrutalistButton
+                  onClick={() => navigate('/admin/create-restaurant')}
+                  variant="neutral"
+                  size="sm"
+                >
+                  + Nuevo
+                </BrutalistButton>
               </div>
             </BrutalistCard>
 
@@ -234,42 +248,8 @@ export const Admin = () => {
         )}
       </div>
 
-      {/* Actions Section */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '1.5rem',
-        }}
-      >
-        <BrutalistCard>
-          <h2
-            style={{
-              marginBottom: '1rem',
-              fontSize: '1.25rem',
-              fontWeight: 'bold',
-            }}
-          >
-            Acciones Rápidas
-          </h2>
-          <div
-            style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
-          >
-            <BrutalistButton
-              onClick={() => navigate('/admin/create-owner')}
-              variant="primary"
-            >
-              Crear Nuevo Propietario
-            </BrutalistButton>
-            <BrutalistButton
-              onClick={() => navigate('/admin/create-restaurant')}
-              variant="primary"
-            >
-              Crear Nuevo Restaurante
-            </BrutalistButton>
-          </div>
-        </BrutalistCard>
-
+      {/* Recent Activity Section */}
+      <div>
         <BrutalistCard>
           <h2
             style={{
