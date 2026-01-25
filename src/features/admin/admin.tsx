@@ -244,7 +244,7 @@ export const Admin = () => {
         )}
 
         {!error && !isLoading && !stats && (
-          <p style={{ color: '#666' }}>No hay estadísticas disponibles.</p>
+          <p style={{ color: 'var(--text-secondary)' }}>No hay estadísticas disponibles.</p>
         )}
       </div>
 
@@ -281,7 +281,7 @@ export const Admin = () => {
           )}
 
           {!activityError && !activityLoading && activity.length === 0 && (
-            <p style={{ color: '#666', fontSize: '0.875rem' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
               No hay actividad reciente.
             </p>
           )}
@@ -297,9 +297,9 @@ export const Admin = () => {
                 <li
                   key={item.id}
                   style={{
-                    border: '2px solid #000',
+                    border: '2px solid var(--border-default)',
                     padding: '0.75rem',
-                    backgroundColor: '#f6f6f6',
+                    backgroundColor: 'var(--bg-secondary)',
                   }}
                 >
                   <div
@@ -314,26 +314,27 @@ export const Admin = () => {
                       style={{
                         fontSize: '0.7rem',
                         fontWeight: 700,
-                        border: '2px solid #000',
+                        border: '2px solid var(--border-default)',
                         padding: '0.15rem 0.45rem',
                         textTransform: 'uppercase',
                         letterSpacing: '0.08em',
                         backgroundColor:
                           item.type === ADMIN_ACTIVITY_TYPES.OWNER
-                            ? '#ffe066'
-                            : '#7bed9f',
+                            ? 'var(--color-warning)'
+                            : 'var(--color-success)',
+                        color: '#000',
                       }}
                     >
                       {getActivityLabel(item.type)}
                     </span>
-                    <span style={{ fontSize: '0.75rem', color: '#333' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                       {formatDate(item.createdAt)}
                     </span>
                   </div>
                   <div style={{ fontWeight: 700, marginBottom: '0.25rem' }}>
                     {item.title}
                   </div>
-                  <div style={{ fontSize: '0.85rem', color: '#444' }}>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                     {item.description}
                   </div>
                 </li>

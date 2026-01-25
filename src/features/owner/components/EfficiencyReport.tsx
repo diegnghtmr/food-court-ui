@@ -367,7 +367,7 @@ export const EfficiencyReport = () => {
             style={{
               textAlign: 'center',
               padding: '3rem',
-              color: '#666',
+              color: 'var(--text-secondary)',
               fontFamily: 'monospace',
             }}
           >
@@ -383,23 +383,29 @@ export const EfficiencyReport = () => {
               }}
             >
               <thead>
-                <tr style={{ backgroundColor: '#000', color: '#fff' }}>
+                <tr
+                  style={{
+                    backgroundColor: 'var(--bg-header, #000)',
+                    color: 'var(--text-header, #fff)',
+                  }}
+                >
                   <th
                     onClick={() => handleSort('employeeName')}
                     style={{
                       padding: '1rem',
                       textAlign: 'left',
                       fontWeight: 'bold',
-                      border: '3px solid #000',
+                      border: '3px solid var(--border-default)',
                       cursor: 'pointer',
                       userSelect: 'none',
                       transition: 'background-color 0.2s',
                     }}
                     onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor = '#333')
+                      (e.currentTarget.style.backgroundColor =
+                        'var(--bg-header-hover, #333)')
                     }
                     onMouseLeave={(e) =>
-                      (e.currentTarget.style.backgroundColor = '#000')
+                      (e.currentTarget.style.backgroundColor = 'transparent')
                     }
                   >
                     NOMBRE DEL EMPLEADO
@@ -411,16 +417,17 @@ export const EfficiencyReport = () => {
                       padding: '1rem',
                       textAlign: 'right',
                       fontWeight: 'bold',
-                      border: '3px solid #000',
+                      border: '3px solid var(--border-default)',
                       cursor: 'pointer',
                       userSelect: 'none',
                       transition: 'background-color 0.2s',
                     }}
                     onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor = '#333')
+                      (e.currentTarget.style.backgroundColor =
+                        'var(--bg-header-hover, #333)')
                     }
                     onMouseLeave={(e) =>
-                      (e.currentTarget.style.backgroundColor = '#000')
+                      (e.currentTarget.style.backgroundColor = 'transparent')
                     }
                   >
                     PEDIDOS COMPLETADOS
@@ -432,16 +439,17 @@ export const EfficiencyReport = () => {
                       padding: '1rem',
                       textAlign: 'right',
                       fontWeight: 'bold',
-                      border: '3px solid #000',
+                      border: '3px solid var(--border-default)',
                       cursor: 'pointer',
                       userSelect: 'none',
                       transition: 'background-color 0.2s',
                     }}
                     onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor = '#333')
+                      (e.currentTarget.style.backgroundColor =
+                        'var(--bg-header-hover, #333)')
                     }
                     onMouseLeave={(e) =>
-                      (e.currentTarget.style.backgroundColor = '#000')
+                      (e.currentTarget.style.backgroundColor = 'transparent')
                     }
                   >
                     TIEMPO PROMEDIO
@@ -453,16 +461,17 @@ export const EfficiencyReport = () => {
                       padding: '1rem',
                       textAlign: 'right',
                       fontWeight: 'bold',
-                      border: '3px solid #000',
+                      border: '3px solid var(--border-default)',
                       cursor: 'pointer',
                       userSelect: 'none',
                       transition: 'background-color 0.2s',
                     }}
                     onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor = '#333')
+                      (e.currentTarget.style.backgroundColor =
+                        'var(--bg-header-hover, #333)')
                     }
                     onMouseLeave={(e) =>
-                      (e.currentTarget.style.backgroundColor = '#000')
+                      (e.currentTarget.style.backgroundColor = 'transparent')
                     }
                   >
                     EFICIENCIA
@@ -475,21 +484,27 @@ export const EfficiencyReport = () => {
                   <tr
                     key={`${report.employeeId}-${index}`}
                     style={{
-                      backgroundColor: index % 2 === 0 ? '#fff' : '#f5f5f5',
+                      backgroundColor:
+                        index % 2 === 0
+                          ? 'var(--bg-card)'
+                          : 'var(--bg-secondary)',
                       transition: 'background-color 0.2s',
                     }}
                     onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor = '#e0e0e0')
+                      (e.currentTarget.style.backgroundColor =
+                        'var(--bg-hover)')
                     }
                     onMouseLeave={(e) =>
                       (e.currentTarget.style.backgroundColor =
-                        index % 2 === 0 ? '#fff' : '#f5f5f5')
+                        index % 2 === 0
+                          ? 'var(--bg-card)'
+                          : 'var(--bg-secondary)')
                     }
                   >
                     <td
                       style={{
                         padding: '1rem',
-                        border: '2px solid #000',
+                        border: '2px solid var(--border-default)',
                         fontWeight: 'bold',
                       }}
                     >
@@ -498,7 +513,7 @@ export const EfficiencyReport = () => {
                     <td
                       style={{
                         padding: '1rem',
-                        border: '2px solid #000',
+                        border: '2px solid var(--border-default)',
                         textAlign: 'right',
                       }}
                     >
@@ -507,7 +522,7 @@ export const EfficiencyReport = () => {
                     <td
                       style={{
                         padding: '1rem',
-                        border: '2px solid #000',
+                        border: '2px solid var(--border-default)',
                         textAlign: 'right',
                       }}
                     >
@@ -516,15 +531,15 @@ export const EfficiencyReport = () => {
                     <td
                       style={{
                         padding: '1rem',
-                        border: '2px solid #000',
+                        border: '2px solid var(--border-default)',
                         textAlign: 'right',
                         fontWeight: 'bold',
                         color:
                           report.efficiency >= 80
-                            ? '#16a34a'
+                            ? 'var(--color-success)'
                             : report.efficiency >= 60
-                              ? '#ca8a04'
-                              : '#dc2626',
+                              ? 'var(--color-warning)'
+                              : 'var(--color-error)',
                       }}
                     >
                       {formatEfficiency(report.efficiency)}
@@ -541,8 +556,8 @@ export const EfficiencyReport = () => {
             style={{
               marginTop: '1.5rem',
               padding: '1rem',
-              backgroundColor: '#f5f5f5',
-              border: '2px solid #000',
+              backgroundColor: 'var(--bg-secondary)',
+              border: '2px solid var(--border-default)',
               fontFamily: 'monospace',
               fontWeight: 'bold',
             }}
