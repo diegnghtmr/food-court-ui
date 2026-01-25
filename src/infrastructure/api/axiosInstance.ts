@@ -48,18 +48,25 @@ axiosInstance.interceptors.response.use(
   (error: AxiosError) => {
     // Handle 401 Unauthorized - Token expired or invalid
     if (error.response?.status === 401) {
-      // Clear auth state via store to keep SPA in sync
-      const { logout } = useAuthStore.getState()
-      logout()
+      // Check if this is a login request - don't trigger session expired for login failures
+      const requestUrl = error.config?.url || ''
+      const isLoginRequest =
+        requestUrl.includes('/auth/login') || requestUrl.includes('/login')
 
-      window.dispatchEvent(
-        new CustomEvent('auth:unauthorized', {
-          detail: {
-            message:
-              'Tu sesión ha expirado. Por favor inicia sesión nuevamente.',
-          },
-        })
-      )
+      if (!isLoginRequest) {
+        // Only logout and dispatch event if NOT a login attempt
+        const { logout } = useAuthStore.getState()
+        logout()
+
+        window.dispatchEvent(
+          new CustomEvent('auth:unauthorized', {
+            detail: {
+              message:
+                'Tu sesión ha expirado. Por favor inicia sesión nuevamente.',
+            },
+          })
+        )
+      }
     }
 
     // Handle 403 Forbidden - Insufficient permissions

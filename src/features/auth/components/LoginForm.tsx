@@ -18,6 +18,36 @@ interface LoginFormProps {
   onSwitchToRegister?: () => void
 }
 
+/**
+ * Translate common backend error messages to Spanish
+ */
+const translateErrorMessage = (message: string): string => {
+  const translations: Record<string, string> = {
+    'authentication failed':
+      'Credenciales incorrectas. Verifica tu correo y contraseña.',
+    'invalid credentials':
+      'Credenciales incorrectas. Verifica tu correo y contraseña.',
+    'user not found': 'Usuario no encontrado.',
+    'invalid password': 'Contraseña incorrecta.',
+    'account disabled': 'Tu cuenta ha sido deshabilitada.',
+    'account locked': 'Tu cuenta ha sido bloqueada.',
+    unauthorized: 'No autorizado. Verifica tus credenciales.',
+    'bad credentials':
+      'Credenciales incorrectas. Verifica tu correo y contraseña.',
+  }
+
+  const lowerMessage = message.toLowerCase()
+
+  // Search for exact or partial match
+  for (const [key, value] of Object.entries(translations)) {
+    if (lowerMessage.includes(key)) {
+      return value
+    }
+  }
+
+  return message // Return original if no translation found
+}
+
 export const LoginForm = ({ onSwitchToRegister }: LoginFormProps) => {
   const navigate = useNavigate()
   const { login } = useAuthActions()
@@ -53,9 +83,10 @@ export const LoginForm = ({ onSwitchToRegister }: LoginFormProps) => {
       }
     } catch (error) {
       const axiosError = error as AxiosError<{ message?: string }>
-      const message =
-        axiosError.response?.data?.message ||
-        'Error al iniciar sesión. Verifica tus credenciales.'
+      const backendMessage = axiosError.response?.data?.message
+      const message = backendMessage
+        ? translateErrorMessage(backendMessage)
+        : 'Error al iniciar sesión. Verifica tus credenciales.'
       setErrorMessage(message)
     } finally {
       setIsSubmitting(false)
