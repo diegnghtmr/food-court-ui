@@ -244,7 +244,9 @@ export const Admin = () => {
         )}
 
         {!error && !isLoading && !stats && (
-          <p style={{ color: 'var(--text-secondary)' }}>No hay estadísticas disponibles.</p>
+          <p style={{ color: 'var(--text-secondary)' }}>
+            No hay estadísticas disponibles.
+          </p>
         )}
       </div>
 
@@ -327,14 +329,24 @@ export const Admin = () => {
                     >
                       {getActivityLabel(item.type)}
                     </span>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                    <span
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'var(--text-secondary)',
+                      }}
+                    >
                       {formatDate(item.createdAt)}
                     </span>
                   </div>
                   <div style={{ fontWeight: 700, marginBottom: '0.25rem' }}>
                     {item.title}
                   </div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                  <div
+                    style={{
+                      fontSize: '0.85rem',
+                      color: 'var(--text-secondary)',
+                    }}
+                  >
                     {item.description}
                   </div>
                 </li>
