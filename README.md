@@ -93,31 +93,22 @@ _Order lifecycle from pending to delivered or canceled, including state transiti
 ## UI Screenshots
 ### Authentication
 ![Login](docs/00-login.png)
-_Login screen for role-based access._
 
 ### Client
 ![Client - Screen 1](docs/01-client.png)
-_Client view for browsing restaurants._
 ![Client - Screen 2](docs/02-client.png)
-_Client view for menu and dish selection._
 ![Client - Screen 3](docs/03-client.png)
-_Client view for cart and order confirmation._
 ![Client - Screen 4](docs/04-client.png)
-_Client view for order tracking and status._
 
 ### Employee
 ![Employee - Screen](docs/05-employee.png)
-_Employee view for order queue and actions._
 
 ### Owner
 ![Owner - Screen 1](docs/06-owner.png)
-_Owner dashboard for restaurant operations._
 ![Owner - Screen 2](docs/07-owner.png)
-_Owner view for dish and staff management._
 
 ### Admin
 ![Admin - Screen](docs/08-admin.png)
-_Admin view for platform overview and management._
 
 ## Related Repositories
 - [user-microservice](https://github.com/diegnghtmr/user-microservice)
