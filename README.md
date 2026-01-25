@@ -21,7 +21,7 @@ Role-based frontend for the Food Court platform. It serves admins, restaurant ow
 - [Related Repositories](#related-repositories)
 
 ## Overview
-Food Court UI is the role-based client for the Food Court system. It orchestrates ordering and operational workflows by consuming dedicated backend services while enforcing the Scope Rule so the folder structure directly reflects business capabilities.
+Food Court UI is the role-based client for the Food Court system with a brutalist visual style. It orchestrates ordering and operational workflows by consuming dedicated backend services while enforcing the Scope Rule so the folder structure directly reflects business capabilities.
 
 ## System Context
 - Consumes User, Food Court, Order, and Traceability APIs.
