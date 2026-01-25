@@ -3,14 +3,14 @@ import React, { useState, useEffect } from 'react'
 const COUNTRY_CODES = [
   { code: '+57', country: 'CO', label: '🇨🇴+57' }, // Colombia (default)
   { code: '+1', country: 'US', label: '🇺🇸+1' }, // USA
-  { code: '+52', country: 'MX', label: '🇲🇽+52' }, // México
+  { code: '+52', country: 'MX', label: '🇲🇽+52' }, // Mexico
   { code: '+54', country: 'AR', label: '🇦🇷+54' }, // Argentina
-  { code: '+55', country: 'BR', label: '🇧🇷+55' }, // Brasil
+  { code: '+55', country: 'BR', label: '🇧🇷+55' }, // Brazil
   { code: '+56', country: 'CL', label: '🇨🇱+56' }, // Chile
-  { code: '+51', country: 'PE', label: '🇵🇪+51' }, // Perú
+  { code: '+51', country: 'PE', label: '🇵🇪+51' }, // Peru
   { code: '+58', country: 'VE', label: '🇻🇪+58' }, // Venezuela
   { code: '+593', country: 'EC', label: '🇪🇨+593' }, // Ecuador
-  { code: '+34', country: 'ES', label: '🇪🇸+34' }, // España
+  { code: '+34', country: 'ES', label: '🇪🇸+34' }, // Spain
 ] as const
 
 interface BrutalistPhoneInputProps {
@@ -82,7 +82,7 @@ export const BrutalistPhoneInput = React.forwardRef<
     }
 
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newPhone = e.target.value.replace(/\D/g, '') // Solo números
+      const newPhone = e.target.value.replace(/\D/g, '') // Digits only
       setPhoneNumber(newPhone)
       onChange?.(countryCode + newPhone)
     }

@@ -1,8 +1,8 @@
 /**
- * EJEMPLOS DE USO - Brutalist Components
+ * USAGE EXAMPLES - Brutalist Components
  *
- * Este archivo contiene ejemplos de implementación de los componentes brutalistas.
- * NO es parte de la aplicación, solo sirve como referencia.
+ * This file contains implementation examples of the brutalist components.
+ * It is NOT part of the application and only serves as a reference.
  */
 
 /* eslint-disable no-console */
@@ -25,7 +25,7 @@ import {
   AccessDenied,
 } from './index'
 
-// ===== EJEMPLO 1: Formulario Completo =====
+// ===== EXAMPLE 1: Full Form =====
 export const FormExample: React.FC = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -100,7 +100,7 @@ export const FormExample: React.FC = () => {
   )
 }
 
-// ===== EJEMPLO 2: Tabla con Datos =====
+// ===== EXAMPLE 2: Data Table =====
 interface Product extends Record<string, unknown> {
   id: string
   name: string
@@ -187,7 +187,7 @@ export const TableExample: React.FC = () => {
   )
 }
 
-// ===== EJEMPLO 3: Modal con Confirmación =====
+// ===== EXAMPLE 3: Confirmation Modal =====
 export const ModalExample: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -232,7 +232,7 @@ export const ModalExample: React.FC = () => {
   )
 }
 
-// ===== EJEMPLO 4: Alerts y Estados =====
+// ===== EXAMPLE 4: Alerts and States =====
 export const AlertsExample: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
@@ -306,7 +306,7 @@ export const AlertsExample: React.FC = () => {
   )
 }
 
-// ===== EJEMPLO 5: Loading States =====
+// ===== EXAMPLE 5: Loading States =====
 export const LoadingExample: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
 
@@ -351,7 +351,7 @@ export const LoadingExample: React.FC = () => {
   )
 }
 
-// ===== EJEMPLO 6: Botones con Variantes =====
+// ===== EXAMPLE 6: Button Variants =====
 export const ButtonVariantsExample: React.FC = () => {
   return (
     <BrutalistCard>
@@ -415,7 +415,7 @@ export const ButtonVariantsExample: React.FC = () => {
   )
 }
 
-// ===== EJEMPLO 7: Access Denied =====
+// ===== EXAMPLE 7: Access Denied =====
 export const AccessDeniedExample: React.FC = () => {
   const [showDenied, setShowDenied] = useState(false)
 
@@ -435,7 +435,7 @@ export const AccessDeniedExample: React.FC = () => {
   )
 }
 
-// ===== EJEMPLO COMPLETO: Dashboard =====
+// ===== FULL EXAMPLE: Dashboard =====
 export const CompleteDashboardExample: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#0a0a0a] p-8">

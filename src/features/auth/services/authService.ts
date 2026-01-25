@@ -10,7 +10,7 @@ import type { LoginCredentials, RegisterData, AuthResponse } from '../models'
 export const authService = {
   /**
    * Login user
-   * @param credentials - User login credentials (correo, clave)
+   * @param credentials - User login credentials (email, password)
    * @returns Promise with token and user data
    */
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {

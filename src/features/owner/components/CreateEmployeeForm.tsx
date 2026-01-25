@@ -62,7 +62,7 @@ const createEmployeeSchema = z.object({
       const monthDiff = today.getMonth() - birthDate.getMonth()
       const dayDiff = today.getDate() - birthDate.getDate()
 
-      // Ajustar si aún no ha cumplido años este año
+      // Adjust if the birthday has not occurred yet this year
       const adjustedAge =
         monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age
 
