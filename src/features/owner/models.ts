@@ -59,5 +59,5 @@ export interface OwnerStats {
   totalDishes: number
   activeDishes: number
   totalEmployees: number
-  totalOrders: number
+  ordersToday: number
 }

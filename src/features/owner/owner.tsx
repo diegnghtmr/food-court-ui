@@ -1,8 +1,50 @@
-import { BrutalistCard, BrutalistButton } from '@shared/components'
+import { useEffect, useState } from 'react'
+import {
+  BrutalistCard,
+  BrutalistButton,
+  LoadingSpinner,
+  ErrorAlert,
+} from '@shared/components'
 import { useNavigate } from 'react-router-dom'
+import { getRestaurantId } from '@infrastructure/auth/tokenManager'
+import { ownerStatsService } from './services/ownerStatsService'
+import type { OwnerStats } from './models'
 
 export const Owner = () => {
   const navigate = useNavigate()
+  const [stats, setStats] = useState<OwnerStats | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const loadStats = async () => {
+      setIsLoading(true)
+      setError(null)
+      const restaurantId = getRestaurantId()?.toString() || ''
+
+      if (!restaurantId) {
+        setError('No se pudo determinar el restaurante del propietario.')
+        setIsLoading(false)
+        return
+      }
+
+      try {
+        const data = await ownerStatsService.getOwnerStats(restaurantId)
+        setStats(data)
+      } catch (err) {
+        const message =
+          err instanceof Error
+            ? err.message
+            : 'Error al cargar las estadisticas del dashboard.'
+        setError(message)
+        setStats(null)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    void loadStats()
+  }, [])
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -29,21 +71,54 @@ export const Owner = () => {
           >
             Statistics
           </h2>
-          <p style={{ marginBottom: '1rem', color: '#666' }}>
-            TODO: Display owner statistics
-          </p>
-          <ul
-            style={{
-              paddingLeft: '1.5rem',
-              fontSize: '0.875rem',
-              color: '#666',
-            }}
-          >
-            <li>Total dishes created</li>
-            <li>Active dishes</li>
-            <li>Total employees</li>
-            <li>Orders today</li>
-          </ul>
+
+          {error && (
+            <div style={{ marginBottom: '1rem' }}>
+              <ErrorAlert message={error} />
+            </div>
+          )}
+
+          {!error && isLoading && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '120px',
+              }}
+            >
+              <LoadingSpinner size="md" />
+            </div>
+          )}
+
+          {!error && !isLoading && stats && (
+            <ul
+              style={{
+                paddingLeft: '1.5rem',
+                fontSize: '0.9rem',
+                color: '#444',
+                display: 'grid',
+                gap: '0.5rem',
+              }}
+            >
+              <li>
+                <strong>{stats.totalDishes}</strong> platos creados
+              </li>
+              <li>
+                <strong>{stats.activeDishes}</strong> platos activos
+              </li>
+              <li>
+                <strong>{stats.totalEmployees}</strong> empleados registrados
+              </li>
+              <li>
+                <strong>{stats.ordersToday}</strong> pedidos hoy
+              </li>
+            </ul>
+          )}
+
+          {!error && !isLoading && !stats && (
+            <p style={{ color: '#666' }}>No hay estadisticas disponibles.</p>
+          )}
         </BrutalistCard>
 
         <BrutalistCard>
