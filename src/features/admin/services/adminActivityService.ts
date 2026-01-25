@@ -5,11 +5,7 @@
 
 import axiosInstance from '@infrastructure/api/axiosInstance'
 import { API_ENDPOINTS } from '@infrastructure/api/endpoints'
-import {
-  ADMIN_ACTIVITY_TYPES,
-  type AdminActivity,
-  type Owner,
-} from '../models'
+import { ADMIN_ACTIVITY_TYPES, type AdminActivity, type Owner } from '../models'
 import { ownerService } from './ownerService'
 
 interface RestaurantPagePayload {
@@ -172,7 +168,10 @@ export const adminActivityService = {
     ]
 
     return activities
-      .sort((left, right) => getTimestamp(right.createdAt) - getTimestamp(left.createdAt))
+      .sort(
+        (left, right) =>
+          getTimestamp(right.createdAt) - getTimestamp(left.createdAt)
+      )
       .slice(0, limit)
   },
 }
