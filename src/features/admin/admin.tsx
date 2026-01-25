@@ -1,8 +1,42 @@
-import { BrutalistCard, BrutalistButton } from '@shared/components'
+import { useEffect, useState } from 'react'
+import {
+  BrutalistCard,
+  BrutalistButton,
+  LoadingSpinner,
+  ErrorAlert,
+} from '@shared/components'
 import { useNavigate } from 'react-router-dom'
+import { adminStatsService } from './services/adminStatsService'
+import type { AdminStats } from './models'
 
 export const Admin = () => {
   const navigate = useNavigate()
+  const [stats, setStats] = useState<AdminStats | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const loadStats = async () => {
+      setIsLoading(true)
+      setError(null)
+
+      try {
+        const data = await adminStatsService.getAdminStats()
+        setStats(data)
+      } catch (err) {
+        const message =
+          err instanceof Error
+            ? err.message
+            : 'Error al cargar las estadisticas del dashboard.'
+        setError(message)
+        setStats(null)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    void loadStats()
+  }, [])
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -12,6 +46,140 @@ export const Admin = () => {
         Admin Dashboard
       </h1>
 
+      {/* Statistics Section */}
+      <div style={{ marginBottom: '2rem' }}>
+        <h2
+          style={{
+            fontSize: '1rem',
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            marginBottom: '1rem',
+            color: 'var(--text-secondary)',
+          }}
+        >
+          Estadísticas
+        </h2>
+
+        {error && (
+          <div style={{ marginBottom: '1rem' }}>
+            <ErrorAlert message={error} />
+          </div>
+        )}
+
+        {!error && isLoading && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minHeight: '150px',
+            }}
+          >
+            <LoadingSpinner size="lg" />
+          </div>
+        )}
+
+        {!error && !isLoading && stats && (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '1.5rem',
+            }}
+          >
+            {/* Total Owners Card */}
+            <BrutalistCard>
+              <div className="text-center py-4">
+                <div className="flex justify-center mb-3">
+                  <svg
+                    className="w-10 h-10 text-[var(--color-info)]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="square"
+                      strokeLinejoin="miter"
+                      strokeWidth={2}
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                </div>
+                <div className="text-5xl font-bold text-[var(--color-info)] mb-2">
+                  {stats.totalOwners}
+                </div>
+                <div className="text-sm text-[var(--text-secondary)] uppercase tracking-wider font-medium">
+                  Propietarios Registrados
+                </div>
+              </div>
+            </BrutalistCard>
+
+            {/* Total Restaurants Card */}
+            <BrutalistCard>
+              <div className="text-center py-4">
+                <div className="flex justify-center mb-3">
+                  <svg
+                    className="w-10 h-10 text-[var(--color-success)]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="square"
+                      strokeLinejoin="miter"
+                      strokeWidth={2}
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
+                  </svg>
+                </div>
+                <div className="text-5xl font-bold text-[var(--color-success)] mb-2">
+                  {stats.totalRestaurants}
+                </div>
+                <div className="text-sm text-[var(--text-secondary)] uppercase tracking-wider font-medium">
+                  Restaurantes Creados
+                </div>
+              </div>
+            </BrutalistCard>
+
+            {/* Active Restaurants Card */}
+            <BrutalistCard>
+              <div className="text-center py-4">
+                <div className="flex justify-center mb-3">
+                  <svg
+                    className="w-10 h-10 text-[var(--color-warning)]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="square"
+                      strokeLinejoin="miter"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <div className="text-5xl font-bold text-[var(--color-warning)] mb-2">
+                  {stats.activeRestaurants}
+                </div>
+                <div className="text-sm text-[var(--text-secondary)] uppercase tracking-wider font-medium">
+                  Restaurantes Activos
+                </div>
+              </div>
+            </BrutalistCard>
+          </div>
+        )}
+
+        {!error && !isLoading && !stats && (
+          <p style={{ color: '#666' }}>No hay estadísticas disponibles.</p>
+        )}
+      </div>
+
+      {/* Actions Section */}
       <div
         style={{
           display: 'grid',
@@ -27,34 +195,7 @@ export const Admin = () => {
               fontWeight: 'bold',
             }}
           >
-            Statistics
-          </h2>
-          <p style={{ marginBottom: '1rem', color: '#666' }}>
-            TODO: Display admin statistics
-          </p>
-          <ul
-            style={{
-              paddingLeft: '1.5rem',
-              fontSize: '0.875rem',
-              color: '#666',
-            }}
-          >
-            <li>Total owners created</li>
-            <li>Total restaurants created</li>
-            <li>Active restaurants</li>
-            <li>Recent activity</li>
-          </ul>
-        </BrutalistCard>
-
-        <BrutalistCard>
-          <h2
-            style={{
-              marginBottom: '1rem',
-              fontSize: '1.25rem',
-              fontWeight: 'bold',
-            }}
-          >
-            Quick Actions
+            Acciones Rápidas
           </h2>
           <div
             style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
@@ -63,13 +204,13 @@ export const Admin = () => {
               onClick={() => navigate('/admin/create-owner')}
               variant="primary"
             >
-              Create New Owner
+              Crear Nuevo Propietario
             </BrutalistButton>
             <BrutalistButton
               onClick={() => navigate('/admin/create-restaurant')}
               variant="primary"
             >
-              Create New Restaurant
+              Crear Nuevo Restaurante
             </BrutalistButton>
           </div>
         </BrutalistCard>
@@ -82,10 +223,10 @@ export const Admin = () => {
               fontWeight: 'bold',
             }}
           >
-            Recent Activity
+            Actividad Reciente
           </h2>
           <p style={{ color: '#666', fontSize: '0.875rem' }}>
-            TODO: Display recent owners and restaurants created
+            TODO: Mostrar propietarios y restaurantes creados recientemente
           </p>
         </BrutalistCard>
       </div>
