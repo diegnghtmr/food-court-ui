@@ -129,9 +129,7 @@ export const LoginForm = ({ onSwitchToRegister }: LoginFormProps) => {
           fullWidth
           disabled={loginMutation.isPending}
         >
-          {loginMutation.isPending
-            ? 'Iniciando sesión...'
-            : 'Iniciar Sesión'}
+          {loginMutation.isPending ? 'Iniciando sesión...' : 'Iniciar Sesión'}
         </BrutalistButton>
       </form>
 

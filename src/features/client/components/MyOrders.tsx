@@ -99,11 +99,7 @@ import { useCancelOrder, useMyOrders } from '../queries/clientQueries'
  * Implements polling for real-time updates
  */
 export const MyOrders = () => {
-  const {
-    data: orders = [],
-    isLoading,
-    error,
-  } = useMyOrders()
+  const { data: orders = [], isLoading, error } = useMyOrders()
   const cancelOrderMutation = useCancelOrder()
   const [actionError, setActionError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)

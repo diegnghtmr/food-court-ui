@@ -194,7 +194,10 @@ export const DishesTable = () => {
 
       {/* Error Alert */}
       {errorMessage && (
-        <ErrorAlert message={errorMessage} onClose={() => setActionError(null)} />
+        <ErrorAlert
+          message={errorMessage}
+          onClose={() => setActionError(null)}
+        />
       )}
 
       {/* Table Section */}

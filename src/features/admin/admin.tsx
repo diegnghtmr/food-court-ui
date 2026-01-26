@@ -11,11 +11,7 @@ import { ADMIN_ACTIVITY_TYPES, type AdminActivity } from './models'
 
 export const Admin = () => {
   const navigate = useNavigate()
-  const {
-    data: stats,
-    isLoading,
-    error: statsError,
-  } = useAdminStats()
+  const { data: stats, isLoading, error: statsError } = useAdminStats()
   const {
     data: activity = [],
     isLoading: activityLoading,
@@ -249,11 +245,15 @@ export const Admin = () => {
             </div>
           )}
 
-          {!activityErrorMessage && !activityLoading && activity.length === 0 && (
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
-              No hay actividad reciente.
-            </p>
-          )}
+          {!activityErrorMessage &&
+            !activityLoading &&
+            activity.length === 0 && (
+              <p
+                style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}
+              >
+                No hay actividad reciente.
+              </p>
+            )}
 
           {!activityErrorMessage && !activityLoading && activity.length > 0 && (
             <ul

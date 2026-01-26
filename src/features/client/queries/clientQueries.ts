@@ -9,8 +9,7 @@ const clientQueryKeys = {
     ['client', 'restaurants', page, size] as const,
   restaurant: (restaurantId: number) =>
     ['client', 'restaurant', restaurantId] as const,
-  dishes: (restaurantId: number) =>
-    ['client', 'dishes', restaurantId] as const,
+  dishes: (restaurantId: number) => ['client', 'dishes', restaurantId] as const,
   orders: ['client', 'orders'] as const,
 } as const
 

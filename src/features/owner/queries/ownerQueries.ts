@@ -15,11 +15,13 @@ const ownerQueryKeys = {
   dishes: (restaurantId: string, page: number, size: number) =>
     ['owner', 'dishes', restaurantId, page, size] as const,
   dish: (dishId: string) => ['owner', 'dish', dishId] as const,
-  efficiency: (
-    restaurantId: string,
-    startDate?: string,
-    endDate?: string
-  ) => ['owner', 'efficiency', restaurantId, startDate ?? '', endDate ?? ''],
+  efficiency: (restaurantId: string, startDate?: string, endDate?: string) => [
+    'owner',
+    'efficiency',
+    restaurantId,
+    startDate ?? '',
+    endDate ?? '',
+  ],
 } as const
 
 export const useOwnerStats = (restaurantId: string) => {
@@ -128,6 +130,7 @@ export const useToggleDishStatus = () => {
 
 export const useCreateEmployee = () => {
   return useMutation({
-    mutationFn: (data: CreateEmployeeData) => employeeService.createEmployee(data),
+    mutationFn: (data: CreateEmployeeData) =>
+      employeeService.createEmployee(data),
   })
 }

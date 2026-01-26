@@ -7,10 +7,14 @@ const employeeQueryKeys = {
     ['employee', 'orders', restaurantId, status] as const,
 } as const
 
-export const useOrdersByStatus = (restaurantId: number, status: OrderStatus) => {
+export const useOrdersByStatus = (
+  restaurantId: number,
+  status: OrderStatus
+) => {
   return useQuery({
     queryKey: employeeQueryKeys.orders(restaurantId, status),
-    queryFn: () => orderManagementService.getOrdersByStatus(restaurantId, status),
+    queryFn: () =>
+      orderManagementService.getOrdersByStatus(restaurantId, status),
     enabled: Number.isFinite(restaurantId) && restaurantId > 0,
     refetchInterval: 10000,
   })
@@ -42,7 +46,8 @@ export const useMarkOrderReady = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (orderId: string) => orderManagementService.markOrderReady(orderId),
+    mutationFn: (orderId: string) =>
+      orderManagementService.markOrderReady(orderId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['employee', 'orders'] })
     },

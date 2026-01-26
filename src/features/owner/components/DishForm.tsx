@@ -245,9 +245,7 @@ const DishFormCreate = () => {
                   border: `2px solid ${errors.price?.message ? '#ff0000' : '#ffffff'}`,
                   transition: 'border-color 75ms',
                   opacity: createDishMutation.isPending ? 0.5 : 1,
-                  cursor: createDishMutation.isPending
-                    ? 'not-allowed'
-                    : 'text',
+                  cursor: createDishMutation.isPending ? 'not-allowed' : 'text',
                 }}
               />
               {errors.price?.message && (
@@ -270,14 +268,14 @@ const DishFormCreate = () => {
 
           {/* IMAGE URL FIELD */}
           <div style={{ marginBottom: '1.5rem' }}>
-              <BrutalistInput
-                type="url"
-                label="URL de Imagen"
-                placeholder="https://loremflickr.com/640/480/food"
-                error={errors.imageUrl?.message}
-                disabled={createDishMutation.isPending}
-                {...register('imageUrl')}
-              />
+            <BrutalistInput
+              type="url"
+              label="URL de Imagen"
+              placeholder="https://loremflickr.com/640/480/food"
+              error={errors.imageUrl?.message}
+              disabled={createDishMutation.isPending}
+              {...register('imageUrl')}
+            />
           </div>
 
           {/* CATEGORY FIELD */}
@@ -559,8 +557,8 @@ const DishFormEdit = () => {
               placeholder="Describe el plato en detalle..."
               rows={4}
               error={errors.description?.message}
-               disabled={updateDishMutation.isPending}
-               {...register('description')}
+              disabled={updateDishMutation.isPending}
+              {...register('description')}
             />
           </div>
 
@@ -596,9 +594,7 @@ const DishFormEdit = () => {
                   border: `2px solid ${errors.price?.message ? '#ff0000' : '#ffffff'}`,
                   transition: 'border-color 75ms',
                   opacity: updateDishMutation.isPending ? 0.5 : 1,
-                  cursor: updateDishMutation.isPending
-                    ? 'not-allowed'
-                    : 'text',
+                  cursor: updateDishMutation.isPending ? 'not-allowed' : 'text',
                 }}
               />
               {errors.price?.message && (
