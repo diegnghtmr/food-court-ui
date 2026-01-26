@@ -1,9 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useMemo } from 'react'
 import { LoadingSpinner } from '@shared/components'
 import { useAuth } from '@infrastructure/auth'
 import { Order, OrdersByStatus } from '../models'
 import { OrderStatus } from '@shared/types'
-import { orderManagementService } from '../services/orderManagementService'
+import {
+  useAssignOrder,
+  useDeliverOrder,
+  useMarkOrderReady,
+  useOrdersByStatus,
+} from '../queries/employeeQueries'
 import { OrderCard } from './OrderCard'
 import { PinValidationModal } from './PinValidationModal'
 import { getRestaurantId } from '@infrastructure/auth/tokenManager'
@@ -21,75 +26,42 @@ import { getRestaurantId } from '@infrastructure/auth/tokenManager'
  */
 export const OrdersKanban: React.FC = () => {
   const { userId } = useAuth()
-  const [ordersByStatus, setOrdersByStatus] = useState<OrdersByStatus>({
-    PENDIENTE: [],
-    EN_PREPARACION: [],
-    LISTO: [],
-    ENTREGADO: [],
-  })
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const [isPinModalOpen, setIsPinModalOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
   const [loadingOrderId, setLoadingOrderId] = useState<string | null>(null)
 
-  const restaurantId = getRestaurantId()
+  const restaurantId = Number(getRestaurantId() ?? 0)
+  const pendingQuery = useOrdersByStatus(restaurantId, OrderStatus.PENDIENTE)
+  const preparingQuery = useOrdersByStatus(
+    restaurantId,
+    OrderStatus.EN_PREPARACION
+  )
+  const readyQuery = useOrdersByStatus(restaurantId, OrderStatus.LISTO)
+  const deliveredQuery = useOrdersByStatus(restaurantId, OrderStatus.ENTREGADO)
+  const assignOrderMutation = useAssignOrder()
+  const markReadyMutation = useMarkOrderReady()
+  const deliverOrderMutation = useDeliverOrder()
 
-  /**
-   * Fetch all orders for all statuses
-   */
-  const fetchOrders = useCallback(async () => {
-    try {
-      if (!restaurantId) {
-        setIsLoading(false)
-        console.error('Restaurant ID no disponible para el empleado')
-        return
-      }
+  const ordersByStatus = useMemo<OrdersByStatus>(
+    () => ({
+      PENDIENTE: pendingQuery.data ?? [],
+      EN_PREPARACION: preparingQuery.data ?? [],
+      LISTO: readyQuery.data ?? [],
+      ENTREGADO: deliveredQuery.data ?? [],
+    }),
+    [
+      pendingQuery.data,
+      preparingQuery.data,
+      readyQuery.data,
+      deliveredQuery.data,
+    ]
+  )
 
-      const [pendiente, enPreparacion, listo, entregado] = await Promise.all([
-        orderManagementService.getOrdersByStatus(
-          restaurantId,
-          OrderStatus.PENDIENTE
-        ),
-        orderManagementService.getOrdersByStatus(
-          restaurantId,
-          OrderStatus.EN_PREPARACION
-        ),
-        orderManagementService.getOrdersByStatus(
-          restaurantId,
-          OrderStatus.LISTO
-        ),
-        orderManagementService.getOrdersByStatus(
-          restaurantId,
-          OrderStatus.ENTREGADO
-        ),
-      ])
-
-      setOrdersByStatus({
-        PENDIENTE: pendiente,
-        EN_PREPARACION: enPreparacion,
-        LISTO: listo,
-        ENTREGADO: entregado,
-      })
-    } catch (error) {
-      console.error('Error fetching orders:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [restaurantId])
-
-  /**
-   * Initial load and polling setup
-   * Polls every 10 seconds for real-time updates
-   */
-  useEffect(() => {
-    fetchOrders()
-
-    const interval = setInterval(() => {
-      fetchOrders()
-    }, 10000) // 10 seconds
-
-    return () => clearInterval(interval)
-  }, [fetchOrders])
+  const isLoading =
+    pendingQuery.isLoading ||
+    preparingQuery.isLoading ||
+    readyQuery.isLoading ||
+    deliveredQuery.isLoading
 
   /**
    * Assign order to employee (PENDIENTE -> EN_PREPARACION)
@@ -99,11 +71,11 @@ export const OrdersKanban: React.FC = () => {
 
     setLoadingOrderId(orderId)
     try {
-      await orderManagementService.assignOrderToEmployee(
+      await assignOrderMutation.mutateAsync({
         orderId,
-        Number(userId)
-      )
-      await fetchOrders()
+        employeeId: Number(userId),
+        restaurantId,
+      })
     } catch (error) {
       console.error('Error assigning order:', error)
     } finally {
@@ -117,8 +89,7 @@ export const OrdersKanban: React.FC = () => {
   const handleMarkReady = async (orderId: string) => {
     setLoadingOrderId(orderId)
     try {
-      await orderManagementService.markOrderReady(orderId)
-      await fetchOrders()
+      await markReadyMutation.mutateAsync(orderId)
     } catch (error) {
       console.error('Error marking order as ready:', error)
     } finally {
@@ -142,16 +113,15 @@ export const OrdersKanban: React.FC = () => {
     if (!selectedOrder) return false
 
     try {
-      const result = await orderManagementService.deliverOrder(
-        selectedOrder.id,
-        pin
-      )
+      const result = await deliverOrderMutation.mutateAsync({
+        orderId: selectedOrder.id,
+        pin,
+      })
 
       if (result.valido) {
         // Close modal and refresh orders
         setIsPinModalOpen(false)
         setSelectedOrder(null)
-        await fetchOrders()
         return true
       }
 
@@ -187,6 +157,16 @@ export const OrdersKanban: React.FC = () => {
   const myPreparingOrders = ordersByStatus.EN_PREPARACION.filter(
     (order) => order.empleadoId === (userId ?? '')
   )
+
+  if (!restaurantId) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <p className="text-muted-foreground uppercase tracking-wide text-sm">
+          Restaurante no disponible para el empleado
+        </p>
+      </div>
+    )
+  }
 
   if (isLoading) {
     return (

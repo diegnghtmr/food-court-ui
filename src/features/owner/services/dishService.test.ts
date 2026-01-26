@@ -38,7 +38,7 @@ describe('dishService', () => {
         description: 'Hamburguesa con queso',
         price: 15000,
         imageUrl: 'https://example.com/burger.jpg',
-        category: 'PLATO_FUERTE',
+        categoryId: 2,
         restaurantId: '1',
       }
 
@@ -51,7 +51,7 @@ describe('dishService', () => {
           description: dishData.description,
           price: dishData.price,
           imageUrl: dishData.imageUrl,
-          category: dishData.category,
+          categoryId: dishData.categoryId,
           restaurantId: 1,
         }
       )

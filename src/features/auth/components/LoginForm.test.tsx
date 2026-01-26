@@ -9,6 +9,7 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom'
 import { LoginForm } from './LoginForm'
 import { authService } from '../services/authService'
 import { UserRole } from '@shared/types'
+import { TestQueryClientProvider } from '../../../tests/queryTestUtils'
 
 // Mock the auth service
 vi.mock('../services/authService')
@@ -53,7 +54,11 @@ describe('LoginForm Integration', () => {
       future: { v7_relativeSplatPath: true },
     })
 
-    render(<RouterProvider router={router} />)
+    render(
+      <TestQueryClientProvider>
+        <RouterProvider router={router} />
+      </TestQueryClientProvider>
+    )
 
     expect(screen.getByLabelText(/correo/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/contraseña/i)).toBeInTheDocument()
@@ -67,7 +72,11 @@ describe('LoginForm Integration', () => {
       future: { v7_relativeSplatPath: true },
     })
 
-    render(<RouterProvider router={router} />)
+    render(
+      <TestQueryClientProvider>
+        <RouterProvider router={router} />
+      </TestQueryClientProvider>
+    )
 
     const submitButton = screen.getByRole('button', {
       name: /iniciar sesi[óo]n/i,
@@ -84,7 +93,11 @@ describe('LoginForm Integration', () => {
       future: { v7_relativeSplatPath: true },
     })
 
-    render(<RouterProvider router={router} />)
+    render(
+      <TestQueryClientProvider>
+        <RouterProvider router={router} />
+      </TestQueryClientProvider>
+    )
 
     const emailInput = screen.getByLabelText(/correo/i)
     const submitButton = screen.getByRole('button', {
@@ -118,7 +131,11 @@ describe('LoginForm Integration', () => {
       future: { v7_relativeSplatPath: true },
     })
 
-    render(<RouterProvider router={router} />)
+    render(
+      <TestQueryClientProvider>
+        <RouterProvider router={router} />
+      </TestQueryClientProvider>
+    )
 
     const emailInput = screen.getByLabelText(/correo/i)
     const passwordInput = screen.getByLabelText(/contraseña/i)
@@ -153,7 +170,11 @@ describe('LoginForm Integration', () => {
       future: { v7_relativeSplatPath: true },
     })
 
-    render(<RouterProvider router={router} />)
+    render(
+      <TestQueryClientProvider>
+        <RouterProvider router={router} />
+      </TestQueryClientProvider>
+    )
 
     const emailInput = screen.getByLabelText(/correo/i)
     const passwordInput = screen.getByLabelText(/contraseña/i)
@@ -179,7 +200,11 @@ describe('LoginForm Integration', () => {
       future: { v7_relativeSplatPath: true },
     })
 
-    render(<RouterProvider router={router} />)
+    render(
+      <TestQueryClientProvider>
+        <RouterProvider router={router} />
+      </TestQueryClientProvider>
+    )
 
     const emailInput = screen.getByLabelText(/correo/i)
     const passwordInput = screen.getByLabelText(/contraseña/i)

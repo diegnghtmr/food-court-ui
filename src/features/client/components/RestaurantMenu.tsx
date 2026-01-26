@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   BrutalistCard,
@@ -8,10 +8,10 @@ import {
   SuccessAlert,
 } from '@shared/components'
 import { DishCategory, DISH_CATEGORY_LABELS } from '@shared/types'
-import { restaurantService } from '../services/restaurantService'
-import { dishService } from '../services/dishService'
 import { useCartStore } from '../cartStore'
-import { Restaurant, Dish } from '../models'
+import { useShallow } from 'zustand/react/shallow'
+import { useDishesByRestaurant, useRestaurant } from '../queries/clientQueries'
+import { Dish } from '../models'
 
 /**
  * RestaurantMenu Component
@@ -20,41 +20,36 @@ import { Restaurant, Dish } from '../models'
 export const RestaurantMenu = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { addItem, getItemCount } = useCartStore()
+  const { addItem, getItemCount } = useCartStore(
+    useShallow((state) => ({
+      addItem: state.addItem,
+      getItemCount: state.getItemCount,
+    }))
+  )
 
-  const [restaurant, setRestaurant] = useState<Restaurant | null>(null)
-  const [dishes, setDishes] = useState<Dish[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const restaurantId = Number(id)
+  const {
+    data: restaurant,
+    isLoading: isRestaurantLoading,
+    error: restaurantError,
+  } = useRestaurant(restaurantId)
+  const {
+    data: dishes = [],
+    isLoading: isDishesLoading,
+    error: dishesError,
+  } = useDishesByRestaurant(restaurantId)
+  const [actionError, setActionError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
+  const isLoading = isRestaurantLoading || isDishesLoading
+  const fetchErrorMessage = useMemo(() => {
+    if (!id) return 'Restaurante no encontrado'
+    if (!restaurantError && !dishesError) return null
+    return 'Error al cargar el menu. Por favor, intenta de nuevo.'
+  }, [id, restaurantError, dishesError])
+  const errorMessage = actionError ?? fetchErrorMessage
+
   const cartItemCount = getItemCount()
-
-  useEffect(() => {
-    if (id) {
-      fetchRestaurantAndMenu(parseInt(id))
-    }
-  }, [id])
-
-  const fetchRestaurantAndMenu = async (restaurantId: number) => {
-    try {
-      setIsLoading(true)
-      setError(null)
-
-      const [restaurantData, dishesData] = await Promise.all([
-        restaurantService.getRestaurantById(restaurantId),
-        dishService.getDishesByRestaurant(restaurantId),
-      ])
-
-      setRestaurant(restaurantData)
-      setDishes(dishesData)
-    } catch (err) {
-      setError('Error al cargar el menu. Por favor, intenta de nuevo.')
-      console.error('Error fetching menu:', err)
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   const handleAddToCart = (dish: Dish) => {
     if (!restaurant) return
@@ -65,8 +60,8 @@ export const RestaurantMenu = () => {
       setTimeout(() => setSuccessMessage(null), 3000)
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message)
-        setTimeout(() => setError(null), 5000)
+        setActionError(err.message)
+        setTimeout(() => setActionError(null), 5000)
       }
     }
   }
@@ -149,9 +144,9 @@ export const RestaurantMenu = () => {
       </div>
 
       {/* Alerts */}
-      {error && (
+      {errorMessage && (
         <div className="mb-6">
-          <ErrorAlert message={error} />
+          <ErrorAlert message={errorMessage} />
         </div>
       )}
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import {
   BrutalistCard,
   BrutalistButton,
@@ -91,8 +91,7 @@ const getStatusBadgeClass = (status: OrderStatus): string => {
   }
   return badgeClasses[status]
 }
-import { orderService } from '../services/orderService'
-import { ClientOrder } from '../models'
+import { useCancelOrder, useMyOrders } from '../queries/clientQueries'
 
 /**
  * MyOrders Component - CRITICAL
@@ -100,30 +99,20 @@ import { ClientOrder } from '../models'
  * Implements polling for real-time updates
  */
 export const MyOrders = () => {
-  const [orders, setOrders] = useState<ClientOrder[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const {
+    data: orders = [],
+    isLoading,
+    error,
+  } = useMyOrders()
+  const cancelOrderMutation = useCancelOrder()
+  const [actionError, setActionError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
-  // Polling every 10 seconds for real-time updates
-  useEffect(() => {
-    fetchOrders()
-    const interval = setInterval(fetchOrders, 10000)
-    return () => clearInterval(interval)
-  }, [])
-
-  const fetchOrders = async () => {
-    try {
-      const data = await orderService.getMyOrders()
-      setOrders(data)
-      setIsLoading(false)
-      setError(null)
-    } catch (err) {
-      setError('Error al cargar pedidos. Por favor, intenta de nuevo.')
-      console.error('Error fetching orders:', err)
-      setIsLoading(false)
-    }
-  }
+  const errorMessage = useMemo(() => {
+    if (actionError) return actionError
+    if (!error) return null
+    return 'Error al cargar pedidos. Por favor, intenta de nuevo.'
+  }, [actionError, error])
 
   const handleCancelOrder = async (orderId: string) => {
     if (
@@ -135,14 +124,14 @@ export const MyOrders = () => {
     }
 
     try {
-      await orderService.cancelOrder(orderId)
+      setActionError(null)
+      await cancelOrderMutation.mutateAsync(orderId)
       setSuccessMessage('Pedido cancelado exitosamente')
       setTimeout(() => setSuccessMessage(null), 3000)
-      await fetchOrders()
     } catch (err) {
-      setError('Error al cancelar pedido. Por favor, intenta de nuevo.')
+      setActionError('Error al cancelar pedido. Por favor, intenta de nuevo.')
       console.error('Error cancelling order:', err)
-      setTimeout(() => setError(null), 5000)
+      setTimeout(() => setActionError(null), 5000)
     }
   }
 
@@ -181,9 +170,9 @@ export const MyOrders = () => {
       </h1>
 
       {/* Alerts */}
-      {error && (
+      {errorMessage && (
         <div className="mb-6">
-          <ErrorAlert message={error} />
+          <ErrorAlert message={errorMessage} />
         </div>
       )}
 

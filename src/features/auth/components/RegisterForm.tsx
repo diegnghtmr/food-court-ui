@@ -14,8 +14,8 @@ import {
   ErrorAlert,
   SuccessAlert,
 } from '@shared/components'
-import { authService } from '../services/authService'
 import { registerSchema, type RegisterFormData } from '../models'
+import { useRegister } from '../queries/authQueries'
 
 interface RegisterFormProps {
   onSuccess?: () => void
@@ -28,7 +28,7 @@ export const RegisterForm = ({
 }: RegisterFormProps) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const registerMutation = useRegister()
 
   const {
     register,
@@ -42,12 +42,11 @@ export const RegisterForm = ({
   })
 
   const onSubmit = async (data: RegisterFormData) => {
-    setIsSubmitting(true)
     setErrorMessage(null)
     setSuccessMessage(null)
 
     try {
-      await authService.register(data)
+      await registerMutation.mutateAsync(data)
 
       setSuccessMessage('Registro exitoso. Redirigiendo al inicio de sesión...')
       reset()
@@ -61,8 +60,6 @@ export const RegisterForm = ({
         axiosError.response?.data?.message ||
         'Error al registrar usuario. Intenta nuevamente.'
       setErrorMessage(message)
-    } finally {
-      setIsSubmitting(false)
     }
   }
 
@@ -90,7 +87,7 @@ export const RegisterForm = ({
               type="text"
               placeholder="Juan"
               error={errors.nombre?.message}
-              disabled={isSubmitting}
+              disabled={registerMutation.isPending}
               {...register('nombre')}
             />
           </div>
@@ -101,7 +98,7 @@ export const RegisterForm = ({
               type="text"
               placeholder="Pérez"
               error={errors.apellido?.message}
-              disabled={isSubmitting}
+              disabled={registerMutation.isPending}
               {...register('apellido')}
             />
           </div>
@@ -113,7 +110,7 @@ export const RegisterForm = ({
             type="text"
             placeholder="1234567890"
             error={errors.documento?.message}
-            disabled={isSubmitting}
+            disabled={registerMutation.isPending}
             {...register('documento')}
           />
         </div>
@@ -128,7 +125,7 @@ export const RegisterForm = ({
                 value={field.value}
                 onChange={field.onChange}
                 error={errors.celular?.message}
-                disabled={isSubmitting}
+                disabled={registerMutation.isPending}
               />
             )}
           />
@@ -139,7 +136,7 @@ export const RegisterForm = ({
             label="Fecha de Nacimiento"
             type="date"
             error={errors.fechaNacimiento?.message}
-            disabled={isSubmitting}
+            disabled={registerMutation.isPending}
             {...register('fechaNacimiento')}
           />
         </div>
@@ -150,7 +147,7 @@ export const RegisterForm = ({
             type="email"
             placeholder="tu@correo.com"
             error={errors.correo?.message}
-            disabled={isSubmitting}
+            disabled={registerMutation.isPending}
             {...register('correo')}
           />
         </div>
@@ -161,7 +158,7 @@ export const RegisterForm = ({
             type="password"
             placeholder="••••••••"
             error={errors.clave?.message}
-            disabled={isSubmitting}
+            disabled={registerMutation.isPending}
             {...register('clave')}
           />
           <p className="mt-1 text-xs text-[var(--text-secondary)]">
@@ -173,9 +170,9 @@ export const RegisterForm = ({
           type="submit"
           variant="primary"
           fullWidth
-          disabled={isSubmitting || !!successMessage}
+          disabled={registerMutation.isPending || !!successMessage}
         >
-          {isSubmitting ? 'Registrando...' : 'Crear Cuenta'}
+          {registerMutation.isPending ? 'Registrando...' : 'Crear Cuenta'}
         </BrutalistButton>
       </form>
 

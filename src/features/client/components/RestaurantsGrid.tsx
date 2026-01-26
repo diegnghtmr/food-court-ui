@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   BrutalistCard,
@@ -7,8 +7,7 @@ import {
   Pagination,
   ErrorAlert,
 } from '@shared/components'
-import { restaurantService } from '../services/restaurantService'
-import { Restaurant } from '../models'
+import { useRestaurants } from '../queries/clientQueries'
 
 /**
  * RestaurantsGrid Component
@@ -16,35 +15,15 @@ import { Restaurant } from '../models'
  */
 export const RestaurantsGrid = () => {
   const navigate = useNavigate()
-  const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [currentPage, setCurrentPage] = useState(0)
-  const [totalPages, setTotalPages] = useState(0)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
   const pageSize = 9
-
-  const fetchRestaurants = useCallback(async () => {
-    try {
-      setIsLoading(true)
-      setError(null)
-      const response = await restaurantService.getRestaurants(
-        currentPage,
-        pageSize
-      )
-      setRestaurants(response.content)
-      setTotalPages(response.totalPages)
-    } catch (err) {
-      setError('Error al cargar restaurantes. Por favor, intenta de nuevo.')
-      console.error('Error fetching restaurants:', err)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [currentPage, pageSize])
-
-  useEffect(() => {
-    fetchRestaurants()
-  }, [fetchRestaurants])
+  const { data, isLoading, error } = useRestaurants(currentPage, pageSize)
+  const restaurants = useMemo(() => data?.content ?? [], [data])
+  const totalPages = data?.totalPages ?? 0
+  const errorMessage = error
+    ? 'Error al cargar restaurantes. Por favor, intenta de nuevo.'
+    : null
 
   const handlePrevious = () => {
     if (currentPage > 0) {
@@ -76,9 +55,9 @@ export const RestaurantsGrid = () => {
         RESTAURANTES DISPONIBLES
       </h1>
 
-      {error && (
+      {errorMessage && (
         <div className="mb-6">
-          <ErrorAlert message={error} />
+          <ErrorAlert message={errorMessage} />
         </div>
       )}
 

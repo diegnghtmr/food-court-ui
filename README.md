@@ -3,6 +3,8 @@
 ![React](https://img.shields.io/badge/React-19-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
 ![Vite](https://img.shields.io/badge/Vite-6-yellow)
+![TanStack Query](https://img.shields.io/badge/TanStack%20Query-v5-blue)
+![Zustand](https://img.shields.io/badge/Zustand-5-green)
 
 Role-based frontend for the Food Court platform. It serves admins, restaurant owners, employees, and clients while keeping the UI structure aligned with business features.
 
@@ -34,6 +36,8 @@ The UI follows Scope Rule and Screaming Architecture.
 - Scope Rule: code used by 1 feature stays local to that feature.
 - Scope Rule: code used by 2 or more features moves to `shared/`.
 - Screaming Architecture: features are named after business roles and use cases, not technical concerns.
+- Server state is handled with TanStack React Query.
+- Client-side UI state is handled with Zustand stores.
 
 Container and presentational pattern:
 - Containers handle orchestration, state, and data fetching.

@@ -8,7 +8,8 @@ import {
   LoadingSpinner,
 } from '@shared/components'
 import { useCartStore } from '../cartStore'
-import { orderService } from '../services/orderService'
+import { useShallow } from 'zustand/react/shallow'
+import { useCreateOrder } from '../queries/clientQueries'
 
 /**
  * ShoppingCart Component
@@ -24,9 +25,19 @@ export const ShoppingCart = () => {
     clearCart,
     getTotalAmount,
     getItemCount,
-  } = useCartStore()
+  } = useCartStore(
+    useShallow((state) => ({
+      items: state.items,
+      restaurantName: state.restaurantName,
+      removeItem: state.removeItem,
+      updateQuantity: state.updateQuantity,
+      clearCart: state.clearCart,
+      getTotalAmount: state.getTotalAmount,
+      getItemCount: state.getItemCount,
+    }))
+  )
 
-  const [isLoading, setIsLoading] = useState(false)
+  const createOrderMutation = useCreateOrder()
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
@@ -58,7 +69,6 @@ export const ShoppingCart = () => {
     }
 
     try {
-      setIsLoading(true)
       setError(null)
 
       const orderData = {
@@ -69,7 +79,7 @@ export const ShoppingCart = () => {
         })),
       }
 
-      await orderService.createOrder(orderData)
+      await createOrderMutation.mutateAsync(orderData)
 
       setSuccessMessage('Pedido creado exitosamente!')
       clearCart()
@@ -85,8 +95,6 @@ export const ShoppingCart = () => {
           ? 'Ya tienes un pedido en curso. No puedes realizar otro hasta que finalice el actual.'
           : 'Error al crear el pedido. Por favor, intenta de nuevo.'
       setError(errorMessage)
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -278,9 +286,9 @@ export const ShoppingCart = () => {
                 variant="success"
                 fullWidth
                 onClick={handleConfirmOrder}
-                disabled={isLoading}
+                disabled={createOrderMutation.isPending}
               >
-                {isLoading ? (
+                {createOrderMutation.isPending ? (
                   <div className="flex items-center justify-center gap-2">
                     <LoadingSpinner size="sm" color="#ffffff" />
                     <span>PROCESANDO...</span>
@@ -294,7 +302,7 @@ export const ShoppingCart = () => {
                 variant="neutral"
                 fullWidth
                 onClick={() => navigate(-1)}
-                disabled={isLoading}
+                disabled={createOrderMutation.isPending}
               >
                 SEGUIR COMPRANDO
               </BrutalistButton>
@@ -311,7 +319,7 @@ export const ShoppingCart = () => {
                     clearCart()
                   }
                 }}
-                disabled={isLoading}
+                disabled={createOrderMutation.isPending}
               >
                 VACIAR CARRITO
               </BrutalistButton>

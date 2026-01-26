@@ -22,8 +22,8 @@ import {
   ErrorAlert,
   LoadingSpinner,
 } from '@shared/components'
-import { ownerService } from '../services/ownerService'
 import type { CreateOwnerData } from '../models'
+import { useCreateOwner } from '../queries/adminQueries'
 
 /**
  * Validation schema with Zod
@@ -83,9 +83,9 @@ type CreateOwnerFormData = z.infer<typeof createOwnerSchema>
 
 export const CreateOwner = () => {
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const createOwnerMutation = useCreateOwner()
 
   const {
     register,
@@ -97,7 +97,6 @@ export const CreateOwner = () => {
   })
 
   const onSubmit = async (data: CreateOwnerFormData) => {
-    setIsLoading(true)
     setErrorMessage('')
     setSuccessMessage('')
 
@@ -112,7 +111,7 @@ export const CreateOwner = () => {
         password: data.password,
       }
 
-      await ownerService.createOwner(ownerData)
+      await createOwnerMutation.mutateAsync(ownerData)
 
       setSuccessMessage('¡Propietario creado exitosamente!')
       reset()
@@ -136,8 +135,6 @@ export const CreateOwner = () => {
       const message =
         rawMessage ?? 'Error al crear propietario. Intenta nuevamente.'
       setErrorMessage(message)
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -182,7 +179,7 @@ export const CreateOwner = () => {
               error={errors.name?.message}
               required
               placeholder="Juan"
-              disabled={isLoading}
+              disabled={createOwnerMutation.isPending}
             />
 
             {/* Surname */}
@@ -193,7 +190,7 @@ export const CreateOwner = () => {
               error={errors.surname?.message}
               required
               placeholder="Pérez"
-              disabled={isLoading}
+              disabled={createOwnerMutation.isPending}
             />
 
             {/* Document Number */}
@@ -204,7 +201,7 @@ export const CreateOwner = () => {
               error={errors.documentNumber?.message}
               required
               placeholder="12345678"
-              disabled={isLoading}
+              disabled={createOwnerMutation.isPending}
             />
 
             {/* Phone */}
@@ -215,7 +212,7 @@ export const CreateOwner = () => {
               error={errors.phone?.message}
               required
               placeholder="+573001234567"
-              disabled={isLoading}
+              disabled={createOwnerMutation.isPending}
             />
 
             {/* Birth Date */}
@@ -225,7 +222,7 @@ export const CreateOwner = () => {
               {...register('birthDate')}
               error={errors.birthDate?.message}
               required
-              disabled={isLoading}
+              disabled={createOwnerMutation.isPending}
             />
 
             {/* Email */}
@@ -236,7 +233,7 @@ export const CreateOwner = () => {
               error={errors.email?.message}
               required
               placeholder="propietario@example.com"
-              disabled={isLoading}
+              disabled={createOwnerMutation.isPending}
             />
 
             {/* Password */}
@@ -247,7 +244,7 @@ export const CreateOwner = () => {
               error={errors.password?.message}
               required
               placeholder="********"
-              disabled={isLoading}
+              disabled={createOwnerMutation.isPending}
             />
 
             {/* Submit Button */}
@@ -257,9 +254,9 @@ export const CreateOwner = () => {
                 variant="primary"
                 size="lg"
                 fullWidth
-                disabled={isLoading}
+                disabled={createOwnerMutation.isPending}
               >
-                {isLoading ? (
+                {createOwnerMutation.isPending ? (
                   <div className="flex items-center justify-center gap-2">
                     <LoadingSpinner size="sm" />
                     <span>CREANDO...</span>
@@ -274,7 +271,7 @@ export const CreateOwner = () => {
                 variant="neutral"
                 size="lg"
                 onClick={() => navigate('/admin/dashboard')}
-                disabled={isLoading}
+                disabled={createOwnerMutation.isPending}
               >
                 CANCELAR
               </BrutalistButton>

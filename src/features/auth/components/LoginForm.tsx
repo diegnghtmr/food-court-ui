@@ -11,8 +11,8 @@ import { AxiosError } from 'axios'
 import { BrutalistInput, BrutalistButton, ErrorAlert } from '@shared/components'
 import { useAuthActions } from '@infrastructure/auth'
 import { getUserRole, getRoleHomePath } from '@infrastructure/auth/tokenManager'
-import { authService } from '../services/authService'
 import { loginSchema, type LoginFormData } from '../models'
+import { useLogin } from '../queries/authQueries'
 
 interface LoginFormProps {
   onSwitchToRegister?: () => void
@@ -52,7 +52,7 @@ export const LoginForm = ({ onSwitchToRegister }: LoginFormProps) => {
   const navigate = useNavigate()
   const { login } = useAuthActions()
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const loginMutation = useLogin()
 
   const {
     register,
@@ -64,11 +64,10 @@ export const LoginForm = ({ onSwitchToRegister }: LoginFormProps) => {
   })
 
   const onSubmit = async (data: LoginFormData) => {
-    setIsSubmitting(true)
     setErrorMessage(null)
 
     try {
-      const response = await authService.login(data)
+      const response = await loginMutation.mutateAsync(data)
 
       // Save token and update auth state
       login(response.token)
@@ -88,8 +87,6 @@ export const LoginForm = ({ onSwitchToRegister }: LoginFormProps) => {
         ? translateErrorMessage(backendMessage)
         : 'Error al iniciar sesión. Verifica tus credenciales.'
       setErrorMessage(message)
-    } finally {
-      setIsSubmitting(false)
     }
   }
 
@@ -110,7 +107,7 @@ export const LoginForm = ({ onSwitchToRegister }: LoginFormProps) => {
             type="email"
             placeholder="tu@correo.com"
             error={errors.correo?.message}
-            disabled={isSubmitting}
+            disabled={loginMutation.isPending}
             {...register('correo')}
           />
         </div>
@@ -121,7 +118,7 @@ export const LoginForm = ({ onSwitchToRegister }: LoginFormProps) => {
             type="password"
             placeholder="••••••••"
             error={errors.clave?.message}
-            disabled={isSubmitting}
+            disabled={loginMutation.isPending}
             {...register('clave')}
           />
         </div>
@@ -130,9 +127,11 @@ export const LoginForm = ({ onSwitchToRegister }: LoginFormProps) => {
           type="submit"
           variant="primary"
           fullWidth
-          disabled={isSubmitting}
+          disabled={loginMutation.isPending}
         >
-          {isSubmitting ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+          {loginMutation.isPending
+            ? 'Iniciando sesión...'
+            : 'Iniciar Sesión'}
         </BrutalistButton>
       </form>
 

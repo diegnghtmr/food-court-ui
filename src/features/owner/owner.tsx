@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import {
   BrutalistCard,
   BrutalistButton,
@@ -7,44 +7,26 @@ import {
 } from '@shared/components'
 import { useNavigate } from 'react-router-dom'
 import { getRestaurantId } from '@infrastructure/auth/tokenManager'
-import { ownerStatsService } from './services/ownerStatsService'
-import type { OwnerStats } from './models'
+import { useOwnerStats } from './queries/ownerQueries'
 
 export const Owner = () => {
   const navigate = useNavigate()
-  const [stats, setStats] = useState<OwnerStats | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const restaurantId = getRestaurantId()?.toString() || ''
+  const {
+    data: stats,
+    isLoading,
+    error: statsError,
+  } = useOwnerStats(restaurantId)
 
-  useEffect(() => {
-    const loadStats = async () => {
-      setIsLoading(true)
-      setError(null)
-      const restaurantId = getRestaurantId()?.toString() || ''
-
-      if (!restaurantId) {
-        setError('No se pudo determinar el restaurante del propietario.')
-        setIsLoading(false)
-        return
-      }
-
-      try {
-        const data = await ownerStatsService.getOwnerStats(restaurantId)
-        setStats(data)
-      } catch (err) {
-        const message =
-          err instanceof Error
-            ? err.message
-            : 'Error al cargar las estadísticas del dashboard.'
-        setError(message)
-        setStats(null)
-      } finally {
-        setIsLoading(false)
-      }
+  const errorMessage = useMemo(() => {
+    if (!restaurantId) {
+      return 'No se pudo determinar el restaurante del propietario.'
     }
-
-    void loadStats()
-  }, [])
+    if (!statsError) return null
+    return statsError instanceof Error
+      ? statsError.message
+      : 'Error al cargar las estadísticas del dashboard.'
+  }, [restaurantId, statsError])
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -64,13 +46,13 @@ export const Owner = () => {
         Estadísticas
       </h2>
 
-      {error && (
+      {errorMessage && (
         <div style={{ marginBottom: '1.5rem' }}>
-          <ErrorAlert message={error} />
+          <ErrorAlert message={errorMessage} />
         </div>
       )}
 
-      {!error && isLoading && (
+      {!errorMessage && isLoading && (
         <div
           style={{
             display: 'flex',
@@ -83,7 +65,7 @@ export const Owner = () => {
         </div>
       )}
 
-      {!error && !isLoading && stats && (
+      {!errorMessage && !isLoading && stats && (
         <div
           style={{
             display: 'grid',
@@ -233,7 +215,7 @@ export const Owner = () => {
         </div>
       )}
 
-      {!error && !isLoading && !stats && (
+      {!errorMessage && !isLoading && !stats && (
         <p style={{ color: '#666' }}>No hay estadísticas disponibles.</p>
       )}
     </div>

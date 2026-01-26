@@ -23,8 +23,8 @@ import {
   ErrorAlert,
   LoadingSpinner,
 } from '@shared/components'
-import { restaurantService } from '../services/restaurantService'
 import type { CreateRestaurantData } from '../models'
+import { useCreateRestaurant } from '../queries/adminQueries'
 
 /**
  * Validation schema with Zod
@@ -65,9 +65,9 @@ type CreateRestaurantFormData = z.infer<typeof createRestaurantSchema>
 
 export const CreateRestaurant = () => {
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const createRestaurantMutation = useCreateRestaurant()
 
   const {
     register,
@@ -79,7 +79,6 @@ export const CreateRestaurant = () => {
   })
 
   const onSubmit = async (data: CreateRestaurantFormData) => {
-    setIsLoading(true)
     setErrorMessage('')
     setSuccessMessage('')
 
@@ -93,7 +92,7 @@ export const CreateRestaurant = () => {
         ownerId: data.ownerId,
       }
 
-      await restaurantService.createRestaurant(restaurantData)
+      await createRestaurantMutation.mutateAsync(restaurantData)
 
       setSuccessMessage('¡Restaurante creado exitosamente!')
       reset()
@@ -117,8 +116,6 @@ export const CreateRestaurant = () => {
       const message =
         rawMessage ?? 'Error al crear restaurante. Intenta nuevamente.'
       setErrorMessage(message)
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -163,7 +160,7 @@ export const CreateRestaurant = () => {
               error={errors.name?.message}
               required
               placeholder="La Fogata Grill"
-              disabled={isLoading}
+              disabled={createRestaurantMutation.isPending}
             />
 
             {/* NIT */}
@@ -174,7 +171,7 @@ export const CreateRestaurant = () => {
               error={errors.nit?.message}
               required
               placeholder="900123456-7"
-              disabled={isLoading}
+              disabled={createRestaurantMutation.isPending}
             />
 
             {/* Address */}
@@ -185,7 +182,7 @@ export const CreateRestaurant = () => {
               error={errors.address?.message}
               required
               placeholder="Calle 123 #45-67, Barrio Centro"
-              disabled={isLoading}
+              disabled={createRestaurantMutation.isPending}
             />
 
             {/* Phone */}
@@ -196,7 +193,7 @@ export const CreateRestaurant = () => {
               error={errors.phone?.message}
               required
               placeholder="+573001234567"
-              disabled={isLoading}
+              disabled={createRestaurantMutation.isPending}
             />
 
             {/* Logo URL */}
@@ -207,7 +204,7 @@ export const CreateRestaurant = () => {
               error={errors.urlLogo?.message}
               required
               placeholder="https://example.com/logo.png"
-              disabled={isLoading}
+              disabled={createRestaurantMutation.isPending}
             />
 
             {/* Owner ID */}
@@ -219,7 +216,7 @@ export const CreateRestaurant = () => {
                 error={errors.ownerId?.message}
                 required
                 placeholder="123"
-                disabled={isLoading}
+                disabled={createRestaurantMutation.isPending}
               />
             </div>
 
@@ -230,9 +227,9 @@ export const CreateRestaurant = () => {
                 variant="primary"
                 size="lg"
                 fullWidth
-                disabled={isLoading}
+                disabled={createRestaurantMutation.isPending}
               >
-                {isLoading ? (
+                {createRestaurantMutation.isPending ? (
                   <div className="flex items-center justify-center gap-2">
                     <LoadingSpinner size="sm" />
                     <span>CREANDO...</span>
@@ -247,7 +244,7 @@ export const CreateRestaurant = () => {
                 variant="neutral"
                 size="lg"
                 onClick={() => navigate('/admin/dashboard')}
-                disabled={isLoading}
+                disabled={createRestaurantMutation.isPending}
               >
                 CANCELAR
               </BrutalistButton>

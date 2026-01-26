@@ -19,10 +19,14 @@ import {
   ErrorAlert,
   LoadingSpinner,
 } from '@shared/components'
-import { dishService } from '../services/dishService'
 import { DishCategory, DISH_CATEGORY_LABELS } from '@shared/types'
-import type { CreateDishData, UpdateDishData, Dish } from '../models'
+import type { CreateDishData, UpdateDishData } from '../models'
 import { getRestaurantId } from '@infrastructure/auth/tokenManager'
+import {
+  useCreateDish,
+  useDishById,
+  useUpdateDish,
+} from '../queries/ownerQueries'
 
 /**
  * Component props
@@ -86,9 +90,9 @@ type EditDishFormData = z.infer<typeof editDishSchema>
  */
 const DishFormCreate = () => {
   const navigate = useNavigate()
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const createDishMutation = useCreateDish()
 
   const {
     register,
@@ -123,7 +127,6 @@ const DishFormCreate = () => {
   }
 
   const onSubmit = async (data: CreateDishFormData) => {
-    setIsSubmitting(true)
     setErrorMessage(null)
     setSuccessMessage(null)
 
@@ -144,7 +147,7 @@ const DishFormCreate = () => {
         restaurantId: restaurantId.toString(),
       }
 
-      await dishService.createDish(createData)
+      await createDishMutation.mutateAsync(createData)
       setSuccessMessage('Plato creado exitosamente')
 
       setTimeout(() => {
@@ -154,7 +157,6 @@ const DishFormCreate = () => {
       const message =
         error instanceof Error ? error.message : 'Error al crear el plato'
       setErrorMessage(message)
-      setIsSubmitting(false)
     }
   }
 
@@ -194,7 +196,7 @@ const DishFormCreate = () => {
               label="Nombre del Plato"
               placeholder="Ej: Pizza Margherita"
               error={errors.name?.message}
-              disabled={isSubmitting}
+              disabled={createDishMutation.isPending}
               {...register('name')}
             />
           </div>
@@ -206,7 +208,7 @@ const DishFormCreate = () => {
               placeholder="Describe el plato en detalle..."
               rows={4}
               error={errors.description?.message}
-              disabled={isSubmitting}
+              disabled={createDishMutation.isPending}
               {...register('description')}
             />
           </div>
@@ -232,7 +234,7 @@ const DishFormCreate = () => {
                 placeholder="0.00"
                 step="0.01"
                 min="0"
-                disabled={isSubmitting}
+                disabled={createDishMutation.isPending}
                 {...register('price', { valueAsNumber: true })}
                 style={{
                   width: '100%',
@@ -242,8 +244,10 @@ const DishFormCreate = () => {
                   color: '#f5f5f5',
                   border: `2px solid ${errors.price?.message ? '#ff0000' : '#ffffff'}`,
                   transition: 'border-color 75ms',
-                  opacity: isSubmitting ? 0.5 : 1,
-                  cursor: isSubmitting ? 'not-allowed' : 'text',
+                  opacity: createDishMutation.isPending ? 0.5 : 1,
+                  cursor: createDishMutation.isPending
+                    ? 'not-allowed'
+                    : 'text',
                 }}
               />
               {errors.price?.message && (
@@ -266,14 +270,14 @@ const DishFormCreate = () => {
 
           {/* IMAGE URL FIELD */}
           <div style={{ marginBottom: '1.5rem' }}>
-            <BrutalistInput
-              type="url"
-              label="URL de Imagen"
-              placeholder="https://loremflickr.com/640/480/food"
-              error={errors.imageUrl?.message}
-              disabled={isSubmitting}
-              {...register('imageUrl')}
-            />
+              <BrutalistInput
+                type="url"
+                label="URL de Imagen"
+                placeholder="https://loremflickr.com/640/480/food"
+                error={errors.imageUrl?.message}
+                disabled={createDishMutation.isPending}
+                {...register('imageUrl')}
+              />
           </div>
 
           {/* CATEGORY FIELD */}
@@ -293,7 +297,7 @@ const DishFormCreate = () => {
                 Categoría
               </label>
               <select
-                disabled={isSubmitting}
+                disabled={createDishMutation.isPending}
                 {...register('category')}
                 style={{
                   width: '100%',
@@ -303,8 +307,10 @@ const DishFormCreate = () => {
                   color: '#f5f5f5',
                   border: `2px solid ${errors.category?.message ? '#ff0000' : '#ffffff'}`,
                   transition: 'border-color 75ms',
-                  opacity: isSubmitting ? 0.5 : 1,
-                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                  opacity: createDishMutation.isPending ? 0.5 : 1,
+                  cursor: createDishMutation.isPending
+                    ? 'not-allowed'
+                    : 'pointer',
                 }}
               >
                 <option value="">Seleccionar...</option>
@@ -342,8 +348,12 @@ const DishFormCreate = () => {
             }}
           >
             <div style={{ flex: '1 1 200px' }}>
-              <BrutalistButton type="submit" disabled={isSubmitting} fullWidth>
-                {isSubmitting ? 'Creando...' : 'Crear Plato'}
+              <BrutalistButton
+                type="submit"
+                disabled={createDishMutation.isPending}
+                fullWidth
+              >
+                {createDishMutation.isPending ? 'Creando...' : 'Crear Plato'}
               </BrutalistButton>
             </div>
             <div style={{ flex: '1 1 200px' }}>
@@ -351,7 +361,7 @@ const DishFormCreate = () => {
                 type="button"
                 variant="neutral"
                 onClick={handleCancel}
-                disabled={isSubmitting}
+                disabled={createDishMutation.isPending}
                 fullWidth
               >
                 Cancelar
@@ -371,11 +381,14 @@ const DishFormEdit = () => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [loadedDish, setLoadedDish] = useState<Dish | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const updateDishMutation = useUpdateDish()
+  const {
+    data: loadedDish,
+    isLoading,
+    error: dishError,
+  } = useDishById(id ?? '')
 
   const {
     register,
@@ -387,30 +400,19 @@ const DishFormEdit = () => {
   })
 
   useEffect(() => {
-    const loadDish = async () => {
-      if (!id) return
+    if (!loadedDish) return
+    setValue('description', loadedDish.description)
+    setValue('price', loadedDish.price)
+  }, [loadedDish, setValue])
 
-      setIsLoading(true)
-      setErrorMessage(null)
-
-      try {
-        const dish = await dishService.getDishById(id)
-        setLoadedDish(dish)
-        setValue('description', dish.description)
-        setValue('price', dish.price)
-      } catch (error) {
-        const message =
-          error instanceof Error
-            ? error.message
-            : 'Error al cargar los datos del plato'
-        setErrorMessage(message)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadDish()
-  }, [id, setValue])
+  useEffect(() => {
+    if (!dishError) return
+    const message =
+      dishError instanceof Error
+        ? dishError.message
+        : 'Error al cargar los datos del plato'
+    setErrorMessage(message)
+  }, [dishError])
 
   const onSubmit = async (data: EditDishFormData) => {
     if (!id) {
@@ -418,7 +420,6 @@ const DishFormEdit = () => {
       return
     }
 
-    setIsSubmitting(true)
     setErrorMessage(null)
     setSuccessMessage(null)
 
@@ -428,7 +429,7 @@ const DishFormEdit = () => {
         price: data.price,
       }
 
-      await dishService.updateDish(id, updateData)
+      await updateDishMutation.mutateAsync({ id, data: updateData })
       setSuccessMessage('Plato actualizado exitosamente')
 
       setTimeout(() => {
@@ -438,7 +439,6 @@ const DishFormEdit = () => {
       const message =
         error instanceof Error ? error.message : 'Error al actualizar el plato'
       setErrorMessage(message)
-      setIsSubmitting(false)
     }
   }
 
@@ -559,8 +559,8 @@ const DishFormEdit = () => {
               placeholder="Describe el plato en detalle..."
               rows={4}
               error={errors.description?.message}
-              disabled={isSubmitting}
-              {...register('description')}
+               disabled={updateDishMutation.isPending}
+               {...register('description')}
             />
           </div>
 
@@ -585,7 +585,7 @@ const DishFormEdit = () => {
                 placeholder="0.00"
                 step="0.01"
                 min="0"
-                disabled={isSubmitting}
+                disabled={updateDishMutation.isPending}
                 {...register('price', { valueAsNumber: true })}
                 style={{
                   width: '100%',
@@ -595,8 +595,10 @@ const DishFormEdit = () => {
                   color: '#f5f5f5',
                   border: `2px solid ${errors.price?.message ? '#ff0000' : '#ffffff'}`,
                   transition: 'border-color 75ms',
-                  opacity: isSubmitting ? 0.5 : 1,
-                  cursor: isSubmitting ? 'not-allowed' : 'text',
+                  opacity: updateDishMutation.isPending ? 0.5 : 1,
+                  cursor: updateDishMutation.isPending
+                    ? 'not-allowed'
+                    : 'text',
                 }}
               />
               {errors.price?.message && (
@@ -714,8 +716,14 @@ const DishFormEdit = () => {
             }}
           >
             <div style={{ flex: '1 1 200px' }}>
-              <BrutalistButton type="submit" disabled={isSubmitting} fullWidth>
-                {isSubmitting ? 'Actualizando...' : 'Actualizar Plato'}
+              <BrutalistButton
+                type="submit"
+                disabled={updateDishMutation.isPending}
+                fullWidth
+              >
+                {updateDishMutation.isPending
+                  ? 'Actualizando...'
+                  : 'Actualizar Plato'}
               </BrutalistButton>
             </div>
             <div style={{ flex: '1 1 200px' }}>
@@ -723,7 +731,7 @@ const DishFormEdit = () => {
                 type="button"
                 variant="neutral"
                 onClick={handleCancel}
-                disabled={isSubmitting}
+                disabled={updateDishMutation.isPending}
                 fullWidth
               >
                 Cancelar

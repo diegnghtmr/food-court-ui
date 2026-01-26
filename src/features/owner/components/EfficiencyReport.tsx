@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useMemo } from 'react'
 import {
   BrutalistCard,
   BrutalistInput,
@@ -7,9 +7,12 @@ import {
   ErrorAlert,
   SuccessAlert,
 } from '@shared/components'
-import { analyticsService } from '../services/analyticsService'
 import type { EfficiencyReport as EfficiencyReportType } from '../models'
 import { getRestaurantId } from '@infrastructure/auth/tokenManager'
+import {
+  useEfficiencyReport,
+  useExportEfficiencyReport,
+} from '../queries/ownerQueries'
 
 type SortColumn = keyof EfficiencyReportType | null
 type SortDirection = 'asc' | 'desc'
@@ -70,9 +73,8 @@ export const EfficiencyReport = () => {
   // State
   const [startDate, setStartDate] = useState<string>('')
   const [endDate, setEndDate] = useState<string>('')
-  const [reportData, setReportData] = useState<EfficiencyReportType[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
-  const [exporting, setExporting] = useState<boolean>(false)
+  const [appliedStartDate, setAppliedStartDate] = useState<string>('')
+  const [appliedEndDate, setAppliedEndDate] = useState<string>('')
   const [error, setError] = useState<string>('')
   const [success, setSuccess] = useState<string>('')
   const [sort, setSort] = useState<SortState>({
@@ -80,48 +82,22 @@ export const EfficiencyReport = () => {
     direction: 'asc',
   })
 
-  /**
-   * Fetches efficiency report from API
-   */
-  const loadReportData = useCallback(
-    async (start?: string, end?: string): Promise<void> => {
-      try {
-        setLoading(true)
-        setError('')
+  const {
+    data: reportData = [],
+    isLoading,
+    error: reportError,
+  } = useEfficiencyReport(restaurantId, appliedStartDate, appliedEndDate)
+  const exportMutation = useExportEfficiencyReport()
 
-        if (!restaurantId) {
-          setError('No se pudo determinar el restaurante del propietario.')
-          setReportData([])
-          return
-        }
-
-        const data = await analyticsService.getEfficiencyReport(
-          restaurantId,
-          start,
-          end
-        )
-
-        setReportData(data)
-      } catch (err) {
-        const errorMessage =
-          err instanceof Error
-            ? err.message
-            : 'Error al cargar el reporte de eficiencia'
-        setError(errorMessage)
-        setReportData([])
-      } finally {
-        setLoading(false)
-      }
-    },
-    [restaurantId]
-  )
-
-  /**
-   * Load initial report data without filters
-   */
-  useEffect(() => {
-    void loadReportData()
-  }, [loadReportData])
+  const errorMessage = useMemo(() => {
+    if (!restaurantId) {
+      return 'No se pudo determinar el restaurante del propietario.'
+    }
+    if (!reportError) return ''
+    return reportError instanceof Error
+      ? reportError.message
+      : 'Error al cargar el reporte de eficiencia'
+  }, [restaurantId, reportError])
 
   /**
    * Validates date range
@@ -147,7 +123,8 @@ export const EfficiencyReport = () => {
     if (!validateDateRange()) return
 
     setError('')
-    await loadReportData(startDate, endDate)
+    setAppliedStartDate(startDate)
+    setAppliedEndDate(endDate)
   }
 
   /**
@@ -158,7 +135,8 @@ export const EfficiencyReport = () => {
     setEndDate('')
     setError('')
     setSort({ column: null, direction: 'asc' })
-    await loadReportData()
+    setAppliedStartDate('')
+    setAppliedEndDate('')
   }
 
   /**
@@ -203,15 +181,18 @@ export const EfficiencyReport = () => {
    */
   const handleExportToExcel = async (): Promise<void> => {
     try {
-      setExporting(true)
+      if (!restaurantId) {
+        setError('No se pudo determinar el restaurante del propietario.')
+        return
+      }
       setError('')
       setSuccess('')
 
-      const blob = await analyticsService.exportEfficiencyReport(
+      const blob = await exportMutation.mutateAsync({
         restaurantId,
-        startDate || undefined,
-        endDate || undefined
-      )
+        startDate: appliedStartDate || undefined,
+        endDate: appliedEndDate || undefined,
+      })
 
       const filename =
         startDate && endDate
@@ -227,8 +208,6 @@ export const EfficiencyReport = () => {
       const errorMessage =
         err instanceof Error ? err.message : 'Error al exportar el reporte'
       setError(errorMessage)
-    } finally {
-      setExporting(false)
     }
   }
 
@@ -259,9 +238,12 @@ export const EfficiencyReport = () => {
       </h1>
 
       {/* Alerts */}
-      {error && (
+      {(error || errorMessage) && (
         <div style={{ marginBottom: '1.5rem' }}>
-          <ErrorAlert message={error} onClose={() => setError('')} />
+          <ErrorAlert
+            message={error || errorMessage}
+            onClose={() => setError('')}
+          />
         </div>
       )}
 
@@ -299,7 +281,7 @@ export const EfficiencyReport = () => {
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              disabled={loading}
+              disabled={isLoading}
             />
 
             <BrutalistInput
@@ -308,22 +290,22 @@ export const EfficiencyReport = () => {
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              disabled={loading}
+              disabled={isLoading}
             />
           </div>
 
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
             <BrutalistButton
               onClick={handleApplyFilters}
-              disabled={loading || !startDate || !endDate}
+              disabled={isLoading || !startDate || !endDate}
             >
-              {loading ? 'CARGANDO...' : 'APLICAR FILTROS'}
+              {isLoading ? 'CARGANDO...' : 'APLICAR FILTROS'}
             </BrutalistButton>
 
             <BrutalistButton
               variant="neutral"
               onClick={handleClearFilters}
-              disabled={loading}
+              disabled={isLoading}
             >
               LIMPIAR
             </BrutalistButton>
@@ -331,9 +313,11 @@ export const EfficiencyReport = () => {
             <BrutalistButton
               variant="neutral"
               onClick={handleExportToExcel}
-              disabled={exporting || reportData.length === 0 || loading}
+              disabled={
+                exportMutation.isPending || reportData.length === 0 || isLoading
+              }
             >
-              {exporting ? 'EXPORTANDO...' : 'EXPORTAR A EXCEL'}
+              {exportMutation.isPending ? 'EXPORTANDO...' : 'EXPORTAR A EXCEL'}
             </BrutalistButton>
           </div>
         </BrutalistCard>
@@ -352,7 +336,7 @@ export const EfficiencyReport = () => {
           MÉTRICAS DE EFICIENCIA
         </h2>
 
-        {loading ? (
+        {isLoading ? (
           <div
             style={{
               display: 'flex',
@@ -551,7 +535,7 @@ export const EfficiencyReport = () => {
           </div>
         )}
 
-        {!loading && sortedData.length > 0 && (
+        {!isLoading && sortedData.length > 0 && (
           <div
             style={{
               marginTop: '1.5rem',

@@ -23,9 +23,9 @@ import {
   LoadingSpinner,
   InfoAlert,
 } from '@shared/components'
-import { employeeService } from '../services/employeeService'
 import type { CreateEmployeeData } from '../models'
 import { getRestaurantId } from '@infrastructure/auth/tokenManager'
+import { useCreateEmployee } from '../queries/ownerQueries'
 
 /**
  * Validation schema with Zod
@@ -85,9 +85,9 @@ type CreateEmployeeFormData = z.infer<typeof createEmployeeSchema>
 
 export const CreateEmployee = () => {
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const createEmployeeMutation = useCreateEmployee()
 
   const {
     register,
@@ -99,7 +99,6 @@ export const CreateEmployee = () => {
   })
 
   const onSubmit = async (data: CreateEmployeeFormData) => {
-    setIsLoading(true)
     setErrorMessage('')
     setSuccessMessage('')
 
@@ -120,7 +119,7 @@ export const CreateEmployee = () => {
         restaurantId,
       }
 
-      await employeeService.createEmployee(employeeData)
+      await createEmployeeMutation.mutateAsync(employeeData)
 
       setSuccessMessage('¡Empleado creado exitosamente!')
       reset()
@@ -144,8 +143,6 @@ export const CreateEmployee = () => {
       const message =
         rawMessage ?? 'Error al crear empleado. Intenta nuevamente.'
       setErrorMessage(message)
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -193,7 +190,7 @@ export const CreateEmployee = () => {
               error={errors.name?.message}
               required
               placeholder="Juan"
-              disabled={isLoading}
+              disabled={createEmployeeMutation.isPending}
             />
 
             {/* Surname */}
@@ -204,7 +201,7 @@ export const CreateEmployee = () => {
               error={errors.surname?.message}
               required
               placeholder="Pérez"
-              disabled={isLoading}
+              disabled={createEmployeeMutation.isPending}
             />
 
             {/* Document Number */}
@@ -215,7 +212,7 @@ export const CreateEmployee = () => {
               error={errors.documentNumber?.message}
               required
               placeholder="12345678"
-              disabled={isLoading}
+              disabled={createEmployeeMutation.isPending}
             />
 
             {/* Phone */}
@@ -226,7 +223,7 @@ export const CreateEmployee = () => {
               error={errors.phone?.message}
               required
               placeholder="+573001234567"
-              disabled={isLoading}
+              disabled={createEmployeeMutation.isPending}
             />
 
             {/* Birth Date */}
@@ -236,7 +233,7 @@ export const CreateEmployee = () => {
               {...register('birthDate')}
               error={errors.birthDate?.message}
               required
-              disabled={isLoading}
+              disabled={createEmployeeMutation.isPending}
             />
 
             {/* Email */}
@@ -247,7 +244,7 @@ export const CreateEmployee = () => {
               error={errors.email?.message}
               required
               placeholder="empleado@example.com"
-              disabled={isLoading}
+              disabled={createEmployeeMutation.isPending}
             />
 
             {/* Password */}
@@ -258,7 +255,7 @@ export const CreateEmployee = () => {
               error={errors.password?.message}
               required
               placeholder="********"
-              disabled={isLoading}
+              disabled={createEmployeeMutation.isPending}
             />
 
             {/* Submit Button */}
@@ -268,9 +265,9 @@ export const CreateEmployee = () => {
                 variant="primary"
                 size="lg"
                 fullWidth
-                disabled={isLoading}
+                disabled={createEmployeeMutation.isPending}
               >
-                {isLoading ? (
+                {createEmployeeMutation.isPending ? (
                   <div className="flex items-center justify-center gap-2">
                     <LoadingSpinner size="sm" />
                     <span>CREANDO...</span>
@@ -285,7 +282,7 @@ export const CreateEmployee = () => {
                 variant="neutral"
                 size="lg"
                 onClick={() => navigate('/owner/dashboard')}
-                disabled={isLoading}
+                disabled={createEmployeeMutation.isPending}
               >
                 CANCELAR
               </BrutalistButton>

@@ -4,6 +4,7 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom'
 import { ShoppingCart } from './ShoppingCart'
 import { useCartStore } from '../cartStore'
 import { DishCategory } from '@shared/types'
+import { TestQueryClientProvider } from '../../../tests/queryTestUtils'
 
 const mocks = vi.hoisted(() => ({
   createOrder: vi.fn(),
@@ -56,7 +57,11 @@ describe('ShoppingCart integration', () => {
       { future: { v7_relativeSplatPath: true } }
     )
 
-    render(<RouterProvider router={router} />)
+    render(
+      <TestQueryClientProvider>
+        <RouterProvider router={router} />
+      </TestQueryClientProvider>
+    )
 
     const confirmBtn = screen.getByRole('button', {
       name: /confirmar pedido/i,
@@ -87,7 +92,11 @@ describe('ShoppingCart integration', () => {
       { future: { v7_relativeSplatPath: true } }
     )
 
-    render(<RouterProvider router={router} />)
+    render(
+      <TestQueryClientProvider>
+        <RouterProvider router={router} />
+      </TestQueryClientProvider>
+    )
 
     await act(async () => {
       fireEvent.click(
@@ -115,7 +124,11 @@ describe('ShoppingCart integration', () => {
       { future: { v7_relativeSplatPath: true } }
     )
 
-    render(<RouterProvider router={router} />)
+    render(
+      <TestQueryClientProvider>
+        <RouterProvider router={router} />
+      </TestQueryClientProvider>
+    )
 
     expect(screen.getByText(/tu carrito esta vacio/i)).toBeInTheDocument()
     expect(

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import {
   BrutalistCard,
   BrutalistButton,
@@ -6,68 +6,35 @@ import {
   ErrorAlert,
 } from '@shared/components'
 import { useNavigate } from 'react-router-dom'
-import { adminStatsService } from './services/adminStatsService'
-import { adminActivityService } from './services/adminActivityService'
-import {
-  ADMIN_ACTIVITY_TYPES,
-  type AdminActivity,
-  type AdminStats,
-} from './models'
+import { useAdminActivity, useAdminStats } from './queries/adminQueries'
+import { ADMIN_ACTIVITY_TYPES, type AdminActivity } from './models'
 
 export const Admin = () => {
   const navigate = useNavigate()
-  const [stats, setStats] = useState<AdminStats | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [activity, setActivity] = useState<AdminActivity[]>([])
-  const [activityLoading, setActivityLoading] = useState(true)
-  const [activityError, setActivityError] = useState<string | null>(null)
+  const {
+    data: stats,
+    isLoading,
+    error: statsError,
+  } = useAdminStats()
+  const {
+    data: activity = [],
+    isLoading: activityLoading,
+    error: activityError,
+  } = useAdminActivity()
 
-  useEffect(() => {
-    const loadStats = async () => {
-      setIsLoading(true)
-      setError(null)
+  const statsErrorMessage = useMemo(() => {
+    if (!statsError) return null
+    return statsError instanceof Error
+      ? statsError.message
+      : 'Error al cargar las estadisticas del dashboard.'
+  }, [statsError])
 
-      try {
-        const data = await adminStatsService.getAdminStats()
-        setStats(data)
-      } catch (err) {
-        const message =
-          err instanceof Error
-            ? err.message
-            : 'Error al cargar las estadisticas del dashboard.'
-        setError(message)
-        setStats(null)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    void loadStats()
-  }, [])
-
-  useEffect(() => {
-    const loadActivity = async () => {
-      setActivityLoading(true)
-      setActivityError(null)
-
-      try {
-        const data = await adminActivityService.getRecentActivity()
-        setActivity(data)
-      } catch (err) {
-        const message =
-          err instanceof Error
-            ? err.message
-            : 'Error al cargar la actividad reciente.'
-        setActivityError(message)
-        setActivity([])
-      } finally {
-        setActivityLoading(false)
-      }
-    }
-
-    void loadActivity()
-  }, [])
+  const activityErrorMessage = useMemo(() => {
+    if (!activityError) return null
+    return activityError instanceof Error
+      ? activityError.message
+      : 'Error al cargar la actividad reciente.'
+  }, [activityError])
 
   const formatDate = (dateString: string): string => {
     if (!dateString) return 'Sin fecha'
@@ -116,13 +83,13 @@ export const Admin = () => {
           Estadísticas
         </h2>
 
-        {error && (
+        {statsErrorMessage && (
           <div style={{ marginBottom: '1rem' }}>
-            <ErrorAlert message={error} />
+            <ErrorAlert message={statsErrorMessage} />
           </div>
         )}
 
-        {!error && isLoading && (
+        {!statsErrorMessage && isLoading && (
           <div
             style={{
               display: 'flex',
@@ -135,7 +102,7 @@ export const Admin = () => {
           </div>
         )}
 
-        {!error && !isLoading && stats && (
+        {!statsErrorMessage && !isLoading && stats && (
           <div
             style={{
               display: 'grid',
@@ -243,7 +210,7 @@ export const Admin = () => {
           </div>
         )}
 
-        {!error && !isLoading && !stats && (
+        {!statsErrorMessage && !isLoading && !stats && (
           <p style={{ color: 'var(--text-secondary)' }}>
             No hay estadísticas disponibles.
           </p>
@@ -263,13 +230,13 @@ export const Admin = () => {
             Actividad Reciente
           </h2>
 
-          {activityError && (
+          {activityErrorMessage && (
             <div style={{ marginBottom: '1rem' }}>
-              <ErrorAlert message={activityError} />
+              <ErrorAlert message={activityErrorMessage} />
             </div>
           )}
 
-          {!activityError && activityLoading && (
+          {!activityErrorMessage && activityLoading && (
             <div
               style={{
                 display: 'flex',
@@ -282,13 +249,13 @@ export const Admin = () => {
             </div>
           )}
 
-          {!activityError && !activityLoading && activity.length === 0 && (
+          {!activityErrorMessage && !activityLoading && activity.length === 0 && (
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
               No hay actividad reciente.
             </p>
           )}
 
-          {!activityError && !activityLoading && activity.length > 0 && (
+          {!activityErrorMessage && !activityLoading && activity.length > 0 && (
             <ul
               style={{
                 display: 'grid',

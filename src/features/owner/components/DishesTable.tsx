@@ -14,10 +14,10 @@ import {
   Pagination,
   ErrorAlert,
 } from '@shared/components'
-import { dishService } from '../services/dishService'
 import { getRestaurantId } from '@infrastructure/auth/tokenManager'
 import { DISH_CATEGORY_LABELS, DishCategory } from '@shared/types'
 import type { Dish } from '../models'
+import { useOwnerDishes, useToggleDishStatus } from '../queries/ownerQueries'
 
 const ITEMS_PER_PAGE = 10
 
@@ -27,15 +27,30 @@ export const DishesTable = () => {
   const restaurantId = getRestaurantId()?.toString() || ''
 
   // State management
-  const [dishes, setDishes] = useState<Dish[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState(0)
-  const [totalPages, setTotalPages] = useState(0)
   const [categoryFilter, setCategoryFilter] = useState<DishCategory | ''>('')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [togglingDishId, setTogglingDishId] = useState<string | null>(null)
+  const [actionError, setActionError] = useState<string | null>(null)
+  const toggleDishMutation = useToggleDishStatus()
+  const {
+    data,
+    isLoading,
+    error: queryError,
+  } = useOwnerDishes(restaurantId, currentPage, ITEMS_PER_PAGE)
+  const dishes = useMemo<Dish[]>(() => data?.content ?? [], [data])
+  const totalPages = data?.totalPages ?? 0
+  const errorMessage = useMemo(() => {
+    if (actionError) return actionError
+    if (!restaurantId) {
+      return 'No se pudo determinar el restaurante del propietario.'
+    }
+    if (!queryError) return null
+    return queryError instanceof Error
+      ? queryError.message
+      : 'Error al cargar los platos. Por favor, intente nuevamente.'
+  }, [actionError, restaurantId, queryError])
 
   // Debounce search term (300ms)
   useEffect(() => {
@@ -46,44 +61,6 @@ export const DishesTable = () => {
 
     return () => clearTimeout(timer)
   }, [searchTerm])
-
-  // Fetch dishes when page, category filter, or search term changes
-  useEffect(() => {
-    const fetchDishes = async () => {
-      if (!restaurantId) {
-        setError('No se pudo determinar el restaurante del propietario.')
-        setDishes([])
-        setTotalPages(0)
-        setLoading(false)
-        return
-      }
-      try {
-        setLoading(true)
-        setError(null)
-
-        const response = await dishService.getDishes(
-          restaurantId,
-          currentPage,
-          ITEMS_PER_PAGE
-        )
-
-        setDishes(response.content)
-        setTotalPages(response.totalPages)
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : 'Error al cargar los platos. Por favor, intente nuevamente.'
-        )
-        setDishes([])
-        setTotalPages(0)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchDishes()
-  }, [currentPage, restaurantId])
 
   // Filter dishes by category and search term (client-side filtering)
   const filteredDishes = useMemo(() => {
@@ -109,18 +86,11 @@ export const DishesTable = () => {
   const handleToggleStatus = async (dishId: string) => {
     try {
       setTogglingDishId(dishId)
-      setError(null)
+      setActionError(null)
 
-      await dishService.toggleDishStatus(dishId)
-
-      // Update local state
-      setDishes((prevDishes) =>
-        prevDishes.map((dish) =>
-          dish.id === dishId ? { ...dish, active: !dish.active } : dish
-        )
-      )
+      await toggleDishMutation.mutateAsync(dishId)
     } catch (err) {
-      setError(
+      setActionError(
         err instanceof Error
           ? err.message
           : 'Error al cambiar el estado del plato. Por favor, intente nuevamente.'
@@ -223,11 +193,13 @@ export const DishesTable = () => {
       </BrutalistCard>
 
       {/* Error Alert */}
-      {error && <ErrorAlert message={error} onClose={() => setError(null)} />}
+      {errorMessage && (
+        <ErrorAlert message={errorMessage} onClose={() => setActionError(null)} />
+      )}
 
       {/* Table Section */}
       <BrutalistCard>
-        {loading ? (
+        {isLoading ? (
           <div
             style={{
               display: 'flex',

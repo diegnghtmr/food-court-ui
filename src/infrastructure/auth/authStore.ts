@@ -4,6 +4,7 @@
  */
 
 import { create } from 'zustand'
+import { useShallow } from 'zustand/react/shallow'
 import { UserRole } from '@shared/types'
 import {
   getToken,
@@ -120,7 +121,14 @@ export const useAuthStore = create<AuthState>((set) => ({
  * Hook to get authentication status
  */
 export const useAuth = () => {
-  const { isAuthenticated, role, userId, isLoading } = useAuthStore()
+  const { isAuthenticated, role, userId, isLoading } = useAuthStore(
+    useShallow((state) => ({
+      isAuthenticated: state.isAuthenticated,
+      role: state.role,
+      userId: state.userId,
+      isLoading: state.isLoading,
+    }))
+  )
   return { isAuthenticated, role, userId, isLoading }
 }
 
@@ -128,6 +136,12 @@ export const useAuth = () => {
  * Hook to get auth actions
  */
 export const useAuthActions = () => {
-  const { login, logout, checkAuth } = useAuthStore()
+  const { login, logout, checkAuth } = useAuthStore(
+    useShallow((state) => ({
+      login: state.login,
+      logout: state.logout,
+      checkAuth: state.checkAuth,
+    }))
+  )
   return { login, logout, checkAuth }
 }
