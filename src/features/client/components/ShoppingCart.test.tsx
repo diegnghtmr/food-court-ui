@@ -38,6 +38,9 @@ const sampleDish = {
   restauranteId: 10,
 }
 
+const createCartRouter = () =>
+  createMemoryRouter([{ path: '/', element: <ShoppingCart /> }])
+
 describe('ShoppingCart integration', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -52,10 +55,7 @@ describe('ShoppingCart integration', () => {
   it('crea un pedido y limpia el carrito al confirmar', async () => {
     mocks.createOrder.mockResolvedValueOnce({ id: 123 })
 
-    const router = createMemoryRouter(
-      [{ path: '/', element: <ShoppingCart /> }],
-      { future: { v7_relativeSplatPath: true } }
-    )
+    const router = createCartRouter()
 
     render(
       <TestQueryClientProvider>
@@ -87,10 +87,7 @@ describe('ShoppingCart integration', () => {
   it('muestra error si la creación del pedido falla y no limpia el carrito', async () => {
     mocks.createOrder.mockRejectedValueOnce(new Error('fail'))
 
-    const router = createMemoryRouter(
-      [{ path: '/', element: <ShoppingCart /> }],
-      { future: { v7_relativeSplatPath: true } }
-    )
+    const router = createCartRouter()
 
     render(
       <TestQueryClientProvider>
@@ -119,10 +116,7 @@ describe('ShoppingCart integration', () => {
       restaurantName: '',
     })
 
-    const router = createMemoryRouter(
-      [{ path: '/', element: <ShoppingCart /> }],
-      { future: { v7_relativeSplatPath: true } }
-    )
+    const router = createCartRouter()
 
     render(
       <TestQueryClientProvider>

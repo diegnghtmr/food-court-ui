@@ -44,15 +44,16 @@ vi.mock('@infrastructure/auth/tokenManager', () => ({
   getRoleHomePath: tokenMocks.getRoleHomePath,
 }))
 
+const createLoginRouter = () =>
+  createMemoryRouter([{ path: '/', element: <LoginForm /> }])
+
 describe('LoginForm Integration', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
   it('renders login form with all fields', () => {
-    const router = createMemoryRouter([{ path: '/', element: <LoginForm /> }], {
-      future: { v7_relativeSplatPath: true },
-    })
+    const router = createLoginRouter()
 
     render(
       <TestQueryClientProvider>
@@ -68,9 +69,7 @@ describe('LoginForm Integration', () => {
   })
 
   it('shows validation errors for empty fields', async () => {
-    const router = createMemoryRouter([{ path: '/', element: <LoginForm /> }], {
-      future: { v7_relativeSplatPath: true },
-    })
+    const router = createLoginRouter()
 
     render(
       <TestQueryClientProvider>
@@ -89,9 +88,7 @@ describe('LoginForm Integration', () => {
   })
 
   it('shows validation error for invalid email', async () => {
-    const router = createMemoryRouter([{ path: '/', element: <LoginForm /> }], {
-      future: { v7_relativeSplatPath: true },
-    })
+    const router = createLoginRouter()
 
     render(
       <TestQueryClientProvider>
@@ -127,9 +124,7 @@ describe('LoginForm Integration', () => {
     tokenMocks.getUserRole.mockReturnValue(UserRole.CLIENTE)
     tokenMocks.getRoleHomePath.mockReturnValue('/client/restaurants')
 
-    const router = createMemoryRouter([{ path: '/', element: <LoginForm /> }], {
-      future: { v7_relativeSplatPath: true },
-    })
+    const router = createLoginRouter()
 
     render(
       <TestQueryClientProvider>
@@ -166,9 +161,7 @@ describe('LoginForm Integration', () => {
       },
     })
 
-    const router = createMemoryRouter([{ path: '/', element: <LoginForm /> }], {
-      future: { v7_relativeSplatPath: true },
-    })
+    const router = createLoginRouter()
 
     render(
       <TestQueryClientProvider>
@@ -196,9 +189,7 @@ describe('LoginForm Integration', () => {
       () => new Promise((resolve) => setTimeout(resolve, 1000))
     )
 
-    const router = createMemoryRouter([{ path: '/', element: <LoginForm /> }], {
-      future: { v7_relativeSplatPath: true },
-    })
+    const router = createLoginRouter()
 
     render(
       <TestQueryClientProvider>
