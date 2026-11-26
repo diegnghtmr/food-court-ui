@@ -35,6 +35,14 @@ interface DishFormProps {
   mode: 'create' | 'edit'
 }
 
+const dishPrice = z
+  .number({
+    error: ({ input }) =>
+      input === undefined ? 'El precio es requerido' : 'El precio debe ser un número',
+  })
+  .min(1, 'El precio debe ser mayor a 0')
+  .positive('El precio debe ser un número positivo')
+
 /**
  * Validation schema for CREATE mode
  * All fields are required with strict validation
@@ -48,19 +56,13 @@ const createDishSchema = z.object({
     .string()
     .min(10, 'La descripción debe tener al menos 10 caracteres')
     .max(200, 'La descripción no puede exceder 200 caracteres'),
-  price: z
-    .number({
-      required_error: 'El precio es requerido',
-      invalid_type_error: 'El precio debe ser un número',
-    })
-    .min(1, 'El precio debe ser mayor a 0')
-    .positive('El precio debe ser un número positivo'),
+  price: dishPrice,
   imageUrl: z
     .string()
     .url('Debe ser una URL válida')
     .min(1, 'La URL de la imagen es requerida'),
-  category: z.nativeEnum(DishCategory, {
-    errorMap: () => ({ message: 'Debe seleccionar una categoría válida' }),
+  category: z.enum(DishCategory, {
+    error: 'Debe seleccionar una categoría válida',
   }),
 })
 
@@ -73,13 +75,7 @@ const editDishSchema = z.object({
     .string()
     .min(10, 'La descripción debe tener al menos 10 caracteres')
     .max(200, 'La descripción no puede exceder 200 caracteres'),
-  price: z
-    .number({
-      required_error: 'El precio es requerido',
-      invalid_type_error: 'El precio debe ser un número',
-    })
-    .min(1, 'El precio debe ser mayor a 0')
-    .positive('El precio debe ser un número positivo'),
+  price: dishPrice,
 })
 
 type CreateDishFormData = z.infer<typeof createDishSchema>

@@ -1,4 +1,3 @@
-import React from 'react'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -22,27 +21,26 @@ const ThemeConsumer = () => {
 }
 
 const setupMatchMedia = (initiallyDark: boolean) => {
-  const listeners = new Set<(event: MediaQueryListEvent) => void>()
+  let matches = initiallyDark
+  const events = new EventTarget()
+  const media = '(prefers-color-scheme: dark)'
 
   const mql: MediaQueryList = {
-    matches: initiallyDark,
-    media: '(prefers-color-scheme: dark)',
+    get matches() {
+      return matches
+    },
+    media,
     onchange: null,
     addListener: vi.fn(),
     removeListener: vi.fn(),
-    addEventListener: vi.fn((_, cb: (event: MediaQueryListEvent) => void) =>
-      listeners.add(cb)
-    ),
-    removeEventListener: vi.fn((_, cb: (event: MediaQueryListEvent) => void) =>
-      listeners.delete(cb)
-    ),
-    dispatchEvent: vi.fn(),
+    addEventListener: events.addEventListener.bind(events),
+    removeEventListener: events.removeEventListener.bind(events),
+    dispatchEvent: events.dispatchEvent.bind(events),
   }
 
   const emit = (nextDark: boolean) => {
-    mql.matches = nextDark
-    const event = { matches: nextDark } as MediaQueryListEvent
-    listeners.forEach((listener) => listener(event))
+    matches = nextDark
+    events.dispatchEvent(Object.assign(new Event('change'), { matches, media }))
   }
 
   vi.spyOn(window, 'matchMedia').mockReturnValue(mql)
