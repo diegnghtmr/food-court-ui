@@ -10,6 +10,7 @@
 <img src="https://img.shields.io/badge/React-19-E0C15A?style=for-the-badge&labelColor=1F1F28" alt="React 19">
 <img src="https://img.shields.io/badge/TypeScript-5-E0C15A?style=for-the-badge&labelColor=1F1F28" alt="TypeScript 5">
 <img src="https://img.shields.io/badge/Vite-6-E0C15A?style=for-the-badge&labelColor=1F1F28" alt="Vite 6">
+<img src="https://img.shields.io/badge/React%20Router-7.18-E0C15A?style=for-the-badge&labelColor=1F1F28" alt="React Router 7.18">
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-7FB4CA?style=for-the-badge&labelColor=1F1F28" alt="License: MIT"></a>
 </p>
 
@@ -35,6 +36,10 @@ A customer needs the menu and pickup status; kitchen staff need the queue; an ow
 - **Owner workspace.** Owners manage dishes and employees and open reports on order fulfillment.
 - **Admin workspace.** Administrators have screens for managing restaurant and owner records.
 
+### Feature map
+
+See the [routes and workflows by role](docs/reference.md#feature-map).
+
 ## Preview
 
 ![Kitchen board with one order in each of the Pending, In preparation, and Ready columns](docs/assets/order-queue.png)
@@ -45,7 +50,9 @@ A customer needs the menu and pickup status; kitchen staff need the queue; an ow
 
 *The owner can open dish management, staff creation, or reports from the overview.*
 
-The repository also keeps earlier captures of [sign-in](docs/00-login.png), [the customer workflow](docs/01-client.png), [the kitchen](docs/05-employee.png), [owner tools](docs/06-owner.png), and [the admin workspace](docs/08-admin.png).
+### UI screenshots
+
+Browse the [earlier captures of sign-in and all four roles](docs/reference.md#ui-screenshots).
 
 ## Quick start
 
@@ -58,20 +65,13 @@ HUSKY=0 npm ci
 npm run dev
 ```
 
-Open `http://localhost:3000`. The Vite server uses the local endpoints below by default. Set these overrides in the environment before launching Vite if any API runs on a different origin; do not put secrets in browser environment variables.
-
-| Name | Purpose | Default |
-| --- | --- | --- |
-| `VITE_API_USUARIOS_URL` | Accounts and JWT sign-in | `http://localhost:8090/user-api` |
-| `VITE_API_PLAZOLETA_URL` | Restaurants, dishes, and availability | `http://localhost:8091/foodcourt-api` |
-| `VITE_API_PEDIDOS_URL` | Orders, kitchen queue, and pickup | `http://localhost:8092/order-api` |
-| `VITE_API_TRAZABILIDAD_URL` | Order history and fulfillment reports | `http://localhost:8093/traceability-api` |
-
-Use `npm run prepare` if you want the repository’s Git hooks. The case study also documents a category-field mismatch in the owner’s dish table.
+Open `http://localhost:3000`. Sign in with a local Food Court account or use `/register` to create a customer. The browser uses localhost APIs by default; see the [endpoint settings](docs/reference.md#environment) for overrides and the [sign-in reference](docs/reference.md#authentication) for how the app handles sessions.
 
 ## Architecture
 
-The router selects guarded layouts by role. A feature owns code used only by that feature; code used by two or more moves to `shared/`, while API, auth, and theme wiring live in `infrastructure/`. Feature containers handle data and state while presentational components render props. TanStack Query owns server state; Zustand owns client state.
+The router selects guarded layouts by role. Features own their workflow code, TanStack Query handles server data, and Zustand handles client state. See the [placement rules](docs/reference.md#placement-rules) for where to put reusable components and infrastructure.
+
+### System context
 
 ```mermaid
 flowchart LR
@@ -83,30 +83,26 @@ flowchart LR
     Orders -->|"Record order transitions"| Trace
 ```
 
-Supporting diagrams: [system context](docs/project-architecture.png), [relational entities](docs/sql-entities-diagram.png), [document entities](docs/nosql-entities-diagram.png), and [order lifecycle](docs/order-flow-diagram.png).
+The [system diagrams](docs/reference.md#system-diagrams) show service boundaries, data models, and the order lifecycle in more detail.
 
 ## Tech stack
 
 | Layer | Technology |
 | --- | --- |
-| Interface | React 19, TypeScript 5, React Router, Tailwind CSS, Radix UI |
-| Network and state | Axios, TanStack Query 5, Zustand 5 |
-| Development and checks | Vite 6, Vitest, Playwright, ESLint, Prettier, Husky |
+| Interface | React 19, TypeScript 5, React Router 7.18, Tailwind CSS, Radix UI |
+| Network, state, and validation | Axios, TanStack Query 5, Zustand 5, Zod 4 |
+| Development and checks | Vite 6, Vitest 4, Playwright, ESLint, Prettier, Husky |
 
 ## Testing
 
+### Scripts
+
 ```sh
 npm test -- --run
+npm run build
 ```
 
-[CI](.github/workflows/ci.yml) installs from the npm lockfile with hooks disabled and runs Vitest once. It does not run the production build or Playwright; the checked-in browser specs expect a running app on port `3000`. The current workflow also notes unresolved TypeScript errors in the production build.
-
-| Task | Repository scripts |
-| --- | --- |
-| Watch, interactive runner, or coverage | `npm test`, `npm run test:ui`, `npm run test:coverage` |
-| Lint or apply fixes | `npm run lint`, `npm run lint:fix` |
-| Check or apply formatting | `npm run format:check`, `npm run format` |
-| Build or serve an existing build | `npm run build`, `npm run preview` |
+[CI](.github/workflows/ci.yml) installs from the npm lockfile with hooks disabled and runs Vitest once. Build locally with `npm run build`; CI does not run the production build or Playwright. See the [script reference](docs/reference.md#scripts) for browser test prerequisites, coverage, linting, and formatting.
 
 ## Project structure
 
@@ -118,6 +114,10 @@ src/
 ├── infrastructure/  # API, authentication, and theme
 └── assets/          # Static UI assets
 ```
+
+## Documentation
+
+- [Web app reference](docs/reference.md) — feature routes, placement rules, API endpoints and environment, authentication, scripts, diagrams, and UI screenshots.
 
 ## Related repositories
 
